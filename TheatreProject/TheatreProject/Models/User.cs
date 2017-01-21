@@ -12,6 +12,7 @@ namespace TheatreProject.Models
     public abstract class User : IdentityUser
     {
         public DateTime Joined { get; set; }
+
         public virtual ICollection<Comment> Comments { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
