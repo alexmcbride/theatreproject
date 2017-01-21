@@ -14,7 +14,7 @@ namespace TheatreProject.Models
         public string Content { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual Staff User { get; set; }
+        public virtual Staff Staff { get; set; }
         public virtual Category Category { get; set; }
     }
 }
