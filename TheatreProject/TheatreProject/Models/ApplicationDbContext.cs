@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System.Linq;
 
 namespace TheatreProject.Models
 {
@@ -8,6 +9,16 @@ namespace TheatreProject.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
+
+        public IQueryable<Staff> Staff
+        {
+            get { return Users.OfType<Staff>(); }
+        }
+
+        public IQueryable<Member> Members
+        {
+            get { return Users.OfType<Member>(); }
+        }
 
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
