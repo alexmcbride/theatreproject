@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using System;
+using System.Net;
+using System.Net.Mail;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using TheatreProject.Models;
 
 namespace TheatreProject
@@ -18,8 +16,16 @@ namespace TheatreProject
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "cogc2016");
+
+            MailMessage messaage = new MailMessage();
+            messaage.From = new MailAddress("apptechcogc@gmail.com");
+            messaage.To.Add(message.Destination);
+            messaage.Subject = message.Subject;
+            messaage.Body = message.Body;
+
+            return client.SendMailAsync(messaage);
         }
     }
 
@@ -40,7 +46,7 @@ namespace TheatreProject
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<User>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
@@ -81,7 +87,7 @@ namespace TheatreProject
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<User>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
