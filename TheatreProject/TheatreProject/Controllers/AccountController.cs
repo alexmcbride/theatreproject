@@ -153,7 +153,7 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // check if user with same name exists
+                // Check if user with same name exists
                 User user = await UserManager.FindByNameAsync(model.UserName);
                 if (user == null)
                 {
@@ -164,22 +164,23 @@ namespace TheatreProject.Controllers
                         // We don't want to sign them in here, but after they confirm email address
                         //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-#if !DEBUG              
+#if !DEBUG
                         // Send confirmation email address. Don't sent in debug mode.
                         string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await UserManager.SendEmailAsync(user.Id, 
-                            "Local Theatre Company - Confirm your account", 
+                        await UserManager.SendEmailAsync(user.Id,
+                            "Local Theatre Company - Confirm your account",
                             "Please confirm your account by clicking the following link: \n\n" + callbackUrl);
 #endif
 
                         return View("ConfirmEmailSent"); // show confirmation message
                     }
+
                     AddErrors(result);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "That Username is already taken");
+                    ModelState.AddModelError("", "Username '" + model.UserName + "' is already taken");
                 }
             }
 
@@ -217,18 +218,17 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                await UserManager.SendEmailAsync(user.Id, "Local Theatre Company - Reset Password", "Please reset your password by clicking the following link:\n\n" + callbackUrl);
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
@@ -263,7 +263,7 @@ namespace TheatreProject.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
@@ -437,7 +437,7 @@ namespace TheatreProject.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -494,6 +494,6 @@ namespace TheatreProject.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-#endregion
+        #endregion
     }
 }
