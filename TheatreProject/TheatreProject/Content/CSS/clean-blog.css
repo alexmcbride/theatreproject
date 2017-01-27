@@ -171,6 +171,9 @@ hr.small {
   margin-top: 0;
   font-size: 55px;
 }
+.intro-header .site-heading h1 a {
+    text-decoration: none;
+}
 .intro-header .site-heading .subheading,
 .intro-header .page-heading .subheading {
   font-size: 18px;

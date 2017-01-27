@@ -17,7 +17,8 @@ namespace TheatreProject
         public Task SendAsync(IdentityMessage message)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "cogc2016");
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "<secret>");
 
             MailMessage messaage = new MailMessage();
             messaage.From = new MailAddress("apptechcogc@gmail.com");

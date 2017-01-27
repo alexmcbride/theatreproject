@@ -26,6 +26,16 @@ namespace TheatreProject.Models
             Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
         }
 
+        public Staff FindStaff(string id)
+        {
+            return (Staff)Users.Find(id);
+        }
+
+        public Member FindMember(string id)
+        {
+            return (Member)Users.Find(id);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
