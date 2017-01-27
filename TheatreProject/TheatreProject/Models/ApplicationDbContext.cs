@@ -11,6 +11,7 @@ namespace TheatreProject.Models
 
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
+            //Database.Initialize(true);
             Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
         }
 

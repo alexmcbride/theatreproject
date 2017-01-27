@@ -15,7 +15,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <!-- Custom Fonts -->
-    <link href="@Url.Content("~/Content/Fonts/font-awesome.min.css")" rel="stylesheet" type="text/css">
+    <link href="@Url.Content("~/fonts/font-awesome.min.css")" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -45,7 +45,7 @@
                     <li>@Html.ActionLink("Contact", "contact", "home")</li>
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink(User.Identity.GetUserName() + ", logout", "logoff", "account")</li>
+                        <li>@Html.ActionLink(User.Identity.GetUserName() + " Logout", "logoff", "account")</li>
                     }
                     else
                     {
