@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -41,10 +43,18 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Home", "index", "home")</li>
                     <li>@Html.ActionLink("Contact", "contact", "home")</li>
-                    <li>@Html.ActionLink("Login", "account", "login")</li>
-                    <li>@Html.ActionLink("Register", "account", "register")</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink(User.Identity.GetUserName() + ", logout", "logoff", "account")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Login", "login", "account")</li>
+                        <li>@Html.ActionLink("Register", "register", "account")</li>
+                    }
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -53,7 +63,7 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="site-heading">
-                        <h1>Local Theatre Company</h1>
+                        <h1>@Html.ActionLink("Local Theatre Company", "index", "home")</h1>
                         <hr class="small">
                         <span class="subheading">A blog about local theatre</span>
                     </div>
