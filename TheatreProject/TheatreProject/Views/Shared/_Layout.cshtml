@@ -73,10 +73,14 @@
     </header>
 
     <div class="container">
-        @RenderBody()
-    </div>
+        @RenderSection("breadcrumb", required: false)
 
-    <hr>
+        @RenderBody()
+
+        <div class="row">
+            <hr>
+        </div>
+    </div>
 
     <footer>
         <div class="container">

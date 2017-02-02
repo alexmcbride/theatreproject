@@ -1,21 +1,24 @@
-﻿@{
+﻿@model IEnumerable<TheatreProject.Models.Category>
+
+@{
     ViewBag.Title = "Welcome";
 }
 
 @section head {
-<style>
-    .intro-header .site-heading, .intro-header .post-heading, .intro-header .page-heading {
-        padding: 150px 0;
-    }
+    @* We give the index page slightly different styling. *@
+    <style>
+        .intro-header .site-heading, .intro-header .post-heading, .intro-header .page-heading {
+            padding: 150px 0;
+        }
 
-    .intro-header .site-heading h1, .intro-header .page-heading h1 {
-        font-size: 60px;
-    }
+        .intro-header .site-heading h1, .intro-header .page-heading h1 {
+            font-size: 60px;
+        }
 
-    .intro-header .site-heading .subheading, .intro-header .page-heading .subheading {
-        font-size: 22px;
-    }
-</style>
+        .intro-header .site-heading .subheading, .intro-header .page-heading .subheading {
+            font-size: 22px;
+        }
+    </style>
 }
 
 <div class="row">
@@ -29,10 +32,19 @@
     </div>
     <div class="col-md-6 text-right">
         <h2>Browse Categories</h2>
-        <div class="list-group">
-            <a href="blog.html" class="list-group-item list-group-item-action">Announcements &amp; News</a>
-            <a href="blog.html" class="list-group-item list-group-item-action">Movie Reviews</a>
-            <a href="blog.html" class="list-group-item list-group-item-action">Theatre Reviews</a>
-        </div>
+
+        @if (Model.Any())
+        {
+            <div class="list-group">
+                @foreach (var category in Model)
+                {
+                    @Html.ActionLink(category.Name, "category", new { id = category.CategoryId }, new { @class = "list-group-item list-group-item-action" })
+                }
+            </div>
+        }
+        else
+        {
+            <p><em>There are no categories to display</em></p>
+        }
     </div>
 </div>

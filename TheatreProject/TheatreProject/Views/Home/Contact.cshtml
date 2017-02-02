@@ -2,22 +2,31 @@
     ViewBag.Title = "Contact Us";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; Contact
+        </div>
+        <hr>
+    </div>
+}
+
 <div class="row">
     <h2>@ViewBag.Title.</h2>
 
     <p>If you have any questions or thoughts, don't hesitate to contact us!</p>
 
     <address>
-        Local Theatre Company<br />
-        123 Main Street<br />
-        Glasgow<br />
-        Scotland<br />
-        G12 4DR<br /><br />
+        Local Theatre Company<br>
+        123 Main Street<br>
+        Glasgow<br>
+        Scotland<br>
+        G12 4DR<br><br>
         <strong>Telephone:</strong> 0141 123 1234
     </address>
 
     <address>
-        <strong>Support:</strong>   <a href="mailto:support@localtheatrecompany.com">support@localtheatrecompany.com</a><br />
+        <strong>Support:</strong> <a href="mailto:support@localtheatrecompany.com">support@localtheatrecompany.com</a><br>
         <strong>Marketing:</strong> <a href="mailto:marketing@localtheatrecompany.com">marketing@localtheatrecompany.com</a>
     </address>
 </div>
