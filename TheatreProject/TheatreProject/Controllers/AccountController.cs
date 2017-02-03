@@ -85,7 +85,7 @@ namespace TheatreProject.Controllers
                     case SignInStatus.LockedOut:
                         return View("Lockout");
                     case SignInStatus.RequiresVerification:
-                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                        return RedirectToAction("sendcode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 }
             }
 
@@ -230,9 +230,9 @@ namespace TheatreProject.Controllers
 
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                var callbackUrl = Url.Action("resetpassword", "account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Local Theatre Company - Reset Password", "Please reset your password by clicking the following link:\n\n" + callbackUrl);
-                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                return RedirectToAction("forgotpasswordconfirmation", "account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -270,12 +270,12 @@ namespace TheatreProject.Controllers
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("resetpasswordconfirmation", "account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("resetpasswordconfirmation", "account");
             }
             AddErrors(result);
             return View();
@@ -297,7 +297,7 @@ namespace TheatreProject.Controllers
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider, Url.Action("externallogincallback", "account", new { ReturnUrl = returnUrl }));
         }
 
         //
@@ -332,7 +332,7 @@ namespace TheatreProject.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("verifycode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
         //
@@ -343,7 +343,7 @@ namespace TheatreProject.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("login");
             }
 
             // Sign in the user with this external login provider if the user already has a login
@@ -355,7 +355,7 @@ namespace TheatreProject.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                    return RedirectToAction("sendcode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
@@ -374,7 +374,7 @@ namespace TheatreProject.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Manage");
+                return RedirectToAction("index", "manage");
             }
 
             if (ModelState.IsValid)
@@ -409,7 +409,7 @@ namespace TheatreProject.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("index", "home");
         }
 
         //
