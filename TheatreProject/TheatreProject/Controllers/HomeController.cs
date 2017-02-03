@@ -15,18 +15,6 @@ namespace TheatreProject.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Categories(int? id)
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        public ActionResult Post(int? id)
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
         public ActionResult Contact()
         {
             return View();
