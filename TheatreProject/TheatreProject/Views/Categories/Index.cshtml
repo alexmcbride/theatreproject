@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TheatreProject.Models.Category>
+
+@{
+    ViewBag.Title = "Manage Categories";
+}
+
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; Manage Categories
+        </div>
+        <hr>
+    </div>
+}
+
+<div class="row">
+    <h2>Manage Categories</h2>
+
+    <p>
+        @Html.ActionLink("Create New Category", "create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="text-right">
+                    @Html.ActionLink("Edit", "edit", new { id = item.CategoryId }) |
+                    @Html.ActionLink("Delete", "delete", new { id = item.CategoryId })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

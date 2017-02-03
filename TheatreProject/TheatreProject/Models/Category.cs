@@ -7,6 +7,8 @@ namespace TheatreProject.Models
     {
         [Key]
         public int CategoryId { get; set; }
+
+        [Required, StringLength(64)]
         public string Name { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
