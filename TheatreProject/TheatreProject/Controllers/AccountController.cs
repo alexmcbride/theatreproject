@@ -161,6 +161,9 @@ namespace TheatreProject.Controllers
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
+                        // Add user to member role.
+                        UserManager.AddToRole(user.Id, "Member");
+
                         // We don't want to sign them in here, but after they confirm email address
                         //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 

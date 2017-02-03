@@ -22,8 +22,7 @@ namespace TheatreProject.Models
 
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
-            //Database.Initialize(true);
-            Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
+            Database.SetInitializer(new DatabaseInitializer());
         }
 
         public Staff FindStaff(string id)
