@@ -202,8 +202,7 @@
     <Content Include="Content\CSS\font-awesome.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\theatre-logo.png" />
-    <Content Include="Content\Images\theatre.jpg" />
-    <Content Include="Content\Images\theatre2.jpg" />
+    <Content Include="Content\Images\theatre-background.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
