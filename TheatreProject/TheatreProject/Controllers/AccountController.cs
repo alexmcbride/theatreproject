@@ -452,7 +452,7 @@ namespace TheatreProject.Controllers
             }
         }
 
-        private void AddErrors(IdentityResult result)
+        protected void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {

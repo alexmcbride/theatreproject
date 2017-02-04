@@ -172,6 +172,7 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -187,6 +188,9 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\CreateStaffViewModel.cs" />
+    <Compile Include="ViewModels\EditMemberViewModel.cs" />
+    <Compile Include="ViewModels\EditStaffViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-TheatreProject-20170121015721.mdf" />
@@ -284,6 +288,13 @@
     <Content Include="Views\Categories\Delete.cshtml" />
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\EditStaff.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\EditMember.cshtml" />
+    <Content Include="Views\Users\DetailsStaff.cshtml" />
+    <Content Include="Views\Users\DetailsMember.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

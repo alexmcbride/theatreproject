@@ -54,9 +54,7 @@ namespace TheatreProject.Models
                 if (result.Succeeded)
                 {
                     // Give Admin correct roles.
-                    userManager.AddToRole(staff.Id, "Member");
-                    userManager.AddToRole(staff.Id, "Staff");
-                    userManager.AddToRole(staff.Id, "Admin");
+                    userManager.AddToRoles(staff.Id, "Member", "Staff", "Admin");
                 }
                 else
                 {
