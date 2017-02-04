@@ -193,10 +193,6 @@
     <Compile Include="ViewModels\EditStaffViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-TheatreProject-20170121015721.mdf" />
-    <Content Include="App_Data\aspnet-TheatreProject-20170121015721_log.ldf">
-      <DependentUpon>aspnet-TheatreProject-20170121015721.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\CSS\bootstrap-theme.css" />
     <Content Include="Content\CSS\bootstrap-theme.min.css" />
     <Content Include="Content\CSS\bootstrap.css" />
@@ -296,7 +292,9 @@
     <Content Include="Views\Users\DetailsStaff.cshtml" />
     <Content Include="Views\Users\DetailsMember.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

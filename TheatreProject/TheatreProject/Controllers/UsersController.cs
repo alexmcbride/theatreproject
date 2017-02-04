@@ -18,7 +18,11 @@ namespace TheatreProject.Controllers
 
         public UsersController() : base() { }
 
-        public UsersController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(userManager, signInManager) { }
+        public UsersController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+            : base(userManager, signInManager)
+        {
+
+        }
 
         // GET: Users
         public ActionResult Index()
@@ -62,7 +66,7 @@ namespace TheatreProject.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Email,PhoneNumber,UserName,FirstName,LastName,Address,City,PostCode,Password,PasswordConfirm,BirthDate")] CreateStaffViewModel model)
+        public async Task<ActionResult> Create(CreateStaffViewModel model)
         {
             // Add new staff member to system.
             if (ModelState.IsValid)
@@ -118,11 +122,9 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Users/EditStaff/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditStaff(string id, [Bind(Include = "Email,PhoneNumber,UserName,FirstName,LastName,Address,City,PostCode,BirthDate")] EditStaffViewModel model)
+        public async Task<ActionResult> EditStaff(string id, EditStaffViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -163,15 +165,19 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Users/EditMember/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditMember(string id, [Bind(Include = "Email,UserName,IsSuspended")] EditMemberViewModel model)
+        public async Task<ActionResult> EditMember(string id, EditMemberViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Member member = (Member)await UserManager.FindByIdAsync(id);
+                Member member = (await UserManager.FindByIdAsync(id)) as Member;
+
+                if (member == null)
+                {
+                    return HttpNotFound();
+                }
+
                 UpdateModel(member);
 
                 IdentityResult result = await UserManager.UpdateAsync(member);
