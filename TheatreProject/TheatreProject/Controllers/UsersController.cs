@@ -158,6 +158,7 @@ namespace TheatreProject.Controllers
             {
                 Email = member.Email,
                 UserName = member.UserName,
+                IsSuspended = member.IsSuspended
             });
         }
 
@@ -166,7 +167,7 @@ namespace TheatreProject.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditMember(string id, [Bind(Include = "Email,UserName")] EditMemberViewModel model)
+        public async Task<ActionResult> EditMember(string id, [Bind(Include = "Email,UserName,IsSuspended")] EditMemberViewModel model)
         {
             if (ModelState.IsValid)
             {
