@@ -171,14 +171,13 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                Member member = (await UserManager.FindByIdAsync(id)) as Member;
+                Member member = (Member)await UserManager.FindByIdAsync(id);
+                UpdateModel(member);
 
                 if (member == null)
                 {
                     return HttpNotFound();
                 }
-
-                UpdateModel(member);
 
                 IdentityResult result = await UserManager.UpdateAsync(member);
                 if (result.Succeeded)
