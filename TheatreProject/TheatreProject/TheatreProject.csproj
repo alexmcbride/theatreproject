@@ -291,6 +291,7 @@
     <Content Include="Views\Users\EditMember.cshtml" />
     <Content Include="Views\Users\DetailsStaff.cshtml" />
     <Content Include="Views\Users\DetailsMember.cshtml" />
+    <Content Include="Views\Users\DeleteError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -81,7 +81,7 @@ namespace TheatreProject.Controllers
                     // Assign roles to this staff member.
                     await UserManager.AddToRolesAsync(staff.Id, "Staff", "Member");
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("index");
                 }
                 else
                 {
@@ -134,7 +134,7 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(staff);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("index");
                 }
                 AddErrors(result);
             }
@@ -182,7 +182,7 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(member);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("index");
                 }
                 AddErrors(result);
             }
@@ -197,6 +197,12 @@ namespace TheatreProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            if (id == User.Identity.GetUserId())
+            {
+                return View("DeleteError");
+            }
+
             User user = db.Users.Find(id);
             if (user == null)
             {
@@ -208,12 +214,11 @@ namespace TheatreProject.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            User user = await UserManager.FindByIdAsync(id);
+            await UserManager.DeleteAsync(user);
+            return RedirectToAction("index");
         }
 
         protected override void Dispose(bool disposing)
