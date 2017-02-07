@@ -1,21 +1,20 @@
 ﻿@model TheatreProject.Models.Member
 
 @{
-    ViewBag.Title = "DetailsMember";
+    ViewBag.Title = "Member Details";
 }
 
-<h2>DetailsMember</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
-    <h4>Member</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Joined)
+            Username
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Joined)
+            @Html.DisplayFor(model => model.UserName)
         </dd>
 
         <dt>
@@ -27,19 +26,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserName)
+            @Html.DisplayNameFor(model => model.Joined)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.UserName)
+            @Html.DisplayFor(model => model.Joined)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsSuspended)
+            Is Suspended
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.IsSuspended)
+            @(Model.IsSuspended ? "Yes" : "No")
         </dd>
 
     </dl>
