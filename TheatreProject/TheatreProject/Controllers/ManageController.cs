@@ -101,19 +101,16 @@ namespace TheatreProject.Controllers
                 User user = db.Users.SingleOrDefault(u => u.Email == model.Email);
                 if (user == null)
                 {
-                    string id = User.Identity.GetUserId();
-                    user = await UserManager.FindByIdAsync(id);
+                    user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     user.Email = model.Email;
-                    IdentityResult result = await UserManager.UpdateAsync(user);
 
+                    IdentityResult result = await UserManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("index", new { Message = ManageMessageId.EmailChangedSuccess });
                     }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+
+                    AddErrors(result);
                 }
                 else
                 {

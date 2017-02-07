@@ -15,14 +15,6 @@ namespace TheatreProject.Models
 
         public virtual ICollection<Comment> Comments { get; set; }
 
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
-        {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
-            return userIdentity;
-        }
-
         public string MemberType {
             get
             {
@@ -30,16 +22,28 @@ namespace TheatreProject.Models
                 {
                     return "Member";
                 }
-                if (this is Staff)
+
+                Staff staff = this as Staff;
+                if (staff != null)
                 {
-                    if (((Staff)this).IsAdmin)
+                    if (staff.IsAdmin)
                     {
                         return "Admin";
                     }
+
                     return "Staff";
                 }
+
                 return "None";
             }
+        }
+
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
+        {
+            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
+            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            // Add custom user claims here
+            return userIdentity;
         }
     }
 }

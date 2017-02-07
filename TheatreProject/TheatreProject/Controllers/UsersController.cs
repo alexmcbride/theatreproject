@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Linq;
 using System.Net;
@@ -153,7 +152,8 @@ namespace TheatreProject.Controllers
                 AddErrors(result);
             }
 
-            model.ShowAdminFlag = User.Identity.GetUserId() != id;
+            // Don't show is admin option on your own account
+            model.ShowAdminFlag = (User.Identity.GetUserId() != id);
 
             return View(model);
         }
