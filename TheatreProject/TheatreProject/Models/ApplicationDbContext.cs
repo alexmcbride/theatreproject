@@ -35,6 +35,11 @@ namespace TheatreProject.Models
             return (Member)Users.Find(id);
         }
 
+        public bool EmailAddressExists(string emailAddress)
+        {
+            return Users.SingleOrDefault(u => u.Email == emailAddress) != null;
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

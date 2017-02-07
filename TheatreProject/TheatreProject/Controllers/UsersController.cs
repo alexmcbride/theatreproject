@@ -131,15 +131,8 @@ namespace TheatreProject.Controllers
             {
                 Staff staff = (Staff)await UserManager.FindByIdAsync(id);
 
-                // Add or remove from admin role depending on IsAdmin flag.
-                if (model.IsAdmin && !staff.IsAdmin)
-                {
-                    UserManager.AddToRole(id, "admin");
-                }
-                else if (staff.IsAdmin && !model.IsAdmin)
-                {
-                    UserManager.RemoveFromRole(id, "admin");
-                }
+                // Remember so it's not lost when updating.
+                bool wasAdmin = staff.IsAdmin;
 
                 // Update staff from the view model.
                 UpdateModel(staff);
@@ -147,6 +140,16 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(staff);
                 if (result.Succeeded)
                 {
+                    // Add or remove from admin role depending on IsAdmin flag.
+                    if (model.IsAdmin && !wasAdmin)
+                    {
+                        UserManager.AddToRole(id, "admin");
+                    }
+                    else if (wasAdmin && !model.IsAdmin)
+                    {
+                        UserManager.RemoveFromRole(id, "admin");
+                    }
+
                     return RedirectToAction("index");
                 }
                 AddErrors(result);
@@ -190,11 +193,6 @@ namespace TheatreProject.Controllers
             {
                 Member member = (Member)await UserManager.FindByIdAsync(id);
                 UpdateModel(member);
-
-                if (member == null)
-                {
-                    return HttpNotFound();
-                }
 
                 IdentityResult result = await UserManager.UpdateAsync(member);
                 if (result.Succeeded)

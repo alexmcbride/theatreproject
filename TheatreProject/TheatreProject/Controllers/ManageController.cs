@@ -92,16 +92,19 @@ namespace TheatreProject.Controllers
         }
 
         //
-        // POST: /Manage/changeEmail
+        // POST: /Manage/ChangeEmail
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeEmail(ChangeEmailViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = db.Users.SingleOrDefault(u => u.Email == model.Email);
-                if (user == null)
+                if (db.EmailAddressExists(model.Email))
                 {
-                    user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    ModelState.AddModelError("", "The email address already exists");
+                }
+                else
+                {
+                    User user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     user.Email = model.Email;
 
                     IdentityResult result = await UserManager.UpdateAsync(user);
@@ -111,10 +114,6 @@ namespace TheatreProject.Controllers
                     }
 
                     AddErrors(result);
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The email address already exists");
                 }
             }
 
