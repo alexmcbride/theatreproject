@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,10 +18,7 @@ namespace TheatreProject.Controllers
         public UsersController() : base() { }
 
         public UsersController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-            : base(userManager, signInManager)
-        {
-
-        }
+            : base(userManager, signInManager) { }
 
         // GET: Users
         public ActionResult Index()

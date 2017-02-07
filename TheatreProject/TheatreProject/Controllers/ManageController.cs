@@ -63,6 +63,7 @@ namespace TheatreProject.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.EmailChangedSuccess ? "Your email address has been changed."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -77,6 +78,8 @@ namespace TheatreProject.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Manage/ChangeEmail
         public async Task<ActionResult> ChangeEmail()
         {
             string id = User.Identity.GetUserId();
@@ -88,6 +91,8 @@ namespace TheatreProject.Controllers
             });
         }
 
+        //
+        // POST: /Manage/changeEmail
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeEmail(ChangeEmailViewModel model)
         {
@@ -103,7 +108,7 @@ namespace TheatreProject.Controllers
 
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("changeemailconfirm");
+                        return RedirectToAction("index", new { Message = ManageMessageId.EmailChangedSuccess });
                     }
                     else
                     {
@@ -112,16 +117,11 @@ namespace TheatreProject.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The email already exists");
+                    ModelState.AddModelError("", "The email address already exists");
                 }
             }
 
             return View(model);
-        }
-
-        public ActionResult ChangeEmailConfirm()
-        {
-            return View();
         }
 
         //
@@ -430,6 +430,7 @@ namespace TheatreProject.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
+            EmailChangedSuccess,
             Error
         }
 

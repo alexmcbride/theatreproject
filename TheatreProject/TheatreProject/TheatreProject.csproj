@@ -294,7 +294,6 @@
     <Content Include="Views\Users\DetailsMember.cshtml" />
     <Content Include="Views\Users\DeleteError.cshtml" />
     <Content Include="Views\Manage\ChangeEmail.cshtml" />
-    <Content Include="Views\Manage\ChangeEmailConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
