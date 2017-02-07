@@ -6,5 +6,8 @@ namespace TheatreProject.ViewModels
     {
         [Required, DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [Required, DataType(DataType.EmailAddress), Display(Name = "Confirm Email"), Compare("Email", ErrorMessage = "The email and confirmation email do not match.")]
+        public string EmailConfirm { get; set; }
     }
 }
