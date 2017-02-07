@@ -62,6 +62,13 @@ namespace TheatreProject.Models
                     throw new ApplicationException("Could not create user: " + result.Errors.FirstOrDefault());
                 }
             }
+
+            // Add some default categories.
+            context.Categories.Add(new Category { Name = "News" });
+            context.Categories.Add(new Category { Name = "Announcements" });
+            context.Categories.Add(new Category { Name = "Movie Reviews" });
+            context.Categories.Add(new Category { Name = "Theatre Reviews" });
+            context.SaveChanges();
         }
     }
 }
