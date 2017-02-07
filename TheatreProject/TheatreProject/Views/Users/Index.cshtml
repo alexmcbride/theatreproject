@@ -33,41 +33,35 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @item.Joined.ToShortDateString()
-        </td>
-        <td>
-            @if (item is Staff)
-            {
-                @:Staff
-            }
-            else if (item is Member)
-            {
-                @:Member
-            }
-        </td>
-        <td>
-            @if (item is Staff)
-            {
-                @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
-            }
-            else if (item is Member)
-            {
-                @Html.ActionLink("Edit", "editmember", new { id = item.Id })
-            } |
-            @Html.ActionLink("Details", "details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @item.Joined.ToShortDateString()
+            </td>
+            <td>
+                @item.MemberType
+            </td>
+            <td>
+                @if (item is Staff)
+                {
+                    @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
+                }
+                else if (item is Member)
+                {
+                    @Html.ActionLink("Edit", "editmember", new { id = item.Id })
+                } |
+                @Html.ActionLink("Details", "details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
 

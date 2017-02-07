@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using TheatreProject.Models;
 
 namespace TheatreProject.ViewModels
 {
@@ -31,5 +32,11 @@ namespace TheatreProject.ViewModels
 
         [Required, DataType(DataType.Date), Display(Name = "Date of Birth")]
         public DateTime BirthDate { get; set; }
+
+        [Display(Name = "Is Admin")]
+        public bool IsAdmin { get; set; }
+
+        public bool ShowAdminFlag { get; set; }
+
     }
 }

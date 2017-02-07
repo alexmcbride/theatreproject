@@ -12,7 +12,7 @@ namespace TheatreProject.Models
         {
             base.Seed(context);
 
-            // Add roles.
+            // Add roles if they don't exist.
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             if (!roleManager.RoleExists("Admin"))
             {
@@ -27,19 +27,20 @@ namespace TheatreProject.Models
                 roleManager.Create(new IdentityRole("Member"));
             }
 
-            // Create admin.
-            var staff = new Staff
-            {
-                UserName = "Admin",
-                Email = "admin@admin.com",
-                Joined = DateTime.Now,
-                BirthDate = new DateTime(1970, 1, 1)
-            };
-
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
             // Create admin if does not exist yet.
             if (userManager.FindByName("Admin") == null)
             {
+                // Create admin.
+                var staff = new Staff
+                {
+                    UserName = "Admin",
+                    Email = "admin@admin.com",
+                    Joined = DateTime.Now,
+                    BirthDate = new DateTime(1970, 1, 1),
+                    IsAdmin = true
+                };
+
                 // Super liberal password validation for password "admin"
                 userManager.PasswordValidator = new PasswordValidator
                 {

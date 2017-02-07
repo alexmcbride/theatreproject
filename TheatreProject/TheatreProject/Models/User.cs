@@ -22,5 +22,24 @@ namespace TheatreProject.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public string MemberType {
+            get
+            {
+                if (this is Member)
+                {
+                    return "Member";
+                }
+                if (this is Staff)
+                {
+                    if (((Staff)this).IsAdmin)
+                    {
+                        return "Admin";
+                    }
+                    return "Staff";
+                }
+                return "None";
+            }
+        }
     }
 }

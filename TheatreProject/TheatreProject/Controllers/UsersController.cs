@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Linq;
 using System.Net;
@@ -56,7 +57,10 @@ namespace TheatreProject.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateStaffViewModel
+            {
+                ShowAdminFlag = true
+            });
         }
 
         // POST: Users/Create
@@ -114,6 +118,8 @@ namespace TheatreProject.Controllers
                 PhoneNumber = staff.PhoneNumber,
                 PostCode = staff.PostCode,
                 UserName = staff.UserName,
+                IsAdmin = staff.IsAdmin,
+                ShowAdminFlag = User.Identity.GetUserId() != id,
             });
         }
 
@@ -125,6 +131,18 @@ namespace TheatreProject.Controllers
             if (ModelState.IsValid)
             {
                 Staff staff = (Staff)await UserManager.FindByIdAsync(id);
+
+                // Add or remove from admin role depending on IsAdmin flag.
+                if (model.IsAdmin && !staff.IsAdmin)
+                {
+                    UserManager.AddToRole(id, "admin");
+                }
+                else if (staff.IsAdmin && !model.IsAdmin)
+                {
+                    UserManager.RemoveFromRole(id, "admin");
+                }
+
+                // Update staff from the view model.
                 UpdateModel(staff);
 
                 IdentityResult result = await UserManager.UpdateAsync(staff);
@@ -134,6 +152,9 @@ namespace TheatreProject.Controllers
                 }
                 AddErrors(result);
             }
+
+            model.ShowAdminFlag = User.Identity.GetUserId() != id;
+
             return View(model);
         }
 

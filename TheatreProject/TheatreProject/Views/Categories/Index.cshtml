@@ -18,6 +18,8 @@
 
     <p>Manage the list of blog categories that are available.</p>
 
+    @if (Model.Any())
+    {
     <table class="table">
         @*<tr>
             <th>
@@ -39,6 +41,11 @@
             </tr>
         }
     </table>
+    }
+    else
+    {
+        <p><em>There are no categories to display</em></p>
+    }
 
     <p>
         @Html.ActionLink("Create New Category", "create")
