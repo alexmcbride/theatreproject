@@ -16,16 +16,15 @@
 <div class="row">
     <h2>Manage Categories</h2>
 
-    <p>
-        @Html.ActionLink("Create New Category", "create")
-    </p>
+    <p>Manage the list of blog categories that are available.</p>
+
     <table class="table">
-        <tr>
+        @*<tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th></th>
-        </tr>
+        </tr>*@
 
         @foreach (var item in Model)
         {
@@ -40,4 +39,8 @@
             </tr>
         }
     </table>
+
+    <p>
+        @Html.ActionLink("Create New Category", "create")
+    </p>
 </div>

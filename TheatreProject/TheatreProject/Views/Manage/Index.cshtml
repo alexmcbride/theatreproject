@@ -3,6 +3,15 @@
     ViewBag.Title = "Manage";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; Manage Profile
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>@ViewBag.Title.</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>

@@ -4,14 +4,23 @@
     ViewBag.Title = "Delete";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Delete
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>Delete</h2>
 
 <p>Are you sure you want to this user?</p>
 <div>
     <ul>
-        <li><strong>@Model.UserName</strong></li>
-        <li><strong>@Model.Email</strong></li>
-        <li><strong>@Model.Joined</strong></li>
+        <li><strong>Username: @Model.UserName</strong></li>
+        <li><strong>Email: @Model.Email</strong></li>
+        <li><strong>Joined: @Model.Joined</strong></li>
     </ul>
 
     <br>
@@ -21,7 +30,7 @@
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("No, thanks!", "Index")
         </div>
     }
 </div>

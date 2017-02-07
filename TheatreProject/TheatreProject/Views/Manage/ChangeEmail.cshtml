@@ -4,6 +4,15 @@
     ViewBag.Title = "Change Email";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Profile", "index", "manage") &raquo; Change Email
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>@ViewBag.Title</h2>
 
 
@@ -29,10 +38,6 @@
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to profile", "index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

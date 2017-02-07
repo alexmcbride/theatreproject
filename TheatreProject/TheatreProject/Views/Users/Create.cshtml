@@ -4,6 +4,15 @@
     ViewBag.Title = "Create Staff Member";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Create Staff Member
+        </div>
+        <hr>
+    </div>
+}
+
 <div class="row">
     <h2>@ViewBag.Title</h2>
 
@@ -112,8 +121,4 @@
             </div>
         </div>
     }
-
-    <div>
-        @Html.ActionLink("Back to List", "index")
-    </div>
 </div>

@@ -3,10 +3,15 @@
     ViewBag.Title = "Delete Error";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Delete
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>@ViewBag.Title</h2>
 
 <p>Sorry - you cannot delete your own user account</p>
-
-<div>
-    @Html.ActionLink("Back to List", "index")
-</div>

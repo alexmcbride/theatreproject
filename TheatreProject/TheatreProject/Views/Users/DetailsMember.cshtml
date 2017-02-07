@@ -4,6 +4,15 @@
     ViewBag.Title = "Member Details";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Member Details
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>@ViewBag.Title</h2>
 
 <div>
@@ -44,6 +53,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "editmember", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "index")
+    @Html.ActionLink("Edit", "editmember", new { id = Model.Id })
 </p>

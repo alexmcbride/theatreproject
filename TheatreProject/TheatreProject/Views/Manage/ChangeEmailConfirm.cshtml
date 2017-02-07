@@ -3,11 +3,16 @@
     ViewBag.Title = "Email Changed";
 }
 
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Profile", "index", "manage") &raquo; Change Email
+        </div>
+        <hr>
+    </div>
+}
+
 <h2>@ViewBag.Title</h2>
 
 <p>Your email address has been changed.</p>
-
-<div>
-    @Html.ActionLink("Back to profile", "index")
-</div>
 
