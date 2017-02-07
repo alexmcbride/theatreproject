@@ -14,6 +14,7 @@ namespace TheatreProject.Controllers
     [Authorize]
     public class ManageController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -33,9 +34,9 @@ namespace TheatreProject.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -74,6 +75,53 @@ namespace TheatreProject.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
+        }
+
+        public async Task<ActionResult> ChangeEmail()
+        {
+            string id = User.Identity.GetUserId();
+            User user = await UserManager.FindByIdAsync(id);
+
+            return View(new ChangeEmailViewModel
+            {
+                Email = user.Email,
+            });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeEmail(ChangeEmailViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = db.Users.SingleOrDefault(u => u.Email == model.Email);
+                if (user == null)
+                {
+                    string id = User.Identity.GetUserId();
+                    user = await UserManager.FindByIdAsync(id);
+                    user.Email = model.Email;
+                    IdentityResult result = await UserManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("changeemailconfirm");
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "The email already exists");
+                }
+            }
+
+            return View(model);
+        }
+
+        public ActionResult ChangeEmailConfirm()
+        {
+            return View();
         }
 
         //
@@ -334,7 +382,7 @@ namespace TheatreProject.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -385,6 +433,6 @@ namespace TheatreProject.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

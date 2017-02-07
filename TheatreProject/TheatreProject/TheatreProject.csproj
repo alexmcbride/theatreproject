@@ -181,6 +181,7 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DatabaseInitializer.cs" />
+    <Compile Include="ViewModels\ChangeEmailViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Post.cs" />
@@ -292,6 +293,8 @@
     <Content Include="Views\Users\DetailsStaff.cshtml" />
     <Content Include="Views\Users\DetailsMember.cshtml" />
     <Content Include="Views\Users\DeleteError.cshtml" />
+    <Content Include="Views\Manage\ChangeEmail.cshtml" />
+    <Content Include="Views\Manage\ChangeEmailConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
