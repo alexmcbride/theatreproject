@@ -10,7 +10,7 @@ namespace TheatreProject.Models
         public string Address { get; set; }
         public string City { get; set; }
         public string PostCode { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public bool IsAdmin { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }

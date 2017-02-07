@@ -109,7 +109,7 @@ namespace TheatreProject.Controllers
             return View(new EditStaffViewModel
             {
                 Address = staff.Address,
-                BirthDate = staff.BirthDate,
+                BirthDate = staff.BirthDate ?? new DateTime(1900, 1, 1),
                 City = staff.City,
                 Email = staff.Email,
                 FirstName = staff.FirstName,

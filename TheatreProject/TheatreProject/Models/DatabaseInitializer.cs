@@ -31,16 +31,6 @@ namespace TheatreProject.Models
             // Create admin if does not exist yet.
             if (userManager.FindByName("Admin") == null)
             {
-                // Create admin.
-                var staff = new Staff
-                {
-                    UserName = "Admin",
-                    Email = "admin@admin.com",
-                    Joined = DateTime.Now,
-                    BirthDate = new DateTime(1970, 1, 1),
-                    IsAdmin = true
-                };
-
                 // Super liberal password validation for password "admin"
                 userManager.PasswordValidator = new PasswordValidator
                 {
@@ -51,16 +41,38 @@ namespace TheatreProject.Models
                     RequireUppercase = false,
                 };
 
-                var result = userManager.Create(staff, "admin");
-                if (result.Succeeded)
+                // Create admin.
+                var admin = new Staff
                 {
-                    // Give Admin correct roles.
-                    userManager.AddToRoles(staff.Id, "Member", "Staff", "Admin");
-                }
-                else
+                    UserName = "Admin",
+                    Email = "admin@admin.com",
+                    Joined = DateTime.Now,
+                    IsAdmin = true
+                };
+                userManager.Create(admin, "admin");
+                userManager.AddToRoles(admin.Id, "Member", "Staff", "Admin");
+
+                // Create staff.
+                var staff = new Staff
                 {
-                    throw new ApplicationException("Could not create user: " + result.Errors.FirstOrDefault());
-                }
+                    UserName = "Staff",
+                    Email = "staff@staff.com",
+                    Joined = DateTime.Now,
+                    IsAdmin = false
+                };
+                userManager.Create(staff, "staff");
+                userManager.AddToRoles(staff.Id, "Member", "Staff");
+
+                // Create member.
+                var member = new Member
+                {
+                    UserName = "Member",
+                    Email = "member@member.com",
+                    Joined = DateTime.Now
+                };
+
+                userManager.Create(member, "member");
+                userManager.AddToRoles(member.Id, "Member");
             }
 
             // Add some default categories.

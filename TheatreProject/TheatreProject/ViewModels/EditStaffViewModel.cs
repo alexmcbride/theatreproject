@@ -30,7 +30,9 @@ namespace TheatreProject.ViewModels
         [Required, DataType(DataType.PostalCode), Display(Name = "Post Code")]
         public string PostCode { get; set; }
 
-        [Required, DataType(DataType.Date), Display(Name = "Date of Birth")]
+        [Required, DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime BirthDate { get; set; }
 
         [Display(Name = "Is Admin")]
