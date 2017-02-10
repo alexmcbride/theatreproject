@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using TheatreProject.Models;
 
@@ -18,6 +16,7 @@ namespace TheatreProject.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts
+        [AllowAnonymous]
         public ActionResult Index(int? id)
         {
             if (id == null)
@@ -47,6 +46,7 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Posts/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)
