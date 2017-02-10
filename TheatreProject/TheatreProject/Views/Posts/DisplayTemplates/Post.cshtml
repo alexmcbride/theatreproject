@@ -1,0 +1,7 @@
+﻿@model TheatreProject.Models.Post
+
+<article>
+    <h2>@Html.ActionLink(Model.Title, "details", new { id = Model.PostId })</h2>
+    <p>@Model.Content</p>
+    <p class="text-muted small">Posted by @Model.Staff.UserName on @Model.Published</p>
+</article>

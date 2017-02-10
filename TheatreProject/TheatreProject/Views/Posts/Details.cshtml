@@ -13,7 +13,5 @@
 <div class="row">
     <hr />
 
-    <h2>@Html.ActionLink(Model.Title, "details", new { Model.PostId })</h2>
-    <p>@Model.Content</p>
-    <p class="post-meta text-muted small">Posted by @Model.Staff.UserName on @Model.Published</p>
+    @Html.DisplayForModel()
 </div>

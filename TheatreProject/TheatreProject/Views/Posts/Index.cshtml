@@ -13,17 +13,10 @@
 
     @if (Model.Any())
     {
-        foreach (var post in Model)
-        {
-            <article>
-                <h2>@Html.ActionLink(post.Title, "details", new { id=post.PostId })</h2>
-                <p>@post.Content</p>
-                <p class="post-meta text-muted small">Posted by @post.Staff.UserName on @post.Published</p>
-            </article>
-        }
+        @Html.DisplayForModel()
     }
     else
     {
-        <p><em>Sorry - there are no posts in the @ViewBag.Category.ToLower() category.</em></p>
+        <p><em>There are no posts in the @ViewBag.Category.ToLower() category.</em></p>
     }
 </div>
