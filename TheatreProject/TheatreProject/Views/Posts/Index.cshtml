@@ -1,0 +1,30 @@
+﻿@model TheatreProject.Models.Category
+
+@{
+    ViewBag.Title = "Category: " + Model.Name;
+}
+
+@section breadcrumb {
+    <div class="row">
+        <div class="small text-muted">
+            @Html.ActionLink("Home", "index", "home") &raquo; @Model.Name
+        </div>
+        <hr>
+    </div>
+}
+
+@if (Model.Posts.Any())
+{
+    foreach (var post in Model.Posts)
+    {
+        <article>
+            <h2>@post.Title</h2>
+            <p>@post.Content</p>
+            <p class="post-meta">Posted by @post.Staff.UserName on @post.Published</p>
+        </article>
+    }
+}
+else
+{
+    <p><em>Sorry, there are no posts in '@Model.Name'.</em></p>
+}

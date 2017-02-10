@@ -10,15 +10,21 @@ namespace TheatreProject.Models
         [Key]
         public int PostId { get; set; }
 
-        [ForeignKey("Category")]
+        [ForeignKey("Category"), Display(Name = "Category")]
         public int CategoryId { get; set; }
 
-        [ForeignKey("Staff")]
+        [ForeignKey("Staff"), Display(Name = "Staff")]
         public string StaffId { get; set; }
 
+        [Required]
         public string Title { get; set; }
+
+        [Required, DataType(DataType.DateTime)]
         public DateTime Published { get; set; }
+
         public bool IsApproved { get; set; }
+
+        [Required, DataType(DataType.MultilineText)]
         public string Content { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }

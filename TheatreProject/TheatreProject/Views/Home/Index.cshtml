@@ -38,7 +38,7 @@
             <div class="list-group">
                 @foreach (var category in Model)
                 {
-                    @Html.ActionLink(category.Name, "category", new { id = category.CategoryId }, new { @class = "list-group-item list-group-item-action" })
+                    @Html.ActionLink(category.Name, "index", "posts", new { id = category.CategoryId }, new { @class = "list-group-item list-group-item-action" })
                 }
             </div>
         }
