@@ -25,20 +25,25 @@ namespace TheatreProject.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var category = db.Categories
-                .Where(c => c.CategoryId == id)
-                .Include(c => c.Posts)
-                .SingleOrDefault();
-
+            // Get category for post.
+            var category = db.Categories.SingleOrDefault(c => c.CategoryId == id);
             if (category == null)
             {
                 return HttpNotFound();
             }
 
-            return View(category);
+            // Need this for the breadcrumb in the view.
+            ViewBag.CategoryId = category.CategoryId;
+            ViewBag.Category = category.Name;
 
-            //var posts = db.Posts.Include(p => p.Category).Include(p => p.Staff);
-            //return View(posts.ToList());
+            // Get posts (incuding staff members)
+            var posts = db.Posts.
+                Where(p => p.CategoryId == id).
+                Include(p => p.Staff).
+                OrderByDescending(p => p.Published).
+                ToList();
+
+            return View(posts);
         }
 
         // GET: Posts/Details/5
