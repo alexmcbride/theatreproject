@@ -5,15 +5,12 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; Manage Categories
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; Manage Categories
 }
 
 <div class="row">
+    <hr />
+
     <h2>Manage Categories</h2>
 
     <p>Manage the list of blog categories that are available.</p>

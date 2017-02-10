@@ -5,12 +5,7 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Profile", "index", "manage") &raquo; Change Email
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Profile", "index", "manage") &raquo; Change Email
 }
 
 <h2>@ViewBag.Title</h2>

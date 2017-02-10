@@ -5,15 +5,12 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Delete
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Delete
 }
 
 <div class="row">
+    <hr />
+
     <h2>@ViewBag.Title</h2>
 
     <p>Are you sure you want to delete the category <strong>@Model.Name</strong>?</p>

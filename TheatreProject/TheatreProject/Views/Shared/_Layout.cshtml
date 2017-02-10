@@ -88,7 +88,9 @@
     </header>
 
     <div class="container">
-        @RenderSection("breadcrumb", required: false)
+        <div class="row small text-muted">
+            @RenderSection("breadcrumb", required: false)
+        </div>
 
         @RenderBody()
 

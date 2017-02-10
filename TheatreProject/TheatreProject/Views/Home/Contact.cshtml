@@ -3,15 +3,12 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="row small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; Contact
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; Contact
 }
 
 <div class="row">
+    <hr />
+
     <h2>@ViewBag.Title.</h2>
 
     <p>If you have any questions or thoughts, don't hesitate to contact us!</p>

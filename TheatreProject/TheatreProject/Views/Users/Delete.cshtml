@@ -13,24 +13,28 @@
     </div>
 }
 
-<h2>Delete</h2>
+<div class="row">
+    <hr />
+    <h2>Delete</h2>
 
-<p>Are you sure you want to this user?</p>
-<div>
-    <ul>
-        <li><strong>Username: @Model.UserName</strong></li>
-        <li><strong>Email: @Model.Email</strong></li>
-        <li><strong>Joined: @Model.Joined</strong></li>
-    </ul>
+    <p>Are you sure you want to this user?</p>
+    <div>
+        <ul>
+            <li><strong>Username: @Model.UserName</strong></li>
+            <li><strong>Email: @Model.Email</strong></li>
+            <li><strong>Joined: @Model.Joined</strong></li>
+        </ul>
 
-    <br>
+        <br>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("No, thanks!", "Index")
-        </div>
-    }
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("No, thanks!", "Index")
+            </div>
+        }
+    </div>
 </div>

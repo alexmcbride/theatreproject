@@ -6,65 +6,64 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; Manage Users
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; Manage Users
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="row">
+    <hr />
 
-<p>Manager members of the site and create new staff.</p>
+    <h2>@ViewBag.Title</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Joined)
-        </th>
-        <th>Type</th>
-        <th></th>
-    </tr>
+    <p>Manager members of the site and create new staff.</p>
 
-    @foreach (var item in Model)
-    {
+    <table class="table table-hover">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @item.Joined.ToShortDateString()
-            </td>
-            <td>
-                @item.MemberType
-            </td>
-            <td>
-                @if (item is Staff)
-                {
-                    @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
-                }
-                else if (item is Member)
-                {
-                    @Html.ActionLink("Edit", "editmember", new { id = item.Id })
-                } |
-                @Html.ActionLink("Details", "details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "delete", new { id = item.Id })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Joined)
+            </th>
+            <th>Type</th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @item.Joined.ToShortDateString()
+                </td>
+                <td>
+                    @item.MemberType
+                </td>
+                <td>
+                    @if (item is Staff)
+                {
+                        @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
+                    }
+                    else if (item is Member)
+                    {
+                        @Html.ActionLink("Edit", "editmember", new { id = item.Id })
+                    } |
+                    @Html.ActionLink("Details", "details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
 
-<p>
-    @Html.ActionLink("Create New Staff", "create")
-</p>
+    </table>
+
+    <p>
+        @Html.ActionLink("Create New Staff", "create")
+    </p>
+</div>

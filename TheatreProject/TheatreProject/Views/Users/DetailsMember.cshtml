@@ -13,45 +13,48 @@
     </div>
 }
 
-<h2>@ViewBag.Title</h2>
-
-<div>
+<div class="row">
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Username
-        </dt>
+    <h2>@ViewBag.Title</h2>
 
-        <dd>
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Username
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UserName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Joined)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Joined)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Joined)
+            </dt>
 
-        <dt>
-            Is Suspended
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Joined)
+            </dd>
 
-        <dd>
-            @(Model.IsSuspended ? "Yes" : "No")
-        </dd>
+            <dt>
+                Is Suspended
+            </dt>
 
-    </dl>
+            <dd>
+                @(Model.IsSuspended ? "Yes" : "No")
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "editmember", new { id = Model.Id })
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "editmember", new { id = Model.Id })
-</p>

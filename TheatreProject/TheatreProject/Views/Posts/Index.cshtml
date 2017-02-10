@@ -1,30 +1,29 @@
-﻿@model TheatreProject.Models.Category
+﻿@model IEnumerable<TheatreProject.Models.Post>
 
 @{
-    ViewBag.Title = "Category: " + Model.Name;
+    ViewBag.Title = @ViewBag.Category;
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; @Model.Name
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Category
 }
 
-@if (Model.Posts.Any())
-{
-    foreach (var post in Model.Posts)
+<div class="row">
+    <hr />
+
+    @if (Model.Any())
     {
-        <article>
-            <h2>@post.Title</h2>
-            <p>@post.Content</p>
-            <p class="post-meta">Posted by @post.Staff.UserName on @post.Published</p>
-        </article>
+        foreach (var post in Model)
+        {
+            <article>
+                <h2>@Html.ActionLink(post.Title, "details", new { id=post.PostId })</h2>
+                <p>@post.Content</p>
+                <p class="post-meta text-muted small">Posted by @post.Staff.UserName on @post.Published</p>
+            </article>
+        }
     }
-}
-else
-{
-    <p><em>Sorry, there are no posts in '@Model.Name'.</em></p>
-}
+    else
+    {
+        <p><em>Sorry - there are no posts in the @ViewBag.Category.ToLower() category.</em></p>
+    }
+</div>

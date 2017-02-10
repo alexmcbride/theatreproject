@@ -5,18 +5,13 @@
 }
 
 @section breadcrumb {
-    <div class="row">
-        <div class="small text-muted">
-            @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Edit
-        </div>
-        <hr>
-    </div>
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Edit
 }
 
 <div class="row">
-    <h2>Edit Category</h2>
+    <hr />
 
-    <br>
+    <h2>Edit Category</h2>
 
     @using (Html.BeginForm())
     {

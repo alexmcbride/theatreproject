@@ -4,63 +4,16 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo; 
+    @Html.ActionLink(Model.Category.Name, "index", new { id=Model.CategoryId }) &raquo; 
+    @Model.Title
+}
 
-<div>
-    <h4>Post</h4>
+<div class="row">
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.Name)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Staff.UserName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Staff.UserName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Published)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Published)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsApproved)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsApproved)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-
-    </dl>
+    <h2>@Html.ActionLink(Model.Title, "details", new { Model.PostId })</h2>
+    <p>@Model.Content</p>
+    <p class="post-meta text-muted small">Posted by @Model.Staff.UserName on @Model.Published</p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PostId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
