@@ -75,6 +75,7 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryId,Title,Content")] Post post)
         {
+            // Need to set user from UserManager otherwise it doesn't work.
             UserManager<User> manager = new UserManager<User>(new UserStore<User>(db));
             post.Staff = (Staff)manager.FindById(User.Identity.GetUserId());
             post.Published = DateTime.Now;
