@@ -8,12 +8,14 @@ namespace TheatreProject.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        // GET: /Home/Index
         [AllowAnonymous]
         public ActionResult Index()
         {
             return View(db.Categories.ToList());
         }
 
+        // GET: /Home/Contact
         [AllowAnonymous]
         public ActionResult Contact()
         {

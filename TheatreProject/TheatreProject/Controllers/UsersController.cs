@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -217,6 +215,7 @@ namespace TheatreProject.Controllers
             return RedirectToAction("index");
         }
 
+        // GET: Users/ChangeRole/5
         public async Task<ActionResult> ChangeRole(string id)
         {
             if (id == null)
@@ -246,6 +245,7 @@ namespace TheatreProject.Controllers
             });
         }
 
+        // POST: Users/ChangeRole/5
         [HttpPost, ValidateAntiForgeryToken, ActionName("ChangeRole")]
         public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
         {
@@ -274,6 +274,7 @@ namespace TheatreProject.Controllers
             return View(model);
         }
 
+        // GET: Users/ChangeRoleConfirmed/5
         public async Task<ActionResult> ChangeRoleConfirmed(string id)
         {
             if (id == null)

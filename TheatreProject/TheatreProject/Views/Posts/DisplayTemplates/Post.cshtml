@@ -7,7 +7,7 @@
     <p class="text-muted small">
         Posted 
         in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
-        by @Html.ActionLink(Model.Staff.UserName, "posts", "users", new { id = Model.StaffId }, null) 
+        by @Html.ActionLink(Model.Staff.UserName, "user", "posts", new { id = Model.StaffId }, null) 
         about @Html.RelativeDate(Model.Published)
     </p>
 </article>
