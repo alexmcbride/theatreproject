@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Data.Entity;
@@ -15,19 +16,6 @@ namespace TheatreProject.Controllers
     public class PostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        private ApplicationUserManager userManager;
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                if (userManager == null)
-                {
-                    userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                }
-                return userManager;
-            }
-        }
 
         // GET: Posts
         [AllowAnonymous]
@@ -86,7 +74,8 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] Post post)
         {
-            post.Staff = (Staff)await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
+            post.Staff = (Staff)await userManager.FindByIdAsync(User.Identity.GetUserId());
             post.Published = DateTime.Now;
             post.IsApproved = false;
 

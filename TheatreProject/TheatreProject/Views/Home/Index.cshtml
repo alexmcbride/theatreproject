@@ -23,22 +23,25 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Welcome All</h2>
+        <h2>Welcome All.</h2>
         <div>
             Welcome to the blog for the Local Theatre Company. Here you'll find update-to-date information about our theatre and activities.
             There are announcements, movie and performance reviews, as well as a whole host of other things to keep you occupied. Please choose a
             category from the list to the right to get started. Make sure to register and leave a comment to let us know what you think!
         </div>
     </div>
-    <div class="col-md-6 text-right">
-        <h2>Browse Categories</h2>
+    <div class="col-md-6">
+        <h2>Browse Categories.</h2>
 
         @if (Model.Any())
         {
             <div class="list-group">
                 @foreach (var category in Model)
                 {
-                    @Html.ActionLink(category.Name, "index", "posts", new { id = category.CategoryId }, new { @class = "list-group-item list-group-item-action" })
+                    <a href="@Url.Action("index", "posts", new { id = category.CategoryId })" class="list-group-item list-group-item-action justify-content-between">
+                        @category.Name
+                        <span class="badge badge-default badge-pin">@category.Posts.Count()</span>
+                    </a>
                 }
             </div>
         }
