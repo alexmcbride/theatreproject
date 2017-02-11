@@ -47,7 +47,6 @@ namespace TheatreProject.Models
                     UserName = "Admin",
                     Email = "admin@admin.com",
                     Joined = DateTime.Now,
-                    IsAdmin = true
                 };
                 userManager.Create(admin, "admin");
                 userManager.AddToRoles(admin.Id, "Admin");
@@ -58,7 +57,6 @@ namespace TheatreProject.Models
                     UserName = "Staff",
                     Email = "staff@staff.com",
                     Joined = DateTime.Now,
-                    IsAdmin = false
                 };
                 userManager.Create(staff, "staff");
                 userManager.AddToRoles(staff.Id, "Staff");

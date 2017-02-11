@@ -35,9 +35,6 @@ namespace TheatreProject.ViewModels
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime BirthDate { get; set; }
 
-        [Display(Name = "Is Admin")]
-        public bool IsAdmin { get; set; }
-
         public bool ShowAdminFlag { get; set; }
 
     }

@@ -119,7 +119,6 @@ namespace TheatreProject.Controllers
                 PhoneNumber = staff.PhoneNumber,
                 PostCode = staff.PostCode,
                 UserName = staff.UserName,
-                IsAdmin = staff.IsAdmin,
                 ShowAdminFlag = User.Identity.GetUserId() != id,
             });
         }
@@ -132,33 +131,15 @@ namespace TheatreProject.Controllers
             if (ModelState.IsValid)
             {
                 Staff staff = (Staff)await UserManager.FindByIdAsync(id);
-
-                // Remember so it's not lost when updating.
-                bool wasAdmin = staff.IsAdmin;
-
-                // Update staff from the view model.
                 UpdateModel(staff);
 
                 IdentityResult result = await UserManager.UpdateAsync(staff);
                 if (result.Succeeded)
                 {
-                    // Add or remove from admin role depending on IsAdmin flag.
-                    if (model.IsAdmin && !wasAdmin)
-                    {
-                        UserManager.AddToRole(id, "admin");
-                    }
-                    else if (wasAdmin && !model.IsAdmin)
-                    {
-                        UserManager.RemoveFromRole(id, "admin");
-                    }
-
                     return RedirectToAction("index");
                 }
                 AddErrors(result);
             }
-
-            // Don't show is admin option on your own account
-            model.ShowAdminFlag = (User.Identity.GetUserId() != id);
 
             return View(model);
         }
