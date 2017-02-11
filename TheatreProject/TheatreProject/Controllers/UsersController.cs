@@ -255,15 +255,26 @@ namespace TheatreProject.Controllers
                 await UserManager.RemoveFromRoleAsync(id, oldRole);
                 await UserManager.AddToRoleAsync(id, model.Role);
 
-                // Info for confirmation view.
-                ViewBag.OldRole = oldRole;
-                ViewBag.NewRole = model.Role;
-                ViewBag.UserName = user.UserName;
+                // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
+                db.Database.ExecuteSqlCommand(
+                    "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
+                    model.Role == "Admin" ? "Staff" : model.Role, 
+                    id);
 
-                return View("ChangeRoleConfirmed");                
+                // Redirect after change to make sure new user type is loaded.
+                return RedirectToAction("ChangeRoleConfirmed", new { id = id, oldRole = oldRole });
             }
 
             return View(model);
+        }
+
+        public ActionResult ChangeRoleConfirmed(string id)
+        {
+            User user = UserManager.FindById(id);
+            ViewBag.OldRole = Request.Params["oldRole"];
+            ViewBag.NewRole = user.CurrentRole;
+            ViewBag.UserName = user.UserName;
+            return View();
         }
 
         protected override void Dispose(bool disposing)
