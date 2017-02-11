@@ -268,9 +268,20 @@ namespace TheatreProject.Controllers
             return View(model);
         }
 
-        public ActionResult ChangeRoleConfirmed(string id)
+        public async Task<ActionResult> ChangeRoleConfirmed(string id)
         {
-            User user = UserManager.FindById(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            User user = await UserManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
             ViewBag.OldRole = Request.Params["oldRole"];
             ViewBag.NewRole = user.CurrentRole;
             ViewBag.UserName = user.UserName;
