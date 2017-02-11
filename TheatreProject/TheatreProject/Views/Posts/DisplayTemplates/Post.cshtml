@@ -4,5 +4,10 @@
 <article>
     <h2>@Html.ActionLink(Model.Title, "details", new { id = Model.PostId })</h2>
     <p>@Model.Content</p>
-    <p class="text-muted small">Posted by @Html.ActionLink(Model.Staff.UserName, "posts", "users", new { id = Model.StaffId }, null) about @Html.RelativeDate(Model.Published)</p>
+    <p class="text-muted small">
+        Posted 
+        in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
+        by @Html.ActionLink(Model.Staff.UserName, "posts", "users", new { id = Model.StaffId }, null) 
+        about @Html.RelativeDate(Model.Published)
+    </p>
 </article>

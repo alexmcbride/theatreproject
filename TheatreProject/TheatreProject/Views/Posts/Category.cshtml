@@ -1,0 +1,22 @@
+﻿@model IEnumerable<TheatreProject.Models.Post>
+
+@{
+    ViewBag.Title = @ViewBag.Category;
+}
+
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Title
+}
+
+<div class="row">
+    <hr />
+
+    @if (Model.Any())
+    {
+        @Html.DisplayForModel()
+    }
+    else
+    {
+        <p><em>There are no posts in the @ViewBag.Category.ToLower() category.</em></p>
+    }
+</div>

@@ -6,7 +6,7 @@
 
 @section breadcrumb {
     @Html.ActionLink("Home", "index", "home") &raquo; 
-    @Html.ActionLink(Model.Category.Name, "index", new { id=Model.CategoryId }) &raquo; 
+    @Html.ActionLink(Model.Category.Name, "category", new { id=Model.CategoryId }) &raquo; 
     @Model.Title
 }
 

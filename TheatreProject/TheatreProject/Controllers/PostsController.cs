@@ -17,9 +17,20 @@ namespace TheatreProject.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        [AllowAnonymous]
+        public ActionResult Index()
+        {
+            var posts = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.Published);
+
+            return View(posts.ToList());
+        }
+
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index(int? id)
+        public ActionResult Category(int? id)
         {
             if (id == null)
             {
@@ -39,6 +50,7 @@ namespace TheatreProject.Controllers
             var posts = db.Posts
                 .Where(p => p.CategoryId == id)
                 .Include(p => p.Staff)
+                .Include(p => p.Category)
                 .OrderByDescending(p => p.Published);
 
             return View(posts.ToList());
