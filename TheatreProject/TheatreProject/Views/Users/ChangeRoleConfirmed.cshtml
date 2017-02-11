@@ -13,5 +13,10 @@
 
     <h2>Change Role</h2>
 
-    <p>The user <strong>@ViewBag.UserName</strong>'s role has been changed from <strong>@ViewBag.OldRole</strong> to <strong>@ViewBag.NewRole</strong>.</p>
+    @if (ViewBag.WasChanged) {
+        <p>The user <strong>@ViewBag.UserName</strong>'s role has been changed from <strong>@ViewBag.OldRole</strong> to <strong>@ViewBag.NewRole</strong>.</p>
+    }
+    else {
+        <p>The user <strong>@ViewBag.UserName</strong> already has the role <strong>@ViewBag.NewRole</strong></p>
+    }
 </div>

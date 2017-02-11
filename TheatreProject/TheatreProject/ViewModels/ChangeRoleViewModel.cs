@@ -6,9 +6,11 @@ namespace TheatreProject.ViewModels
 {
     public class ChangeRoleViewModel
     {
+        public string UserName { get; set; }
+
         public ICollection<SelectListItem> Roles { get; set; }
 
-        [Display(Name = "Role")]
+        [Required, Display(Name = "Role")]
         public string Role { get; set; }
     }
 }

@@ -25,7 +25,9 @@ namespace TheatreProject.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            var users = db.Users.OrderBy(u => u.Joined);
+
+            return View(users.ToList());
         }
 
         // GET: Users/Details/5
@@ -239,6 +241,7 @@ namespace TheatreProject.Controllers
 
             return View(new ChangeRoleViewModel
             {
+                UserName = user.UserName,
                 Roles = items
             });
         }
@@ -252,14 +255,18 @@ namespace TheatreProject.Controllers
 
                 // Change user's role.
                 string oldRole = (await UserManager.GetRolesAsync(id)).Single();
-                await UserManager.RemoveFromRoleAsync(id, oldRole);
-                await UserManager.AddToRoleAsync(id, model.Role);
 
-                // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
-                db.Database.ExecuteSqlCommand(
-                    "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
-                    model.Role == "Admin" ? "Staff" : model.Role,
-                    id);
+                if (oldRole != model.UserName)
+                {
+                    await UserManager.RemoveFromRoleAsync(id, oldRole);
+                    await UserManager.AddToRoleAsync(id, model.Role);
+
+                    // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
+                    db.Database.ExecuteSqlCommand(
+                        "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
+                        model.Role == "Admin" ? "Staff" : model.Role,
+                        id);
+                }
 
                 // Redirect after change to make sure new user type is loaded.
                 return RedirectToAction("ChangeRoleConfirmed", new { id = id, oldRole = oldRole });
@@ -285,6 +292,7 @@ namespace TheatreProject.Controllers
             ViewBag.OldRole = Request.Params["oldRole"];
             ViewBag.NewRole = user.CurrentRole;
             ViewBag.UserName = user.UserName;
+            ViewBag.WasChanged = ViewBag.OldRole != ViewBag.NewRole;
             return View();
         }
 

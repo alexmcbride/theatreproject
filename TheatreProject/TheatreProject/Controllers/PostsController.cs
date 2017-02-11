@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using TheatreProject.Models;
 
@@ -14,6 +15,19 @@ namespace TheatreProject.Controllers
     public class PostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationUserManager userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                if (userManager == null)
+                {
+                    userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                }
+                return userManager;
+            }
+        }
 
         // GET: Posts
         [AllowAnonymous]
@@ -70,11 +84,9 @@ namespace TheatreProject.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,Title,Content")] Post post)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] Post post)
         {
-            // Need to set user from UserManager otherwise it doesn't work.
-            UserManager<User> manager = new UserManager<User>(new UserStore<User>(db));
-            post.Staff = (Staff)manager.FindById(User.Identity.GetUserId());
+            post.Staff = (Staff)await UserManager.FindByIdAsync(User.Identity.GetUserId());
             post.Published = DateTime.Now;
             post.IsApproved = false;
 

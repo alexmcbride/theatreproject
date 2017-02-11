@@ -2,11 +2,11 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity;
-using System.Linq;
+
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
