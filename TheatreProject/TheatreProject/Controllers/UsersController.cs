@@ -161,7 +161,7 @@ namespace TheatreProject.Controllers
             {
                 Email = member.Email,
                 UserName = member.UserName,
-                IsSuspended = member.IsSuspended
+                IsSuspended = member.IsSuspended ?? false
             });
         }
 
