@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace TheatreProject.Models
 {
@@ -11,30 +14,20 @@ namespace TheatreProject.Models
     // please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public abstract class User : IdentityUser
     {
+        private ApplicationUserManager userManager;
+
         public DateTime Joined { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 
-        public string MemberType {
-            get
-            {
-                if (this is Member)
+        public string CurrentRole
+        {
+            get {
+                if (userManager == null)
                 {
-                    return "Member";
+                    userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 }
-
-                Staff staff = this as Staff;
-                if (staff != null)
-                {
-                    if (staff.IsAdmin)
-                    {
-                        return "Admin";
-                    }
-
-                    return "Staff";
-                }
-
-                return "None";
+                return userManager.GetRoles(Id).Single();
             }
         }
 

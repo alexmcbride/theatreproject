@@ -44,11 +44,11 @@
                     @item.Joined.ToShortDateString()
                 </td>
                 <td>
-                    @item.MemberType
+                    @item.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = item.Id }))
                 </td>
                 <td>
                     @if (item is Staff)
-                {
+                    {
                         @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
                     }
                     else if (item is Member)

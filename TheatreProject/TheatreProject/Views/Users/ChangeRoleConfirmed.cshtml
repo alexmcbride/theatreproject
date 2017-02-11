@@ -1,0 +1,17 @@
+﻿@model TheatreProject.ViewModels.ChangeRoleViewModel
+
+@{
+    ViewBag.Title = "Change Role";
+}
+
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Change Role
+}
+
+<div class="row">
+    <hr>
+
+    <h2>Change Role</h2>
+
+    <p>The user <strong>@ViewBag.UserName</strong>'s role has been changed from <strong>@ViewBag.OldRole</strong> to <strong>@ViewBag.NewRole</strong>.</p>
+</div>

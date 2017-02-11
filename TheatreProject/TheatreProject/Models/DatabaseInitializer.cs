@@ -50,7 +50,7 @@ namespace TheatreProject.Models
                     IsAdmin = true
                 };
                 userManager.Create(admin, "admin");
-                userManager.AddToRoles(admin.Id, "Member", "Staff", "Admin");
+                userManager.AddToRoles(admin.Id, "Admin");
 
                 // Create staff.
                 var staff = new Staff
@@ -61,7 +61,7 @@ namespace TheatreProject.Models
                     IsAdmin = false
                 };
                 userManager.Create(staff, "staff");
-                userManager.AddToRoles(staff.Id, "Member", "Staff");
+                userManager.AddToRoles(staff.Id, "Staff");
 
                 // Create member.
                 var member = new Member

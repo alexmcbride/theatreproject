@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -234,6 +236,47 @@ namespace TheatreProject.Controllers
             User user = await UserManager.FindByIdAsync(id);
             await UserManager.DeleteAsync(user);
             return RedirectToAction("index");
+        }
+
+        public ActionResult ChangeRole(string id)
+        {
+            User user = UserManager.FindById(id);
+            string currentRole = UserManager.GetRoles(id).Single();
+
+            var items = db.Roles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Name,
+                Selected = r.Name == currentRole
+            }).ToList();
+
+            return View(new ChangeRoleViewModel
+            {
+                Roles = items
+            });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName("ChangeRole")]
+        public async Task<ActionResult> ChangeRoleConfirmed(string id, ChangeRoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await UserManager.FindByIdAsync(id);
+
+                // Change user's role.
+                string oldRole = (await UserManager.GetRolesAsync(id)).Single();
+                await UserManager.RemoveFromRoleAsync(id, oldRole);
+                await UserManager.AddToRoleAsync(id, model.NewRole);
+
+                // Info for confirmation view.
+                ViewBag.OldRole = oldRole;
+                ViewBag.NewRole = model.NewRole;
+                ViewBag.UserName = user.UserName;
+
+                return View("ChangeRoleConfirmed");                
+            }
+
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
