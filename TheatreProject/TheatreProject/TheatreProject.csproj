@@ -203,8 +203,8 @@
     <Content Include="Content\CSS\bootstrap.css" />
     <Content Include="Content\CSS\bootstrap.min.css" />
     <Content Include="Content\CSS\clean-blog.css" />
-    <Content Include="Content\CSS\font-awesome.css" />
-    <Content Include="Content\CSS\font-awesome.min.css" />
+    <Content Include="fonts\font-awesome.css" />
+    <Content Include="fonts\font-awesome.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\theatre-logo.png" />
     <Content Include="Content\Images\theatre-background.jpg" />
