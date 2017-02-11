@@ -8,6 +8,7 @@ namespace TheatreProject.ViewModels
     {
         public ICollection<SelectListItem> Roles { get; set; }
 
+        [Display(Name = "Role")]
         public string NewRole { get; set; }
     }
 }

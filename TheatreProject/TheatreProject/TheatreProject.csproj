@@ -303,6 +303,7 @@
     <Content Include="Views\Posts\DisplayTemplates\Post.cshtml" />
     <Content Include="Views\Users\ChangeRole.cshtml" />
     <Content Include="Views\Users\ChangeRoleConfirmed.cshtml" />
+    <Content Include="Views\Users\ChangeOwnRoleError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

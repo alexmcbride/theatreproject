@@ -240,6 +240,11 @@ namespace TheatreProject.Controllers
 
         public ActionResult ChangeRole(string id)
         {
+            if (id == User.Identity.GetUserId())
+            {
+                return View("ChangeOwnRoleError");
+            }
+
             User user = UserManager.FindById(id);
             string currentRole = UserManager.GetRoles(id).Single();
 

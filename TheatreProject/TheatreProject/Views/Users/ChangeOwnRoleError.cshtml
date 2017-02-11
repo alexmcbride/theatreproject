@@ -1,0 +1,19 @@
+﻿@model TheatreProject.ViewModels.ChangeRoleViewModel
+
+@{
+    ViewBag.Title = "Change Role";
+}
+
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Change Role
+}
+
+<div class="row">
+    <hr>
+
+    <h2>Change Role</h2>
+
+    <p>Error: you cannot change your own role.</p>
+
+    <p>@Html.ActionLink("Go Back", "index")</p>
+</div>
