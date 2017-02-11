@@ -64,7 +64,7 @@ namespace TheatreProject.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateStaffViewModel model)
+        public async Task<ActionResult> Create([Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate,Password,PasswordConfirm")] CreateStaffViewModel model)
         {
             // Add new staff member to system.
             if (ModelState.IsValid)
@@ -122,7 +122,7 @@ namespace TheatreProject.Controllers
         // POST: Users/EditStaff/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditStaff(string id, EditStaffViewModel model)
+        public async Task<ActionResult> EditStaff(string id, [Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate")]EditStaffViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -166,7 +166,7 @@ namespace TheatreProject.Controllers
         // POST: Users/EditMember/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditMember(string id, EditMemberViewModel model)
+        public async Task<ActionResult> EditMember(string id, [Bind(Include = "UserName,Email,IsSuspended")] EditMemberViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -244,7 +244,7 @@ namespace TheatreProject.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName("ChangeRole")]
-        public async Task<ActionResult> ChangeRoleConfirmed(string id, ChangeRoleViewModel model)
+        public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -258,7 +258,7 @@ namespace TheatreProject.Controllers
                 // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
                 db.Database.ExecuteSqlCommand(
                     "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
-                    model.Role == "Admin" ? "Staff" : model.Role, 
+                    model.Role == "Admin" ? "Staff" : model.Role,
                     id);
 
                 // Redirect after change to make sure new user type is loaded.
