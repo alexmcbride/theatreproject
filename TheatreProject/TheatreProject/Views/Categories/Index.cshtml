@@ -5,13 +5,13 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; Manage Categories
+    @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>Manage Categories</h2>
+    <h2>@ViewBag.Title.</h2>
 
     <p>Manage the list of blog categories that are available.</p>
 

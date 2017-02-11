@@ -5,17 +5,19 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; Create Post
+    @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>Create Post</h2>
+    <h2>@ViewBag.Title.</h2>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+
+        <h4>Create a new blog post.</h4>
 
         <div class="form-horizontal">
             <hr />

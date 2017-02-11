@@ -5,22 +5,24 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Delete
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>@ViewBag.Title</h2>
-
-    <p>Are you sure you want to delete the category <strong>@Model.Name</strong>?</p>
+    <h2>@ViewBag.Title.</h2>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
+        <h4>Delete a blog category.</h4>
+
+        <p>Are you sure you want to delete the category <strong>@Model.Name</strong>?</p>
+
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("No thanks", "index")
+            @Html.ActionLink("No, thanks!", "index")
         </div>
     }
 </div>

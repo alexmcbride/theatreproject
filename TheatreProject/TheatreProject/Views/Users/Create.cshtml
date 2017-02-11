@@ -1,17 +1,17 @@
 ﻿@model TheatreProject.ViewModels.CreateStaffViewModel
 
 @{
-    ViewBag.Title = "Create Staff Member";
+    ViewBag.Title = "Create Staff";
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Create Staff Member
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>@ViewBag.Title</h2>
+    <h2>@ViewBag.Title.</h2>
 
     <p>Enter details for this new employee.</p>
 

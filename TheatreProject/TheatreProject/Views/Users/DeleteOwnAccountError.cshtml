@@ -4,13 +4,13 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Delete
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>@ViewBag.Title</h2>
+    <h2>@ViewBag.Title.</h2>
 
     <p>You cannot delete your own user account</p>
 

@@ -1,21 +1,23 @@
 ﻿@model TheatreProject.Models.Category
 
 @{
-    ViewBag.Title = "Create New Category";
+    ViewBag.Title = "Create Category";
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; Create New
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
 
-    <h2>Create Category</h2>
+    <h2>@ViewBag.Title.</h2>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+
+        <h4>Create a new blog category.</h4>
 
         <div class="form-horizontal">
             <br>

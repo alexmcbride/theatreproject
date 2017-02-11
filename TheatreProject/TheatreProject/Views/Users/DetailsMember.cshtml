@@ -5,12 +5,12 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Member Details
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
-    <h2>@ViewBag.Title</h2>
+    <h2>@ViewBag.Title.</h2>
 
     <div>
         <hr />
@@ -44,7 +44,7 @@
             </dt>
 
             <dd>
-                @(Model.IsSuspended ? "Yes" : "No")
+                @(Model.IsSuspended ?? false ? "Yes" : "No")
             </dd>
 
         </dl>

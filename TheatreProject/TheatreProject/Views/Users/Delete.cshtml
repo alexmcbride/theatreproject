@@ -5,26 +5,36 @@
 }
 
 @section breadcrumb {
-    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; Delete
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Users", "index", "users") &raquo; @ViewBag.Title
 }
 
 <div class="row">
     <hr />
-    <h2>Delete</h2>
+    <h2>@ViewBag.Title.</h2>
 
-    <p>Are you sure you want to this user?</p>
     <div>
-        <ul>
-            <li><strong>Username: @Model.UserName</strong></li>
-            <li><strong>Email: @Model.Email</strong></li>
-            <li><strong>Joined: @Model.Joined</strong></li>
-        </ul>
-
-        <br>
-
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
+
+            <p>Are you sure you want delete this user?</p>
+
+            <table class="table">
+                <tr>
+                    <td>@Html.LabelFor(m => m.UserName)</td>
+                    <td>@Html.DisplayFor(m => m.UserName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Email)</td>
+                    <td>@Html.DisplayFor(m => m.Email)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Joined)</td>
+                    <td>@Html.DisplayFor(m => m.Joined)</td>
+                </tr>
+            </table>
+
+            <br>
 
             <div class="form-actions no-color">
                 <input type="submit" value="Delete" class="btn btn-default" /> |
