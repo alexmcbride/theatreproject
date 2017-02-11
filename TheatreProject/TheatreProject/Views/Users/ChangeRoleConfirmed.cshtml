@@ -1,4 +1,4 @@
-﻿@model TheatreProject.ViewModels.ChangeRoleViewModel
+﻿@model TheatreProject.ViewModels.ChangeRoleConfirmViewModel
 
 @{
     ViewBag.Title = "Change Role";
@@ -13,15 +13,16 @@
 
     <h2>Change Role</h2>
 
-    @if (ViewBag.WasChanged) {
-        <p>The user <strong>@ViewBag.UserName</strong>'s role has been changed from <strong>@ViewBag.OldRole</strong> to <strong>@ViewBag.NewRole</strong>.</p>
+    @if (Model.WasChanged) {
+        <p>The user <strong>@Model.UserName</strong>'s role has been changed from <strong>@Model.OldRole</strong> to <strong>@Model.NewRole</strong>.</p>
 
         <p>@Html.ActionLink("Continue", "index")</p>
     }
     else
     {
-        <p>The user <strong>@ViewBag.UserName</strong> already has the role <strong>@ViewBag.NewRole</strong></p>
+        <p>The user <strong>@Model.UserName</strong> already has the role <strong>@Model.NewRole</strong></p>
 
-        <p>@Html.ActionLink("Go back", "changerole", new { id = ViewBag.UserId })</p>
+        <p>@Html.ActionLink("Go back", "changerole", new { id = Model.UserId })</p>
     }
 </div>
+

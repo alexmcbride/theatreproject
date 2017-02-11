@@ -289,12 +289,13 @@ namespace TheatreProject.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.UserId = id;
-            ViewBag.OldRole = Request.Params["oldRole"];
-            ViewBag.NewRole = user.CurrentRole;
-            ViewBag.UserName = user.UserName;
-            ViewBag.WasChanged = ViewBag.OldRole != ViewBag.NewRole;
-            return View();
+            return View(new ChangeRoleConfirmViewModel
+            {
+                UserId = id,
+                UserName = user.UserName,
+                NewRole = user.CurrentRole,
+                OldRole = Request.Params["oldRole"],
+            });
         }
 
         protected override void Dispose(bool disposing)
