@@ -289,6 +289,7 @@ namespace TheatreProject.Controllers
                 return HttpNotFound();
             }
 
+            ViewBag.UserId = id;
             ViewBag.OldRole = Request.Params["oldRole"];
             ViewBag.NewRole = user.CurrentRole;
             ViewBag.UserName = user.UserName;
