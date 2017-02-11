@@ -58,10 +58,7 @@ namespace TheatreProject.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View(new CreateStaffViewModel
-            {
-                ShowAdminFlag = true
-            });
+            return View();
         }
 
         // POST: Users/Create
@@ -80,7 +77,7 @@ namespace TheatreProject.Controllers
                 if (result.Succeeded)
                 {
                     // Assign roles to this staff member.
-                    await UserManager.AddToRolesAsync(staff.Id, "Staff", "Member");
+                    await UserManager.AddToRolesAsync(staff.Id, "Staff");
 
                     return RedirectToAction("index");
                 }
@@ -118,8 +115,7 @@ namespace TheatreProject.Controllers
                 LastName = staff.LastName,
                 PhoneNumber = staff.PhoneNumber,
                 PostCode = staff.PostCode,
-                UserName = staff.UserName,
-                ShowAdminFlag = User.Identity.GetUserId() != id,
+                UserName = staff.UserName
             });
         }
 
@@ -198,7 +194,7 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                return View("DeleteError");
+                return View("DeleteOwnAccountError");
             }
 
             User user = db.Users.Find(id);
@@ -219,21 +215,26 @@ namespace TheatreProject.Controllers
             return RedirectToAction("index");
         }
 
-        public ActionResult ChangeRole(string id)
+        public async Task<ActionResult> ChangeRole(string id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             if (id == User.Identity.GetUserId())
             {
                 return View("ChangeOwnRoleError");
             }
 
-            User user = UserManager.FindById(id);
-            string currentRole = UserManager.GetRoles(id).Single();
+            User user = await UserManager.FindByIdAsync(id);
+            string role = (await UserManager.GetRolesAsync(id)).Single();
 
             var items = db.Roles.Select(r => new SelectListItem
             {
                 Text = r.Name,
                 Value = r.Name,
-                Selected = r.Name == currentRole
+                Selected = r.Name == role
             }).ToList();
 
             return View(new ChangeRoleViewModel
@@ -252,11 +253,11 @@ namespace TheatreProject.Controllers
                 // Change user's role.
                 string oldRole = (await UserManager.GetRolesAsync(id)).Single();
                 await UserManager.RemoveFromRoleAsync(id, oldRole);
-                await UserManager.AddToRoleAsync(id, model.NewRole);
+                await UserManager.AddToRoleAsync(id, model.Role);
 
                 // Info for confirmation view.
                 ViewBag.OldRole = oldRole;
-                ViewBag.NewRole = model.NewRole;
+                ViewBag.NewRole = model.Role;
                 ViewBag.UserName = user.UserName;
 
                 return View("ChangeRoleConfirmed");                

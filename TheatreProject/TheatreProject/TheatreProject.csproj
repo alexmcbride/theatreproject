@@ -293,7 +293,7 @@
     <Content Include="Views\Users\EditMember.cshtml" />
     <Content Include="Views\Users\DetailsStaff.cshtml" />
     <Content Include="Views\Users\DetailsMember.cshtml" />
-    <Content Include="Views\Users\DeleteError.cshtml" />
+    <Content Include="Views\Users\DeleteOwnAccountError.cshtml" />
     <Content Include="Views\Manage\ChangeEmail.cshtml" />
     <Content Include="Views\Posts\Create.cshtml" />
     <Content Include="Views\Posts\Delete.cshtml" />

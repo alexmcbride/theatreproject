@@ -10,7 +10,7 @@ using TheatreProject.Models;
 
 namespace TheatreProject.Controllers
 {
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Admin,Staff")]
     public class PostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

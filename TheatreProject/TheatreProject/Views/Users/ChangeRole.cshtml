@@ -21,9 +21,9 @@
 
         <div class="form-horizontal">
             <div class="form-group">
-                @Html.LabelFor(model => model.NewRole, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.NewRole, Model.Roles, new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Role, Model.Roles, new { @class = "form-control" })
                 </div>
             </div>
 
