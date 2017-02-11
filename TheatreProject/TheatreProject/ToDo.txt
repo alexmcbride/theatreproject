@@ -1,0 +1,11 @@
+﻿** Big **
+
+- Edit/Delete posts
+- Post/Edit/Delete comments
+- View all user's posts (and your own)
+- View all user's comments (and your own)
+
+** Small **
+- confirm email changed
+- RSS/Atom
+- Confirmation messages for small things, such as post new post, edit user, edit category etc.. (flash messages?)
