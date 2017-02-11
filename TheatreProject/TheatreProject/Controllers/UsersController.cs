@@ -251,12 +251,11 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Remove old role and add new one.
                 User user = await UserManager.FindByIdAsync(id);
-
-                // Change user's role.
                 string oldRole = (await UserManager.GetRolesAsync(id)).Single();
 
-                if (oldRole != model.UserName)
+                if (oldRole != model.Role)
                 {
                     await UserManager.RemoveFromRoleAsync(id, oldRole);
                     await UserManager.AddToRoleAsync(id, model.Role);
@@ -283,7 +282,6 @@ namespace TheatreProject.Controllers
             }
 
             User user = await UserManager.FindByIdAsync(id);
-
             if (user == null)
             {
                 return HttpNotFound();
