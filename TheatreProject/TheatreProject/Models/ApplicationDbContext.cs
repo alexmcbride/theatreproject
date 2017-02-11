@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TheatreProject.Models
@@ -23,6 +24,9 @@ namespace TheatreProject.Models
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
             Database.SetInitializer(new DatabaseInitializer());
+
+            // Log SQL queries to the debug output.
+            Database.Log = s => Debug.WriteLine(s);
         }
 
         public Staff FindStaff(string id)
