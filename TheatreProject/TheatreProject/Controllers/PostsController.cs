@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Pagination;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TheatreProject.Helpers;
 using TheatreProject.Models;
 
 namespace TheatreProject.Controllers
@@ -14,31 +14,22 @@ namespace TheatreProject.Controllers
     [Authorize(Roles = "Admin,Staff")]
     public class PostsController : Controller
     {
+        private const int MaxPostsPerPage = 10;
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts
         [AllowAnonymous]
         public ActionResult Index(int? page)
         {
-            // Pagination
-            const int PostsPerPage = 2;
-            int currentPage = page ?? 0;
-            int postsToSkip = PostsPerPage * currentPage;
-            int numPages = (int)Math.Ceiling((double)(db.Posts.Count() / PostsPerPage));
-            ViewBag.HasNext = currentPage < numPages;
-            ViewBag.HasPrevious = currentPage > 0;
-            ViewBag.NextPage = currentPage + 1;
-            ViewBag.PreviousPage = currentPage - 1;
-
-            // Get posts.
             var posts = db.Posts
                 .OrderByDescending(p => p.Published)
-                .Skip(postsToSkip)
-                .Take(PostsPerPage)
                 .Include(p => p.Staff)
                 .Include(p => p.Category);
 
-            return View(posts.ToList());
+            var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
+
+            return View(paginator);
         }
 
         // GET: Posts/Category/5
