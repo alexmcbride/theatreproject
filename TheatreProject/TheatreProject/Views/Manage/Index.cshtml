@@ -21,7 +21,7 @@
             <dd>
                 [
                 @if (Model.HasPassword)
-            {
+                {
                     @Html.ActionLink("Change your password", "changepassword")
                 }
                 else
@@ -36,6 +36,15 @@
                 @Html.ActionLink("Change your email", "changeemail")
                 ]
             </dd>
+            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+            {
+                <dt>Details:</dt>
+                <dd>
+                    [
+                    @Html.ActionLink("Change your personal details", "changedetails")
+                    ]
+                </dd>
+            }
         </dl>
     </div>
 </div>

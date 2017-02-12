@@ -6,6 +6,9 @@
 - View all user's comments (and your own)
 
 ** Small **
+
 - confirm email changed
 - RSS/Atom
 - Confirmation messages for small things, such as post new post, edit user, edit category etc.. (flash messages?)
+- Staff should be able to change their own address/postcode etc.
+- Increase password strength (lowered for development)
