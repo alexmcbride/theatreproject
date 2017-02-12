@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TheatreProject.Helpers;
 using TheatreProject.Models;
 using TheatreProject.ViewModels;
 
@@ -13,6 +14,7 @@ namespace TheatreProject.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : AccountController
     {
+        private const int MaxUsersPerPage = 50;
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public UsersController() : base() { }
@@ -21,11 +23,12 @@ namespace TheatreProject.Controllers
             : base(userManager, signInManager) { }
 
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             var users = db.Users.OrderBy(u => u.Joined);
+            var paginator = new Paginator<User>(users, page ?? 0, MaxUsersPerPage);
 
-            return View(users.ToList());
+            return View(paginator);
         }
 
         // GET: Users/Details/5

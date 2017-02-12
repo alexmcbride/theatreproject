@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TheatreProject.Helpers
@@ -38,7 +39,7 @@ namespace TheatreProject.Helpers
         public Paginator(IQueryable<T> items, int currentPage, int postsPerPage)
         {
             this.currentPage = currentPage;
-            this.totalPages = (int)Math.Ceiling((double)(items.Count() / postsPerPage));
+            this.totalPages = (int)Math.Ceiling((double)items.Count() / (double)postsPerPage) - 1;
             int itemsToSkip = this.currentPage * postsPerPage;
             this.items = items.Skip(itemsToSkip).Take(postsPerPage).ToList();
         }

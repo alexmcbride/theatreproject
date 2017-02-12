@@ -26,7 +26,7 @@ namespace TheatreProject.Models
             Database.SetInitializer(new DatabaseInitializer());
 
             // Log SQL queries to the debug output.
-            Database.Log = s => Debug.WriteLine(s);
+            //Database.Log = s => Debug.WriteLine(s);
         }
 
         public Staff FindStaff(string id)

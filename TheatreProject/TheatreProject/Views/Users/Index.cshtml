@@ -1,5 +1,5 @@
 ﻿@using TheatreProject.Models
-@model IEnumerable<User>
+@model TheatreProject.Helpers.Paginator<User>
 
 @{
     ViewBag.Title = "Manage Users";
@@ -19,49 +19,64 @@
     <table class="table table-hover">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                Username
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Joined)
+                Joined
             </th>
             <th>Role</th>
             <th></th>
         </tr>
 
-        @foreach (var item in Model)
+        @foreach (var user in Model.Items)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
+                    @Html.DisplayFor(modelItem => user.UserName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => user.Email)
                 </td>
                 <td>
-                    @item.Joined.ToShortDateString()
+                    @user.Joined.ToShortDateString()
                 </td>
                 <td>
-                    @item.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = item.Id }))
+                    @user.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = user.Id }))
                 </td>
                 <td>
-                    @if (item is Staff)
+                    @if (user is Staff)
                     {
-                        @Html.ActionLink("Edit", "editstaff", new { id = item.Id })
+                        @Html.ActionLink("Edit", "editstaff", new { id = user.Id })
                     }
-                    else if (item is Member)
+                    else if (user is Member)
                     {
-                        @Html.ActionLink("Edit", "editmember", new { id = item.Id })
+                        @Html.ActionLink("Edit", "editmember", new { id = user.Id })
                     } |
-                    @Html.ActionLink("Details", "details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "delete", new { id = item.Id })
+                    @Html.ActionLink("Details", "details", new { id = user.Id }) |
+                    @Html.ActionLink("Delete", "delete", new { id = user.Id })
                 </td>
             </tr>
         }
 
     </table>
+
+    @if (Model.HasPreviousPage)
+    {
+        @:&laquo;  @Html.ActionLink("Previous", "index", new { page = Model.PreviousPageNumber })
+    }
+
+    @if (Model.HasPreviousPage && Model.HasNextPage)
+    {
+        @:|
+    }
+
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "index", new { page = Model.NextPageNumber }) @:&raquo;
+    }
 
     <p>
         @Html.ActionLink("Create New Staff", "create")
