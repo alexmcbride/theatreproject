@@ -14,7 +14,7 @@ namespace TheatreProject.Controllers
     [Authorize(Roles = "Admin,Staff")]
     public class PostsController : Controller
     {
-        private const int MaxPostsPerPage = 10;
+        private const int MaxPostsPerPage = 6;
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -34,7 +34,7 @@ namespace TheatreProject.Controllers
 
         // GET: Posts/Category/5
         [AllowAnonymous]
-        public ActionResult Category(int id)
+        public ActionResult Category(int id, int? page)
         {
             // Get category
             var category = db.Categories.SingleOrDefault(c => c.CategoryId == id);
@@ -52,7 +52,9 @@ namespace TheatreProject.Controllers
                 .Include(p => p.Category)
                 .OrderByDescending(p => p.Published);
 
-            return View(posts.ToList());
+            var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
+
+            return View(paginator);
         }
 
         // GET: Posts/Details/5

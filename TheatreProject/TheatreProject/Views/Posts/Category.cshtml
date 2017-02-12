@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TheatreProject.Models.Post>
+﻿@model TheatreProject.Helpers.Paginator<TheatreProject.Models.Post>
 
 @{
     ViewBag.Title = @ViewBag.Category;
@@ -11,9 +11,24 @@
 <div class="row">
     <hr />
 
-    @if (Model.Any())
+    @if (Model.Items.Any())
     {
-        @Html.DisplayForModel()
+        @Html.DisplayFor(m => m.Items)
+
+        if (Model.HasPreviousPage)
+        {
+            @:&laquo;  @Html.ActionLink("Previous", "category", new { page = Model.PreviousPageNumber })
+        }
+
+        if (Model.HasPreviousPage && Model.HasNextPage)
+        {
+            @:|
+        }
+
+        if (Model.HasNextPage)
+        {
+            @Html.ActionLink("Next", "category", new { page = Model.NextPageNumber }) @:&raquo;
+        }
     }
     else
     {

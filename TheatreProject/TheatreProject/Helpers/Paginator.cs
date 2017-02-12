@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace TheatreProject.Helpers
 {
     public class Paginator<T>
     {
         private int currentPage;
-        private IQueryable<T> items;
-        private int postsPerPage;
-        private int itemsToSkip;
+        private IList<T> items;
         private int totalPages;
 
-        public IQueryable<T> Items
+        public IList<T> Items
         {
-            get { return items.Skip(itemsToSkip).Take(postsPerPage); }
+            get { return items; }
         }
 
         public bool HasNextPage
@@ -40,11 +37,10 @@ namespace TheatreProject.Helpers
 
         public Paginator(IQueryable<T> items, int currentPage, int postsPerPage)
         {
-            this.items = items;
             this.currentPage = currentPage;
-            this.postsPerPage = postsPerPage;
-            this.itemsToSkip = this.currentPage * postsPerPage;
             this.totalPages = (int)Math.Ceiling((double)(items.Count() / postsPerPage));
+            int itemsToSkip = this.currentPage * postsPerPage;
+            this.items = items.Skip(itemsToSkip).Take(postsPerPage).ToList();
         }
     }
 }
