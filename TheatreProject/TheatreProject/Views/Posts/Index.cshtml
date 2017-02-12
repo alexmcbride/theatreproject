@@ -11,4 +11,19 @@
     <hr>
 
     @Html.DisplayForModel()
+
+    @if (ViewBag.HasPrevious)
+    {
+        @:&laquo;  @Html.ActionLink("Previous", "index", new { page = ViewBag.PreviousPage })
+    }
+
+    @if (ViewBag.HasPrevious && ViewBag.HasNext)
+    {
+        @:|
+    }
+
+    @if (ViewBag.HasNext)
+    {
+        @Html.ActionLink("Next", "index", new { page = ViewBag.NextPage }) @:&raquo;
+    }
 </div>

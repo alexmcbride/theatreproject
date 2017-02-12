@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Pagination;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -17,25 +18,33 @@ namespace TheatreProject.Controllers
 
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            // Pagination
+            const int PostsPerPage = 2;
+            int currentPage = page ?? 0;
+            int postsToSkip = PostsPerPage * currentPage;
+            int numPages = (int)Math.Ceiling((double)(db.Posts.Count() / PostsPerPage));
+            ViewBag.HasNext = currentPage < numPages;
+            ViewBag.HasPrevious = currentPage > 0;
+            ViewBag.NextPage = currentPage + 1;
+            ViewBag.PreviousPage = currentPage - 1;
+
+            // Get posts.
             var posts = db.Posts
+                .OrderByDescending(p => p.Published)
+                .Skip(postsToSkip)
+                .Take(PostsPerPage)
                 .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .OrderByDescending(p => p.Published);
+                .Include(p => p.Category);
 
             return View(posts.ToList());
         }
 
         // GET: Posts/Category/5
         [AllowAnonymous]
-        public ActionResult Category(int? id)
+        public ActionResult Category(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
             // Get category
             var category = db.Categories.SingleOrDefault(c => c.CategoryId == id);
             if (category == null)
