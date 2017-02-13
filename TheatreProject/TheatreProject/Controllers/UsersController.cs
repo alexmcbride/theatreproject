@@ -221,9 +221,14 @@ namespace TheatreProject.Controllers
             {
                 var posts = db.Posts.Where(p => p.StaffId == staff.Id).ToList();
                 db.Posts.RemoveRange(posts);
-                await db.SaveChangesAsync();
             }
 
+            // Delete comments owned by this user.
+            var comments = db.Comments.Where(c => c.UserId == user.Id).ToList();
+            db.Comments.RemoveRange(comments);
+            await db.SaveChangesAsync();
+
+            // Delete user.
             await UserManager.DeleteAsync(user);
             return RedirectToAction("index");
         }
