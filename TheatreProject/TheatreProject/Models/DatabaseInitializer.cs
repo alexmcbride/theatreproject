@@ -28,8 +28,8 @@ namespace TheatreProject.Models
             }
 
             // Add some default categories.
-            var category = context.Categories.Add(new Category { Name = "News" });
-            context.Categories.Add(new Category { Name = "Announcements" });
+            var news = context.Categories.Add(new Category { Name = "News" });
+            var announcements = context.Categories.Add(new Category { Name = "Announcements" });
             context.Categories.Add(new Category { Name = "Movie Reviews" });
             context.Categories.Add(new Category { Name = "Theatre Reviews" });
             context.SaveChanges();
@@ -68,19 +68,6 @@ namespace TheatreProject.Models
                 userManager.Create(staff, "staff");
                 userManager.AddToRoles(staff.Id, "Staff");
 
-                // add some posts
-                var post = new Post
-                {
-                    Category = category,
-                    Content = "Test Content",
-                    IsApproved = true,
-                    Published = DateTime.Now,
-                    Staff = staff,
-                    Title = "Test Title",
-                };
-                context.Posts.Add(post);
-                context.SaveChanges();
-
                 // Create member.
                 var member = new Member
                 {
@@ -91,6 +78,45 @@ namespace TheatreProject.Models
 
                 userManager.Create(member, "member");
                 userManager.AddToRoles(member.Id, "Member");
+
+                // Add some posts
+                context.Posts.Add(new Post
+                {
+                    Category = news,
+                    Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean at suscipit eros, id consectetur nisl. Quisque aliquet gravida metus. Ut finibus dolor id augue congue tincidunt. Quisque sit amet sem quam. Etiam ultrices condimentum condimentum. Sed quis arcu viverra massa volutpat iaculis ut vel odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur convallis elementum pulvinar. Praesent est magna, gravida id tincidunt ut, accumsan ut elit. Pellentesque malesuada iaculis purus sed ultricies. Mauris in malesuada dolor. Morbi porta malesuada nibh, ut volutpat erat convallis sit amet. Nunc vulputate sodales purus ut elementum. Ut venenatis eros risus, vel pretium tortor efficitur in.",
+                    IsApproved = true,
+                    Published = new DateTime(2017, 02, 12, 13, 34, 13, 100),
+                    Staff = staff,
+                    Title = "Lorem ipsum dolor sit amet",
+                });
+                context.Posts.Add(new Post
+                {
+                    Category = news,
+                    Content = "Suspendisse euismod mi et ipsum sagittis, et posuere diam fringilla. In hendrerit nulla et volutpat vestibulum. Donec a fermentum ex. Integer imperdiet tincidunt lacinia. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce a sapien ut nisi molestie porttitor non et magna. Fusce eu est et nibh tincidunt accumsan sed quis massa. Phasellus vitae nulla tincidunt, fringilla sapien ac, gravida neque.",
+                    IsApproved = true,
+                    Published = new DateTime(2017, 02, 10, 10, 54, 46, 123),
+                    Staff = admin,
+                    Title = "Suspendisse euismod mi et ipsum sagittis",
+                });
+                context.Posts.Add(new Post
+                {
+                    Category = news,
+                    Content = "In lorem neque, vulputate at tortor sed, viverra aliquam leo. Nam nec auctor odio. Aenean id interdum lacus. Curabitur pretium feugiat purus, in ullamcorper urna iaculis vitae. Integer lectus odio, pretium eu neque in, consequat fermentum sapien. Quisque sit amet tellus eget sem lacinia ultrices. Nullam consequat lacus non maximus semper. Aenean interdum felis sapien, quis consequat dui facilisis eu. Nulla ac lectus eu tellus consectetur fermentum. Proin et nibh eget nibh aliquet fringilla. Sed neque tellus, ullamcorper quis magna eu, porttitor molestie quam. Sed id laoreet nulla, vel efficitur dolor. Praesent non risus at sem sagittis aliquam. Ut efficitur est eget elit euismod aliquet. Curabitur ut ligula sed tortor ultricies finibus sed ut massa. Duis neque lacus, vulputate at pretium at, porta sit amet leo.",
+                    IsApproved = true,
+                    Published = new DateTime(2015, 05, 18, 17, 32, 35, 100),
+                    Staff = staff,
+                    Title = "Vulputate at tortor sed",
+                });
+                context.Posts.Add(new Post
+                {
+                    Category = announcements,
+                    Content = "Phasellus cursus tempus ullamcorper. Fusce in neque viverra, tincidunt magna sit amet, tempor odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque efficitur massa vitae urna facilisis accumsan. Curabitur sit amet enim leo. Nam non lectus id metus iaculis finibus. Donec non nulla elit. Vestibulum dignissim orci sed consectetur pellentesque. Vestibulum eleifend egestas ipsum id sagittis. Duis viverra massa nec ultrices vestibulum. Aliquam mattis vehicula diam, eu porta orci dictum sed. Quisque et tempor orci, vitae convallis ex.",
+                    IsApproved = true,
+                    Published = new DateTime(2017, 02, 13, 13, 39, 00, 100),
+                    Staff = admin,
+                    Title = "Phasellus cursus tempus ullamcorper",
+                });
+                context.SaveChanges();
             }
         }
     }
