@@ -309,6 +309,7 @@
     <Content Include="Views\Users\ChangeRoleConfirmed.cshtml" />
     <Content Include="Views\Users\ChangeOwnRoleError.cshtml" />
     <Content Include="Views\Posts\Index.cshtml" />
+    <Content Include="Views\Account\ResendConfirmEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

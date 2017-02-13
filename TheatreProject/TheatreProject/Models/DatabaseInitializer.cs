@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
@@ -54,6 +54,7 @@ namespace TheatreProject.Models
                     UserName = "Admin",
                     Email = "admin@admin.com",
                     Joined = DateTime.Now,
+                    EmailConfirmed = true,
                 };
                 userManager.Create(admin, "admin");
                 userManager.AddToRoles(admin.Id, "Admin");
@@ -64,6 +65,7 @@ namespace TheatreProject.Models
                     UserName = "Staff",
                     Email = "staff@staff.com",
                     Joined = DateTime.Now,
+                    EmailConfirmed = true,
                 };
                 userManager.Create(staff, "staff");
                 userManager.AddToRoles(staff.Id, "Staff");
@@ -73,7 +75,8 @@ namespace TheatreProject.Models
                 {
                     UserName = "Member",
                     Email = "member@member.com",
-                    Joined = DateTime.Now
+                    Joined = DateTime.Now,
+                    EmailConfirmed = true,
                 };
 
                 userManager.Create(member, "member");

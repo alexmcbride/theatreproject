@@ -76,6 +76,11 @@ namespace TheatreProject.Controllers
             User user = await UserManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
+                if (!user.EmailConfirmed)
+                {
+                    return RedirectToAction("confirmemailsent");
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, change to shouldLockout: true
                 var result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
@@ -165,19 +170,11 @@ namespace TheatreProject.Controllers
                         // Add user to member role.
                         UserManager.AddToRole(user.Id, "Member");
 
-                        // We don't want to sign them in here, but after they confirm email address
-                        //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        //#if !DEBUG
+                        await SendEmailConfirmation(user);
+                        //#endif
 
-#if !DEBUG
-                        // Send confirmation email address. Don't sent in debug mode.
-                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await UserManager.SendEmailAsync(user.Id,
-                            "Local Theatre Company - Confirm your account",
-                            "Please confirm your account by clicking the following link: \n\n" + callbackUrl);
-#endif
-
-                        return View("ConfirmEmailSent"); // show confirmation message
+                        return RedirectToAction("ConfirmEmailSent"); // show confirmation message
                     }
 
                     AddErrors(result);
@@ -192,6 +189,15 @@ namespace TheatreProject.Controllers
             return View(model);
         }
 
+        private async Task SendEmailConfirmation(User user)
+        {
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(user.Id,
+                "Local Theatre Company - Confirm your account",
+                "Please confirm your account by clicking the following link: \n\n" + callbackUrl);
+        }
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -203,6 +209,40 @@ namespace TheatreProject.Controllers
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
+
+        // 
+        // GET: /Account/ConfirmEmail/Sent
+        [AllowAnonymous]
+        public ActionResult ConfirmEmailSent()
+        {
+            return View();
+        }
+
+        // 
+        // GET: /Account/ConfirmEmail/Sent
+        [AllowAnonymous]
+        public ActionResult ResendConfirmEmail()
+        { 
+            return View();
+        }
+
+        [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendConfirmEmail(ForgotViewModel model)
+        { 
+            if (ModelState.IsValid)
+            {
+                // We don't give any indication whether sending was successful or not, for security purposes.
+                User user = await UserManager.FindByEmailAsync(model.Email);
+                if (user != null && !user.EmailConfirmed)
+                {
+                    await SendEmailConfirmation(user);
+                }
+
+                return RedirectToAction("ConfirmEmailSent");
+            }
+
+            return View(model);
         }
 
         //
