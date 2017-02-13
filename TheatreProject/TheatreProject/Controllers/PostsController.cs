@@ -65,11 +65,17 @@ namespace TheatreProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = db.Posts.Find(id);
+
+            Post post = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .SingleOrDefault(p => p.PostId == id);
+
             if (post == null)
             {
                 return HttpNotFound();
             }
+
             return View(post);
         }
 
