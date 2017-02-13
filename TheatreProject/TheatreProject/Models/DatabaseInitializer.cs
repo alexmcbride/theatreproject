@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
@@ -26,6 +26,13 @@ namespace TheatreProject.Models
             {
                 roleManager.Create(new IdentityRole("Member"));
             }
+
+            // Add some default categories.
+            var category = context.Categories.Add(new Category { Name = "News" });
+            context.Categories.Add(new Category { Name = "Announcements" });
+            context.Categories.Add(new Category { Name = "Movie Reviews" });
+            context.Categories.Add(new Category { Name = "Theatre Reviews" });
+            context.SaveChanges();
 
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
             // Create admin if does not exist yet.
@@ -61,6 +68,19 @@ namespace TheatreProject.Models
                 userManager.Create(staff, "staff");
                 userManager.AddToRoles(staff.Id, "Staff");
 
+                // add some posts
+                var post = new Post
+                {
+                    Category = category,
+                    Content = "Test Content",
+                    IsApproved = true,
+                    Published = DateTime.Now,
+                    Staff = staff,
+                    Title = "Test Title",
+                };
+                context.Posts.Add(post);
+                context.SaveChanges();
+
                 // Create member.
                 var member = new Member
                 {
@@ -72,13 +92,6 @@ namespace TheatreProject.Models
                 userManager.Create(member, "member");
                 userManager.AddToRoles(member.Id, "Member");
             }
-
-            // Add some default categories.
-            context.Categories.Add(new Category { Name = "News" });
-            context.Categories.Add(new Category { Name = "Announcements" });
-            context.Categories.Add(new Category { Name = "Movie Reviews" });
-            context.Categories.Add(new Category { Name = "Theatre Reviews" });
-            context.SaveChanges();
         }
     }
 }

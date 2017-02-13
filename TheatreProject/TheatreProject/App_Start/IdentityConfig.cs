@@ -18,7 +18,7 @@ namespace TheatreProject
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com");
             client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "<secret>");
+            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "cogc2016");
 
             MailMessage messaage = new MailMessage();
             messaage.From = new MailAddress("apptechcogc@gmail.com");

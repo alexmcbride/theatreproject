@@ -214,6 +214,16 @@ namespace TheatreProject.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             User user = await UserManager.FindByIdAsync(id);
+
+            // Remove any posts owned by this user.
+            Staff staff = user as Staff;
+            if (staff != null)
+            {
+                var posts = db.Posts.Where(p => p.StaffId == staff.Id).ToList();
+                db.Posts.RemoveRange(posts);
+                await db.SaveChangesAsync();
+            }
+
             await UserManager.DeleteAsync(user);
             return RedirectToAction("index");
         }

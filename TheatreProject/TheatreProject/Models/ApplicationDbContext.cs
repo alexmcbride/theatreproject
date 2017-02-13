@@ -51,6 +51,7 @@ namespace TheatreProject.Models
             // When user deleted, any comments associated with them are left, however the Comment.User property will be null
             // Comments are deleted when Post is deleted.
             modelBuilder.Entity<User>().HasOptional(u => u.Comments).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Staff>().HasOptional(u => u.Posts).WithMany().WillCascadeOnDelete(true);
         }
 
         public static ApplicationDbContext Create()
