@@ -67,7 +67,7 @@ namespace TheatreProject.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate,Password,PasswordConfirm")] CreateStaffViewModel model)
+        public async Task<ActionResult> Create([Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate,Password,PasswordConfirm,EmailConfirmed")] CreateStaffViewModel model)
         {
             // Add new staff member to system.
             if (ModelState.IsValid)
@@ -118,14 +118,15 @@ namespace TheatreProject.Controllers
                 LastName = staff.LastName,
                 PhoneNumber = staff.PhoneNumber,
                 PostCode = staff.PostCode,
-                UserName = staff.UserName
+                UserName = staff.UserName,
+                EmailConfirmed = staff.EmailConfirmed
             });
         }
 
         // POST: Users/EditStaff/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditStaff(string id, [Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate")]EditStaffViewModel model)
+        public async Task<ActionResult> EditStaff(string id, [Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate,EmailConfirmed")]EditStaffViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -162,14 +163,15 @@ namespace TheatreProject.Controllers
             {
                 Email = member.Email,
                 UserName = member.UserName,
-                IsSuspended = member.IsSuspended ?? false
+                IsSuspended = member.IsSuspended ?? false,
+                EmailConfirmed = member.EmailConfirmed
             });
         }
 
         // POST: Users/EditMember/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditMember(string id, [Bind(Include = "UserName,Email,IsSuspended")] EditMemberViewModel model)
+        public async Task<ActionResult> EditMember(string id, [Bind(Include = "UserName,Email,IsSuspended,EmailConfirmed")] EditMemberViewModel model)
         {
             if (ModelState.IsValid)
             {

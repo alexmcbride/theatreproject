@@ -12,5 +12,8 @@ namespace TheatreProject.ViewModels
 
         [Display(Name = "Is Suspended")]
         public bool IsSuspended { get; set; }
+
+        [Display(Name = "Confirm Email")]
+        public bool EmailConfirmed { get; set; }
     }
 }

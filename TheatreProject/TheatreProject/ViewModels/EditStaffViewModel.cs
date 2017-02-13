@@ -34,5 +34,8 @@ namespace TheatreProject.ViewModels
         [Display(Name = "Date of Birth")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime BirthDate { get; set; }
+
+        [Display(Name = "Confirm Email")]
+        public bool EmailConfirmed { get; set; }
     }
 }
