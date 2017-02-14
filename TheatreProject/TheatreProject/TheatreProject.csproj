@@ -170,6 +170,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Helpers\Paginator.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="ViewModels\ChangeRoleConfirmViewModel.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="ViewModels\CreateStaffViewModel.cs" />
     <Compile Include="ViewModels\EditMemberViewModel.cs" />
     <Compile Include="ViewModels\EditStaffViewModel.cs" />
+    <Compile Include="ViewModels\PostDetailsViewModel.cs" />
     <Compile Include="ViewModels\PostEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -311,6 +313,11 @@
     <Content Include="Views\Users\ChangeOwnRoleError.cshtml" />
     <Content Include="Views\Posts\Index.cshtml" />
     <Content Include="Views\Account\ResendConfirmEmail.cshtml" />
+    <Content Include="Views\Comments\Create.cshtml" />
+    <Content Include="Views\Comments\Delete.cshtml" />
+    <Content Include="Views\Comments\Details.cshtml" />
+    <Content Include="Views\Comments\Edit.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

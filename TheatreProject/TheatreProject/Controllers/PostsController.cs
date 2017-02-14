@@ -12,7 +12,7 @@ using TheatreProject.ViewModels;
 
 namespace TheatreProject.Controllers
 {
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize]
     public class PostsController : Controller
     {
         private const int MaxPostsPerPage = 6;
@@ -117,16 +117,60 @@ namespace TheatreProject.Controllers
         public ActionResult Details(int id)
         {
             Post post = GetPostForUser(id, allowApproved: true);
-
             if (post == null)
             {
                 return HttpNotFound();
             }
 
-            return View(post);
+            return View(new PostDetailsViewModel
+            {
+                Post = post,
+                Comments = GetCommentsForPost(post).ToList()
+            });
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Details")]
+        public ActionResult CreateComment(int id, PostDetailsViewModel model)
+        {
+            Post post = GetPostForUser(id, allowApproved: true);
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
+                db.Comments.Add(new Comment
+                {
+                    Post = post,
+                    User = userManager.FindByName(User.Identity.Name),
+                    Content = model.Comment,
+                    Posted = DateTime.Now,
+                    IsApproved = true
+                });
+                db.SaveChanges();
+                return RedirectToAction("details", new { id = post.PostId });
+            }
+
+            model.Post = post;
+            model.Comments = GetCommentsForPost(post).ToList();
+            return View(model);
+        }
+
+        private IOrderedQueryable<Comment> GetCommentsForPost(Post post)
+        {
+            return db.Comments
+                .Include(c => c.User)
+                .Where(c => c.PostId == post.PostId)
+                .OrderByDescending(c => c.Posted);
         }
 
         // GET: Posts/Create
+        [Authorize(Roles = "Admin,Staff")]
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
@@ -136,6 +180,7 @@ namespace TheatreProject.Controllers
         // POST: Posts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] Post post)
@@ -157,6 +202,7 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Posts/Edit/5
+        [Authorize(Roles = "Admin,Staff")]
         public ActionResult Edit(int id)
         {
             Post post = GetPostForUser(id);
@@ -180,6 +226,7 @@ namespace TheatreProject.Controllers
         // POST: Posts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,IsApproved,Content")] PostEditViewModel model)
@@ -207,6 +254,7 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Posts/Delete/5
+        [Authorize(Roles = "Admin,Staff")]
         public ActionResult Delete(int id)
         {
             Post post = GetPostForUser(id);
@@ -218,6 +266,7 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize(Roles = "Admin,Staff")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
