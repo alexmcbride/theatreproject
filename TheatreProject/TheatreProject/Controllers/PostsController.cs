@@ -20,7 +20,7 @@ namespace TheatreProject.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // Gets posts that the user can see.
-        private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int category = 0)
+        private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int categoryId = 0)
         {
             IQueryable<Post> posts = db.Posts
                 .Include(p => p.Staff)
@@ -30,7 +30,7 @@ namespace TheatreProject.Controllers
             // If category is needed then include that.
             if (includeCategory)
             {
-                posts = posts.Where(p => p.CategoryId == category);
+                posts = posts.Where(p => p.CategoryId == categoryId);
             }
 
             // Get approved posts and any posts that belong to the user, or get all if user is an admin.
@@ -107,7 +107,7 @@ namespace TheatreProject.Controllers
             ViewBag.Category = category.Name;
 
             // Get posts.
-            var posts = GetPostsForUser(true, id);
+            var posts = GetPostsForUser(includeCategory: true, categoryId: id);
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
             return View(paginator);
         }
@@ -116,7 +116,7 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Details(int id)
         {
-            Post post = GetPostForUser(id, true);
+            Post post = GetPostForUser(id, allowApproved: true);
 
             if (post == null)
             {
