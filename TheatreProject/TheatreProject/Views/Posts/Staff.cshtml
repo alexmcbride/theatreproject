@@ -1,0 +1,35 @@
+﻿@model IEnumerable<TheatreProject.Models.Post>
+
+@{ 
+    ViewBag.Title = "Member's Posts";
+}
+
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Blog", "index") &raquo; @ViewBag.Title
+}
+
+<div class="row">
+    <hr>
+
+    <h2>@ViewBag.Title.</h2>
+
+    <p>All the posts by the member <strong>@ViewBag.UserName</strong>.</p>
+
+    @if (Model.Any())
+    {
+        <div class="list-group">
+            @foreach (var post in Model)
+            {
+                @Html.ActionLink(post.Title, "details", new { id = post.PostId }, new { @class = "list-group-item" })  
+           }
+        </div>
+    }
+    else
+    {
+        <p><em>Sorry - there are no posts for this staff member.</em></p>
+    }
+</div>
+
+<div class="row">
+    <hr>
+</div>

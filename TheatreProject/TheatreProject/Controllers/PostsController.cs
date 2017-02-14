@@ -290,6 +290,23 @@ namespace TheatreProject.Controllers
             return RedirectToAction("index");
         }
 
+        public ActionResult Staff(string id)
+        {
+            var staff = db.Users.Find(id) as Staff;
+            if (staff == null)
+            {
+                return HttpNotFound();
+            }
+
+            var posts = db.Posts
+                .Where(p => p.StaffId == staff.Id && p.IsApproved)
+                .OrderByDescending(p => p.Published);
+
+            ViewBag.UserName = staff.UserName;
+
+            return View(posts.ToList());
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
