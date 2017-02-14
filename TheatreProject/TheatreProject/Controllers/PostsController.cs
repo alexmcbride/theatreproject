@@ -173,8 +173,10 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
-            return View();
+            return View(new PostEditViewModel
+            {
+                Categories = new SelectList(db.Categories, "CategoryId", "Name")
+            });
         }
 
         // POST: Posts/Create
@@ -183,22 +185,26 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] Post post)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
-            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
-            post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
-            post.Published = DateTime.Now;
-            post.IsApproved = false;
-
             if (ModelState.IsValid)
             {
+                Post post = new Post();
+                UpdateModel(post);
+
+                UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
+                post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
+                post.Published = DateTime.Now;
+                post.IsApproved = false;
+
                 db.Posts.Add(post);
                 db.SaveChanges();
+
                 return RedirectToAction("details", new { id = post.PostId });
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
-            return View(post);
+            model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
+            return View(model);
         }
 
         // GET: Posts/Edit/5
