@@ -237,7 +237,7 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,IsApproved,Content")] PostEditViewModel model)
         {
-            Post post = GetPostForUser(id);
+            Post post = db.Posts.Find(id);
 
             if (post == null)
             {
@@ -277,7 +277,14 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Post post = db.Posts.Find(id);
+            Post post = db.Posts
+                .Include(p => p.Comments)
+                .SingleOrDefault(p => p.PostId == id);
+
+            // Remove any comments associated with this post.
+            db.Comments.RemoveRange(post.Comments.ToList());
+
+            // Save changes to 
             db.Posts.Remove(post);
             db.SaveChanges();
             return RedirectToAction("index");
