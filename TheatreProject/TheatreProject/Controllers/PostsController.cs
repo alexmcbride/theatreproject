@@ -19,18 +19,40 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int category = 0)
+        {
+            IQueryable<Post> posts = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.Published);
+
+            // If category is needed then include that.
+            if (includeCategory)
+            {
+                posts = posts.Where(p => p.CategoryId == category);
+            }
+
+            // Get approved posts and any posts that belong to the user, or get all if an admin.
+            if (User.Identity.IsAuthenticated)
+            {
+                bool admin = User.IsInRole("Admin");
+                User user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                posts = posts.Where(p => admin || p.IsApproved || p.StaffId == user.Id);
+            }
+            else
+            {
+                posts = posts.Where(p => p.IsApproved);
+            }
+
+            return posts;
+        }
+
         // GET: Posts
         [AllowAnonymous]
         public ActionResult Index(int? page)
         {
-            var posts = db.Posts
-                .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .Where(p => p.IsApproved)
-                .OrderByDescending(p => p.Published);
-
+            var posts = GetPostsForUser();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
-
             return View(paginator);
         }
 
@@ -47,15 +69,9 @@ namespace TheatreProject.Controllers
             ViewBag.CategoryId = category.CategoryId;
             ViewBag.Category = category.Name;
 
-            // Get posts (incuding staff members)
-            var posts = db.Posts
-                .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .Where(p => p.CategoryId == id && p.IsApproved)
-                .OrderByDescending(p => p.Published);
-
+            // Get posts.
+            var posts = GetPostsForUser(true, id);
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
-
             return View(paginator);
         }
 

@@ -30,7 +30,7 @@ namespace TheatreProject.Models
             // Add some default categories.
             var news = context.Categories.Add(new Category { Name = "News" });
             var announcements = context.Categories.Add(new Category { Name = "Announcements" });
-            context.Categories.Add(new Category { Name = "Movie Reviews" });
+            var movies = context.Categories.Add(new Category { Name = "Movie Reviews" });
             context.Categories.Add(new Category { Name = "Theatre Reviews" });
             context.SaveChanges();
 
@@ -118,6 +118,15 @@ namespace TheatreProject.Models
                     Published = new DateTime(2017, 02, 13, 13, 39, 00, 100),
                     Staff = admin,
                     Title = "Phasellus cursus tempus ullamcorper",
+                });
+                context.Posts.Add(new Post
+                {
+                    Category = movies,
+                    Content = "Quisque vitae tellus ut libero dapibus pretium vestibulum et lacus. Pellentesque blandit urna nec lacinia iaculis. Ut eu nisi dapibus, scelerisque urna ac, pretium purus. Nunc sodales laoreet urna vel sagittis. Donec dictum, sem eget blandit sodales, enim felis luctus purus, et blandit est nisi sed neque. In at nunc quam. Aenean et bibendum enim. Sed sit amet sapien id mi gravida imperdiet facilisis id ligula. Nullam id finibus nunc. Donec quis dictum enim, eu viverra dolor. Cras gravida sem consequat, faucibus ex non, auctor quam. Maecenas ultrices at velit in facilisis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin est metus, porttitor et libero eu, congue sagittis felis.",
+                    IsApproved = false,
+                    Published = new DateTime(2017, 02, 14, 11, 07, 23, 713),
+                    Staff = staff,
+                    Title = "Quisque vitae tellus ut libero (NA)", 
                 });
                 context.SaveChanges();
             }
