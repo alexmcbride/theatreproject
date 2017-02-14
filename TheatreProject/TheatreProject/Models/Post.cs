@@ -22,6 +22,7 @@ namespace TheatreProject.Models
         [Required, DataType(DataType.DateTime)]
         public DateTime Published { get; set; }
 
+        [Display(Name = "Is Approved")]
         public bool IsApproved { get; set; }
 
         [Required, DataType(DataType.MultilineText)]
@@ -30,5 +31,10 @@ namespace TheatreProject.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Staff Staff { get; set; }
         public virtual Category Category { get; set; }
+
+        public bool BelongsTo(string userId)
+        {
+            return StaffId == userId;
+        }
     }
 }

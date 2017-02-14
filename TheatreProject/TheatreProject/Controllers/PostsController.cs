@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TheatreProject.Helpers;
 using TheatreProject.Models;
+using TheatreProject.ViewModels;
 
 namespace TheatreProject.Controllers
 {
@@ -23,9 +24,10 @@ namespace TheatreProject.Controllers
         public ActionResult Index(int? page)
         {
             var posts = db.Posts
-                .OrderByDescending(p => p.Published)
                 .Include(p => p.Staff)
-                .Include(p => p.Category);
+                .Include(p => p.Category)
+                .Where(p => p.IsApproved)
+                .OrderByDescending(p => p.Published);
 
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
 
@@ -47,9 +49,9 @@ namespace TheatreProject.Controllers
 
             // Get posts (incuding staff members)
             var posts = db.Posts
-                .Where(p => p.CategoryId == id)
                 .Include(p => p.Staff)
                 .Include(p => p.Category)
+                .Where(p => p.CategoryId == id && p.IsApproved)
                 .OrderByDescending(p => p.Published);
 
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
@@ -94,7 +96,7 @@ namespace TheatreProject.Controllers
         public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] Post post)
         {
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
-            post.Staff = (Staff)await userManager.FindByIdAsync(User.Identity.GetUserId());
+            post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
             post.Published = DateTime.Now;
             post.IsApproved = false;
 
@@ -102,7 +104,7 @@ namespace TheatreProject.Controllers
             {
                 db.Posts.Add(post);
                 db.SaveChanges();
-                return RedirectToAction("Details", new { id = post.PostId });
+                return RedirectToAction("details", new { id = post.PostId });
             }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
@@ -110,19 +112,26 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Posts/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Post post = db.Posts.Find(id);
+            Post post = db.Posts
+                .Include(p => p.Category)
+                .SingleOrDefault(p => p.PostId == id);
+
             if (post == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
-            return View(post);
+
+            return View(new PostEditViewModel
+            {
+                Content = post.Content,
+                Title = post.Title,
+                IsApproved = post.IsApproved,
+                Categories = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId),
+                CategoryId = post.CategoryId,
+                Category = post.Category
+            });
         }
 
         // POST: Posts/Edit/5
@@ -130,16 +139,30 @@ namespace TheatreProject.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PostId,CategoryId,StaffId,Title,Published,IsApproved,Content")] Post post)
+        public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,IsApproved,Content")] PostEditViewModel model)
         {
+            Post post = db.Posts
+                .Include(p => p.Category)
+                .SingleOrDefault(p => p.PostId == id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
+                UpdateModel(post);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("details", new { id = post.PostId });
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
-            return View(post);
+
+            model.Category = post.Category;
+            model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
+
+            return View(model);
         }
 
         // GET: Posts/Delete/5
@@ -165,7 +188,7 @@ namespace TheatreProject.Controllers
             Post post = db.Posts.Find(id);
             db.Posts.Remove(post);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("index");
         }
 
         protected override void Dispose(bool disposing)

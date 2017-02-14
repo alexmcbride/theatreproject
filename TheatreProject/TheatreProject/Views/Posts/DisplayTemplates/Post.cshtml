@@ -1,5 +1,6 @@
 ﻿@model TheatreProject.Models.Post
 @using TheatreProject.Helpers
+@using Microsoft.AspNet.Identity;
 
 <article>
     <h2>@Html.ActionLink(Model.Title, "details", new { id = Model.PostId })</h2>
@@ -9,5 +10,12 @@
         in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
         by @Html.ActionLink(Model.Staff.UserName, "user", "posts", new { id = Model.StaffId }, null) 
         about @Html.RelativeDate(Model.Published)
+
+        @if (User.IsInRole("Admin") || Model.BelongsTo(User.Identity.GetUserId()))
+        {
+            @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
+            @:|
+            @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
+        }
     </p>
 </article>

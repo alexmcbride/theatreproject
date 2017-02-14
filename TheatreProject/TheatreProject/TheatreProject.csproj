@@ -197,6 +197,7 @@
     <Compile Include="ViewModels\CreateStaffViewModel.cs" />
     <Compile Include="ViewModels\EditMemberViewModel.cs" />
     <Compile Include="ViewModels\EditStaffViewModel.cs" />
+    <Compile Include="ViewModels\PostEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\CSS\bootstrap-theme.css" />
