@@ -48,7 +48,7 @@
             <hr>
 
             <div>@comment.Content</div>
-            <div class="text-muted text-right small">Posted by @comment.User.UserName about @Html.RelativeDate(comment.Posted)</div>
+            <div class="text-muted text-right small">Posted by @comment.User.UserName @Html.RelativeDate(comment.Posted)</div>
         </div>
     }
 </div>

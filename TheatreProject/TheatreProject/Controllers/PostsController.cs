@@ -144,11 +144,10 @@ namespace TheatreProject.Controllers
 
             if (ModelState.IsValid)
             {
-                UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
                 db.Comments.Add(new Comment
                 {
-                    Post = post,
-                    User = userManager.FindByName(User.Identity.Name),
+                    PostId = post.PostId,
+                    UserId = User.Identity.GetUserId(),
                     Content = model.Comment,
                     Posted = DateTime.Now,
                     IsApproved = true
@@ -305,6 +304,7 @@ namespace TheatreProject.Controllers
             return RedirectToAction("index");
         }
 
+        [AllowAnonymous]
         public ActionResult Staff(string id)
         {
             var staff = db.Users.Find(id) as Staff;
