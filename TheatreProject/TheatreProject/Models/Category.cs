@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace TheatreProject.Models
 {
@@ -12,5 +13,11 @@ namespace TheatreProject.Models
         public string Name { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
+
+
+        public int PostCount()
+        {
+            return Posts.Where(p => p.IsApproved).Count();
+        }
     }
 }
