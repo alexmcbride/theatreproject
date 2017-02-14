@@ -19,6 +19,7 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        // Gets posts that the user can see.
         private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int category = 0)
         {
             IQueryable<Post> posts = db.Posts
@@ -32,7 +33,7 @@ namespace TheatreProject.Controllers
                 posts = posts.Where(p => p.CategoryId == category);
             }
 
-            // Get approved posts and any posts that belong to the user, or get all if an admin.
+            // Get approved posts and any posts that belong to the user, or get all if user is an admin.
             if (User.Identity.IsAuthenticated)
             {
                 bool admin = User.IsInRole("Admin");
@@ -45,6 +46,42 @@ namespace TheatreProject.Controllers
             }
 
             return posts;
+        }
+
+        // Gets post for a single user, if they can view it.
+        private Post GetPostForUser(int id, bool allowApproved = false)
+        {
+            var post = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .SingleOrDefault(p => p.PostId == id);
+
+            if (post != null)
+            {
+                // Everyone can see approved posts.
+                if (allowApproved && post.IsApproved)
+                {
+                    return post;
+                }
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    // Admin always see posts.
+                    if (User.IsInRole("Admin"))
+                    {
+                        return post;
+                    }
+
+                    // Users can see posts if they belong to them.
+                    User user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                    if (post.StaffId == user.Id)
+                    {
+                        return post;
+                    }
+                }
+            }
+
+            return null;
         }
 
         // GET: Posts
@@ -77,17 +114,9 @@ namespace TheatreProject.Controllers
 
         // GET: Posts/Details/5
         [AllowAnonymous]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Post post = db.Posts
-                .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .SingleOrDefault(p => p.PostId == id);
+            Post post = GetPostForUser(id, true);
 
             if (post == null)
             {
@@ -130,9 +159,7 @@ namespace TheatreProject.Controllers
         // GET: Posts/Edit/5
         public ActionResult Edit(int id)
         {
-            Post post = db.Posts
-                .Include(p => p.Category)
-                .SingleOrDefault(p => p.PostId == id);
+            Post post = GetPostForUser(id);
 
             if (post == null)
             {
@@ -157,9 +184,7 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,IsApproved,Content")] PostEditViewModel model)
         {
-            Post post = db.Posts
-                .Include(p => p.Category)
-                .SingleOrDefault(p => p.PostId == id);
+            Post post = GetPostForUser(id);
 
             if (post == null)
             {
@@ -182,13 +207,9 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Posts/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Post post = db.Posts.Find(id);
+            Post post = GetPostForUser(id);
             if (post == null)
             {
                 return HttpNotFound();
