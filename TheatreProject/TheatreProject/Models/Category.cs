@@ -14,10 +14,14 @@ namespace TheatreProject.Models
 
         public virtual ICollection<Post> Posts { get; set; }
 
-
-        public int PostCount()
+        public bool HasApprovedPosts
         {
-            return Posts.Where(p => p.IsApproved).Count();
+            get { return Posts.Where(p => p.IsApproved).Any(); }
+        }
+
+        public int ApprovedPostCount
+        {
+            get { return Posts.Where(p => p.IsApproved).Count(); }
         }
     }
 }
