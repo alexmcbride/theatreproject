@@ -19,7 +19,7 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // Gets posts that the user can see.
+        // Gets posts that this user can see.
         private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int categoryId = 0)
         {
             IQueryable<Post> posts = db.Posts
@@ -27,28 +27,32 @@ namespace TheatreProject.Controllers
                 .Include(p => p.Category)
                 .OrderByDescending(p => p.Published);
 
-            // If category is needed then include that.
+            // Filter posts by category.
             if (includeCategory)
             {
                 posts = posts.Where(p => p.CategoryId == categoryId);
             }
 
-            // Get approved posts and any posts that belong to the user, or get all if user is an admin.
-            if (User.Identity.IsAuthenticated)
+            // Admin can see all posts, so no filtering needed.
+            if (!User.IsInRole("Admin"))
             {
-                bool admin = User.IsInRole("Admin");
-                User user = db.Users.Single(u => u.UserName == User.Identity.Name);
-                posts = posts.Where(p => admin || p.IsApproved || p.StaffId == user.Id);
-            }
-            else
-            {
-                posts = posts.Where(p => p.IsApproved);
+                // Staff see approved posts and posts they've created.
+                if (User.IsInRole("Staff"))
+                {
+                    string userId = User.Identity.GetUserId();
+                    posts = posts.Where(p => p.IsApproved || p.StaffId == userId);
+                }
+                else
+                {
+                    // Everyone else sees only approved posts.
+                    posts = posts.Where(p => p.IsApproved);
+                }
             }
 
             return posts;
         }
 
-        // Gets post for a single user, if they can view it.
+        // Gets a single post if this user can access it.
         private Post GetPostForUser(int id, bool allowApproved = false)
         {
             var post = db.Posts
@@ -58,26 +62,23 @@ namespace TheatreProject.Controllers
 
             if (post != null)
             {
-                // Everyone can see approved posts.
+                // Allow all approved posts.
                 if (allowApproved && post.IsApproved)
                 {
                     return post;
                 }
 
-                if (User.Identity.IsAuthenticated)
+                // Admin always see posts.
+                if (User.IsInRole("Admin"))
                 {
-                    // Admin always see posts.
-                    if (User.IsInRole("Admin"))
-                    {
-                        return post;
-                    }
+                    return post;
+                }
 
-                    // Users can see posts if they belong to them.
-                    User user = db.Users.Single(u => u.UserName == User.Identity.Name);
-                    if (post.StaffId == user.Id)
-                    {
-                        return post;
-                    }
+                // Staff can only view their own posts.
+                string userId = User.Identity.GetUserId();
+                if (User.IsInRole("Staff") && post.StaffId == userId)
+                {
+                    return post;
                 }
             }
 
@@ -201,7 +202,7 @@ namespace TheatreProject.Controllers
                 db.SaveChanges();
 
                 // Redirect to details if approved, otherwise show approval needed warning.
-                return RedirectToAction(post.IsApproved ? "details": "approvalneeded", new { id = post.PostId });
+                return RedirectToAction(post.IsApproved ? "details" : "approvalneeded", new { id = post.PostId });
             }
 
             model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
@@ -312,6 +313,7 @@ namespace TheatreProject.Controllers
                 return HttpNotFound();
             }
 
+            // Get all of this member's posts.
             var posts = db.Posts
                 .Where(p => p.StaffId == staff.Id && p.IsApproved)
                 .OrderByDescending(p => p.Published);
