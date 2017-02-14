@@ -126,7 +126,7 @@ namespace TheatreProject.Models
                     IsApproved = false,
                     Published = new DateTime(2017, 02, 14, 11, 07, 23, 713),
                     Staff = staff,
-                    Title = "Quisque vitae tellus ut libero (NA)", 
+                    Title = "Quisque vitae tellus ut libero", 
                 });
                 context.SaveChanges();
             }

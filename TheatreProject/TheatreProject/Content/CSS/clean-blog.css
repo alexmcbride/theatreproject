@@ -424,3 +424,11 @@ body {
 	color: #458;
 	font-size: 16pt;
 }
+
+.unapproved-post {
+	background-color: #eeeeee;
+    padding-left: 20px;
+    padding-right:20px;
+    padding-top: 1px;
+    border: 1px dotted #333;
+}

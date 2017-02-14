@@ -2,8 +2,15 @@
 @using TheatreProject.Helpers
 @using Microsoft.AspNet.Identity;
 
-<article>
-    <h2>@Html.ActionLink(Model.Title, "details", new { id = Model.PostId })</h2>
+<article @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-post\"")>
+    <h2>
+        @Html.ActionLink(Model.Title, "details", new { id = Model.PostId })
+
+        @if (!Model.IsApproved)
+        {
+            @:[Unapproved]
+        }
+    </h2>
     <p>@Model.Content</p>
 
     <div class="row">

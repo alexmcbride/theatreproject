@@ -185,7 +185,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content,IsApproved")] PostEditViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -195,16 +195,30 @@ namespace TheatreProject.Controllers
                 UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
                 post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
                 post.Published = DateTime.Now;
-                post.IsApproved = false;
+                post.IsApproved = model.IsApproved && User.IsInRole("Admin"); // Only admin can set approved.
 
                 db.Posts.Add(post);
                 db.SaveChanges();
 
-                return RedirectToAction("details", new { id = post.PostId });
+                // Redirect to details if approved, otherwise show approval needed warning.
+                return RedirectToAction(post.IsApproved ? "details": "approvalneeded", new { id = post.PostId });
             }
 
             model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
             return View(model);
+        }
+
+        [Authorize(Roles = "Admin,Staff")]
+        public ActionResult ApprovalNeeded(int id)
+        {
+            Post post = GetPostForUser(id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(post);
         }
 
         // GET: Posts/Edit/5

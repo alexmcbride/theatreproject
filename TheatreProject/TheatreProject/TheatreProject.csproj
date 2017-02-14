@@ -320,6 +320,7 @@
     <Content Include="Views\Comments\Index.cshtml" />
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Views\Posts\Staff.cshtml" />
+    <Content Include="Views\Posts\ApprovalNeeded.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
