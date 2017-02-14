@@ -5,17 +5,24 @@
 <article>
     <h2>@Html.ActionLink(Model.Title, "details", new { id = Model.PostId })</h2>
     <p>@Model.Content</p>
-    <p class="text-muted small">
-        Posted 
-        in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
-        by @Html.ActionLink(Model.Staff.UserName, "user", "posts", new { id = Model.StaffId }, null) 
-        about @Html.RelativeDate(Model.Published)
 
-        @if (User.IsInRole("Admin") || Model.BelongsTo(User.Identity.GetUserId()))
-        {
-            @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
-            @:|
-            @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
-        }
-    </p>
+    <div class="row">
+        <div class="col-sm-8 text-muted small">
+            Posted
+            by @Html.ActionLink(Model.Staff.UserName, "user", "posts", new { id = Model.StaffId }, null)
+            about @Html.RelativeDate(Model.Published)
+            in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
+        </div>
+
+        <div class="col-sm-4 text-muted text-right small">
+            @if (User.IsInRole("Admin") || Model.BelongsTo(User.Identity.GetUserId()))
+            {
+                @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
+                @:|
+                @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
+            }
+        </div>
+    </div>
+
+    <hr>
 </article>

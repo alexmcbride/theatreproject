@@ -6,7 +6,7 @@ using TheatreProject.Models;
 
 namespace TheatreProject.Controllers
 {
-    [Authorize(Roles = "Admin,Staff,Member")]
+    [Authorize(Roles = "Admin")]
     public class CommentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -33,32 +33,32 @@ namespace TheatreProject.Controllers
             return View(comment);
         }
 
-        // GET: Comments/Create
-        public ActionResult Create()
-        {
-            ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email");
-            return View();
-        }
+        //// GET: Comments/Create
+        //public ActionResult Create()
+        //{
+        //    ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId");
+        //    ViewBag.UserId = new SelectList(db.Users, "Id", "Email");
+        //    return View();
+        //}
 
-        // POST: Comments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CommentId,PostId,UserId,Posted,IsApproved,Content")] Comment comment)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Comments.Add(comment);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //// POST: Comments/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "CommentId,PostId,UserId,Posted,IsApproved,Content")] Comment comment)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Comments.Add(comment);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-            ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId", comment.PostId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", comment.UserId);
-            return View(comment);
-        }
+        //    ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId", comment.PostId);
+        //    ViewBag.UserId = new SelectList(db.Users, "Id", "Email", comment.UserId);
+        //    return View(comment);
+        //}
 
         // GET: Comments/Edit/5
         public ActionResult Edit(int? id)
