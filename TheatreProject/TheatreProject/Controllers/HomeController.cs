@@ -11,8 +11,10 @@ namespace TheatreProject.Controllers
 
         // GET: /Home/Index
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Index(AccountMessageId? message)
         {
+            UpdateMessage(message);
+
             return View(db.Categories.ToList());
         }
 
@@ -21,6 +23,21 @@ namespace TheatreProject.Controllers
         public ActionResult Contact()
         {
             return View();
+        }
+
+        private void UpdateMessage(AccountMessageId? message)
+        {
+            switch(message ?? AccountMessageId.None)
+            {
+                case AccountMessageId.SignedIn:
+                    ViewData["Message"] = "You have signed in.";
+                    ViewData["MessageType"] = "success";
+                    break;
+                case AccountMessageId.SignedOut:
+                    ViewData["Message"] = "You have signed out.";
+                    ViewData["MessageType"] = "success";
+                    break;
+            }
         }
     }
 }

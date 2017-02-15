@@ -8,10 +8,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Diagnostics;
 
 namespace TheatreProject.Controllers
 {
+    public enum AccountMessageId
+    {
+        None,
+        SignedIn,
+        SignedOut
+    }
+
     [Authorize]
     public class AccountController : Controller
     {
@@ -20,6 +26,7 @@ namespace TheatreProject.Controllers
 
         public AccountController()
         {
+             
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -88,6 +95,10 @@ namespace TheatreProject.Controllers
                 switch (result)
                 {
                     case SignInStatus.Success:
+                        if (string.IsNullOrEmpty(returnUrl))
+                        {
+                            return RedirectToAction("index", "home", new { message = AccountMessageId.SignedIn });
+                        }                        
                         return RedirectToLocal(returnUrl);
                     case SignInStatus.LockedOut:
                         return View("Lockout");
@@ -451,7 +462,7 @@ namespace TheatreProject.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("index", "home");
+            return RedirectToAction("index", "home",  new { message = AccountMessageId.SignedOut });
         }
 
         //
