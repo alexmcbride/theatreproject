@@ -483,6 +483,7 @@ namespace TheatreProject.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult DebugLogout()
         {
 #if DEBUG
