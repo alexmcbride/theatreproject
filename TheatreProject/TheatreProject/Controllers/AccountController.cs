@@ -486,6 +486,9 @@ namespace TheatreProject.Controllers
         public ActionResult DebugLogout()
         {
 #if DEBUG
+            // We log us out if our ID has changed. This happens when running
+            // debug after previously logging in. And causes all sorts of misery.
+            // By forcing ourselves to login we fix that.
             User user = UserManager.FindByName(User.Identity.Name);
             if (User.Identity.GetUserId() == user.Id)
             {
