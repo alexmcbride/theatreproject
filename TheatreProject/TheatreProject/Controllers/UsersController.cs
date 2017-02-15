@@ -245,7 +245,7 @@ namespace TheatreProject.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            if (id == User.Identity.GetUserId())
+            if (User.Identity.GetUserId() == null || id == User.Identity.GetUserId())
             {
                 return RedirectToAction("index", "users", new { message = UsersMessageId.RoleChangeError });
             }
@@ -290,7 +290,7 @@ namespace TheatreProject.Controllers
                 }
 
                 // Redirect after change to make sure new user type is loaded.
-                return RedirectToAction("index", "users", new { id = id, oldRole = oldRole, message = UsersMessageId.RoleChanged });
+                return RedirectToAction("index", "users", new { id = id, oldRole = oldRole, message = UsersMessageId.RoleNotChanged });
             }
 
             return View(model);
@@ -304,6 +304,7 @@ namespace TheatreProject.Controllers
             Deleted,
             RoleChanged,
             RoleChangeError,
+            RoleNotChanged,
             DeleteError,
         }
 
@@ -312,28 +313,32 @@ namespace TheatreProject.Controllers
             switch (message ?? UsersMessageId.None)
             {
                 case UsersMessageId.Added:
-                    ViewBag.Message = "A new user has been added";
-                    ViewBag.MessageType = "Added";
+                    ViewData["Message"] = "A new user has been added";
+                    ViewData["MessageType"] = "success";
                     break;
                 case UsersMessageId.Edited:
-                    ViewBag.Message = "The user has been edited";
-                    ViewBag.MessageType = "Edited";
+                    ViewData["Message"] = "The user has been edited";
+                    ViewData["MessageType"] = "success";
                     break;
                 case UsersMessageId.Deleted:
-                    ViewBag.Message = "The user has been deleted";
-                    ViewBag.MessageType = "Deleted";
+                    ViewData["Message"] = "The user has been deleted";
+                    ViewData["MessageType"] = "success";
                     break;
                 case UsersMessageId.RoleChanged:
-                    ViewBag.Message = "The user's role has been changed";
-                    ViewBag.MessageType = "Role Changed";
+                    ViewData["Message"] = "The user's role has been changed";
+                    ViewData["MessageType"] = "success";
                     break;
                 case UsersMessageId.RoleChangeError:
-                    ViewBag.Message = "Your cannot change your own role";
-                    ViewBag.MessageType = "Role Change Error";
+                    ViewData["Message"] = "Your cannot change your own role";
+                    ViewData["MessageType"] = "warning";
+                    break;
+                case UsersMessageId.RoleNotChanged:
+                    ViewData["Message"] = "The user already has this role";
+                    ViewData["MessageType"] = "warning";
                     break;
                 case UsersMessageId.DeleteError:
-                    ViewBag.Message = "You cannot delete your own account";
-                    ViewBag.MessageType = "Delete Error";
+                    ViewData["Message"] = "You cannot delete your own account";
+                    ViewData["MessageType"] = "warning";
                     break;
             }
         }

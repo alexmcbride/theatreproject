@@ -363,24 +363,24 @@ namespace TheatreProject.Controllers
             switch (message ?? PostsMessageId.None)
             {
                 case PostsMessageId.Added:
-                    ViewBag.Message = "The post has been added";
-                    ViewBag.MessageType = "Added";
+                    ViewData["Message"] = "The post has been added";
+                    ViewData["MessageType"] = "success";
                     break;
                 case PostsMessageId.Edited:
-                    ViewBag.Message = "The post has been edited";
-                    ViewBag.MessageType = "Edited";
+                    ViewData["Message"] = "The post has been edited";
+                    ViewData["MessageType"] = "success";
                     break;
                 case PostsMessageId.Deleted:
-                    ViewBag.Message = "The post has been deleted";
-                    ViewBag.MessageType = "Deleted";
+                    ViewData["Message"] = "The post has been deleted";
+                    ViewData["MessageType"] = "success";
                     break;
                 case PostsMessageId.Approved:
-                    ViewBag.Message = "The post has been approved";
-                    ViewBag.MessageType = "Approved";
+                    ViewData["Message"] = "The post has been approved";
+                    ViewData["MessageType"] = "success";
                     break;
                 case PostsMessageId.Commented:
-                    ViewBag.Message = "The comment has been added";
-                    ViewBag.MessageType = "Added";
+                    ViewData["Message"] = "The comment has been added";
+                    ViewData["MessageType"] = "success";
                     break;
             }
         }

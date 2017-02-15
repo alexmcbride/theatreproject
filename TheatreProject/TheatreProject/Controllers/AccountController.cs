@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Diagnostics;
 
 namespace TheatreProject.Controllers
 {
@@ -481,7 +482,7 @@ namespace TheatreProject.Controllers
             base.Dispose(disposing);
         }
 
-        #region Helpers
+#region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -538,6 +539,6 @@ namespace TheatreProject.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-        #endregion
+#endregion
     }
 }

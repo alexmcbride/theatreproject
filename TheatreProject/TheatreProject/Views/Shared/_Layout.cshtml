@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using TheatreProject.Helpers
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -93,14 +95,14 @@
             @RenderSection("breadcrumb", required: false)
         </div>
 
-        @if (ViewBag.Message != null)
+        @if (ViewData.ContainsKey("Message"))
         {
-            <div class="row">
-                <p class="text-success">
-                    <div class="alert alert-success">
-                        <strong>@ViewBag.MessageType!</strong> @ViewBag.Message
-                    </div>
-                </p>
+            <br>
+
+            <div class="row" id="message-flash">
+                <div class="alert alert-@((string)ViewData["MessageType"])">
+                    <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
+                </div>
             </div>
         }
 

@@ -58,5 +58,14 @@ namespace TheatreProject.Helpers
                 return years <= 1 ? "about a year ago" : "about " + years + " years ago";
             }
         } 
+
+        public static MvcHtmlString Capitalize(this HtmlHelper helper, string value)
+        {
+            if (value != null && value.Length > 1)
+            {
+                return new MvcHtmlString(Char.ToUpper(value[0]) + value.Substring(1));
+            }
+            return new MvcHtmlString(value);
+        }
     }
 }
