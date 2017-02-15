@@ -171,6 +171,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
+    <Compile Include="Helpers\IPaginator.cs" />
     <Compile Include="Helpers\Paginator.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="SecretConfig.cs" />
@@ -320,6 +321,7 @@
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Views\Posts\Staff.cshtml" />
     <Content Include="Secret.config" />
+    <Content Include="Views\Shared\DisplayTemplates\Paginator.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -14,7 +14,7 @@ namespace TheatreProject.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : AccountController
     {
-        private const int MaxUsersPerPage = 50;
+        private const int MaxUsersPerPage = 20;
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public UsersController() : base() { }

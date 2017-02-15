@@ -63,20 +63,7 @@
 
     </table>
 
-    @if (Model.HasPreviousPage)
-    {
-        @:&laquo;  @Html.ActionLink("Previous", "index", new { page = Model.PreviousPageNumber })
-    }
-
-    @if (Model.HasPreviousPage && Model.HasNextPage)
-    {
-        @:|
-    }
-
-    @if (Model.HasNextPage)
-    {
-        @Html.ActionLink("Next", "index", new { page = Model.NextPageNumber }) @:&raquo;
-    }
+    @Html.DisplayFor(m => m, "Paginator")
 
     <p>
         @Html.ActionLink("Create New Staff", "create")

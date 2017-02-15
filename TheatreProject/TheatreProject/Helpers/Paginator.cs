@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace TheatreProject.Helpers
 {
-    public class Paginator<T>
+    public class Paginator<T> : IPaginator
     {
         private int currentPage;
         private IList<T> items;
