@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TheatreProject.Helpers;
@@ -21,7 +20,7 @@ namespace TheatreProject.Controllers
 
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index(int? category, int? page)
+        public ActionResult Index(int? page)
         {
             IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
