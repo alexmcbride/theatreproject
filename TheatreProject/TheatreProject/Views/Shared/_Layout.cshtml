@@ -13,6 +13,7 @@
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 
     <!-- Custom Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
@@ -99,7 +100,7 @@
         {
             <br>
 
-            <div class="row" id="message-flash">
+            <div id="message-flash" class="row">
                 <div class="alert alert-@((string)ViewData["MessageType"])">
                     <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
                 </div>
@@ -120,7 +121,6 @@
         </div>
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
