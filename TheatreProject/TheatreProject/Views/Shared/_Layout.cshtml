@@ -12,7 +12,7 @@
     <title>Local Theatre Company - @ViewBag.Title</title>
 
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/modernizr")*@
     @Scripts.Render("~/bundles/jquery")
 
     <!-- Custom Fonts -->
@@ -100,11 +100,17 @@
         {
             <br>
 
-            <div id="message-flash" class="row">
+            <div id="message-flash" class="row" style="display: none;">
                 <div class="alert alert-@((string)ViewData["MessageType"])">
                     <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
                 </div>
             </div>
+
+            <script type="text/javascript">
+                $(function () {
+                    $("#message-flash").fadeIn();
+                });
+            </script>
         }
 
         @RenderBody()
