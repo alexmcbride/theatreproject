@@ -115,7 +115,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content,IsApproved")] PostEditViewModel model)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -125,35 +125,16 @@ namespace TheatreProject.Controllers
                 UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
                 post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
                 post.Published = DateTime.Now;
-                post.IsApproved = model.IsApproved && User.IsInRole("Admin"); // Only admin can set approved.
+                post.IsApproved = false;
 
                 db.Posts.Add(post);
                 db.SaveChanges();
 
-                // Redirect to details if approved, otherwise show approval needed warning.
-                if (post.IsApproved)
-                {
-                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Added });
-                }
-
-                return RedirectToAction("approvalneeded", new { id = post.PostId });
+                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.AppovalNeeded });
             }
 
             model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
             return View(model);
-        }
-
-        [Authorize(Roles = "Admin,Staff")]
-        public ActionResult ApprovalNeeded(int id)
-        {
-            Post post = GetAllowedPost(id);
-
-            if (post == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(post);
         }
 
         // GET: Posts/Edit/5
@@ -171,7 +152,6 @@ namespace TheatreProject.Controllers
             {
                 Content = post.Content,
                 Title = post.Title,
-                IsApproved = post.IsApproved && User.IsInRole("Admin"), // Only admin can set this.
                 Categories = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId),
                 CategoryId = post.CategoryId,
                 Category = post.Category
@@ -184,7 +164,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,IsApproved,Content")] PostEditViewModel model)
+        public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
             Post post = db.Posts.Find(id);
 
@@ -195,16 +175,9 @@ namespace TheatreProject.Controllers
 
             if (ModelState.IsValid)
             {
-                bool showApprovedMessage = !post.IsApproved && model.IsApproved;
-
                 UpdateModel(post);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
-
-                if (showApprovedMessage)
-                {
-                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Approved });
-                }
                 return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Edited });
             }
 
@@ -243,6 +216,32 @@ namespace TheatreProject.Controllers
             db.Posts.Remove(post);
             db.SaveChanges();
             return RedirectToAction("index", new { message = PostsMessageId.Deleted });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Approve(int id)
+        {
+            Post post = db.Posts.Find(id);
+            if (!post.IsApproved)
+            {
+                post.IsApproved = true;
+                db.Entry(post).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("details", "posts", new { id = post.PostId, message = PostsMessageId.Approved });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Disallow(int id)
+        {
+            Post post = db.Posts.Find(id);
+            if (post.IsApproved)
+            {
+                post.IsApproved = false;
+                db.Entry(post).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("details", "posts", new { id = post.PostId, message = PostsMessageId.Disallowed });
         }
 
         [AllowAnonymous]
@@ -355,6 +354,8 @@ namespace TheatreProject.Controllers
             Edited,
             Deleted,
             Approved,
+            Disallowed,
+            AppovalNeeded,
             Commented,
         }
 
@@ -377,6 +378,14 @@ namespace TheatreProject.Controllers
                 case PostsMessageId.Approved:
                     ViewData["Message"] = "The post has been approved";
                     ViewData["MessageType"] = "success";
+                    break;
+                case PostsMessageId.Disallowed:
+                    ViewData["Message"] = "The post has been disallowed";
+                    ViewData["MessageType"] = "warning";
+                    break;
+                case PostsMessageId.AppovalNeeded:
+                    ViewData["Message"] = "The post needs to be approved by an admin before it will be displayed";
+                    ViewData["MessageType"] = "warning";
                     break;
                 case PostsMessageId.Commented:
                     ViewData["Message"] = "The comment has been added";

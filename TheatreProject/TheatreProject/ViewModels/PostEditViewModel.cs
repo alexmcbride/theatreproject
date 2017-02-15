@@ -9,9 +9,6 @@ namespace TheatreProject.ViewModels
         [Required]
         public string Title { get; set; }
 
-        [Display(Name = "Is Approved")]
-        public bool IsApproved { get; set; }
-
         [Required, DataType(DataType.MultilineText)]
         public string Content { get; set; }
 

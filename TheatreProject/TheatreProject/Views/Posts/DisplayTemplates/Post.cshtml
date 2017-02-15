@@ -5,24 +5,34 @@
 <article @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-post\"")>
     <h2>
         @Html.ActionLink(Model.Title, "details", new { id = Model.PostId })
-
-        @if (!Model.IsApproved)
-        {
-            @:[Unapproved]
-        }
     </h2>
     <p>@Model.Content</p>
 
     <div class="row">
         <div class="col-sm-8 text-muted small">
-            Posted
-            by @Html.ActionLink(Model.Staff.UserName, "staff", "posts", new { id = Model.StaffId }, null)
+            Posted by @Html.ActionLink(Model.Staff.UserName, "staff", "posts", new { id = Model.StaffId }, null)
             @Html.RelativeDate(Model.Published)
             in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
         </div>
 
         <div class="col-sm-4 text-muted text-right small">
-            @if (User.IsInRole("Admin") || Model.BelongsTo(User.Identity.GetUserId()))
+            @{
+                var admin = User.IsInRole("Admin");
+            }
+
+            @if (admin)
+            {
+                if (Model.IsApproved)
+                {                    
+                    @Html.ActionLink("Disallow", "Disallow", new { id = Model.PostId }) @:|
+                }
+                else
+                {
+                    @Html.ActionLink("Approve", "approve", new { id = Model.PostId }) @:|
+                }
+            }
+
+            @if (admin || Model.BelongsTo(User.Identity.GetUserId()))
             {
                 @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
                 @:|

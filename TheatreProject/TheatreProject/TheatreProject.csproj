@@ -319,7 +319,6 @@
     <Content Include="Views\Comments\Index.cshtml" />
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Views\Posts\Staff.cshtml" />
-    <Content Include="Views\Posts\ApprovalNeeded.cshtml" />
     <Content Include="Secret.config" />
   </ItemGroup>
   <ItemGroup>

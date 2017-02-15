@@ -277,8 +277,11 @@ namespace TheatreProject.Controllers
                 User user = await UserManager.FindByIdAsync(id);
                 string oldRole = (await UserManager.GetRolesAsync(id)).Single();
 
-                if (oldRole != model.Role)
+                if (oldRole == model.Role)
                 {
+                    return RedirectToAction("index", "users", new { id = id, message = UsersMessageId.RoleNotChanged });
+                }
+                else { 
                     await UserManager.RemoveFromRoleAsync(id, oldRole);
                     await UserManager.AddToRoleAsync(id, model.Role);
 
@@ -287,10 +290,10 @@ namespace TheatreProject.Controllers
                         "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
                         model.Role == "Admin" ? "Staff" : model.Role,
                         id);
-                }
 
-                // Redirect after change to make sure new user type is loaded.
-                return RedirectToAction("index", "users", new { id = id, oldRole = oldRole, message = UsersMessageId.RoleNotChanged });
+                    // Redirect after change to make sure new user type is loaded.
+                    return RedirectToAction("index", "users", new { id = id, message = UsersMessageId.RoleChanged });
+                }
             }
 
             return View(model);

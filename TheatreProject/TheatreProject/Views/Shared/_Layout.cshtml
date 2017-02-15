@@ -100,7 +100,7 @@
         {
             <br>
 
-            <div id="message-flash" class="row" style="display: none;">
+            <div id="message-flash" class="row" style="visibility: hidden;">
                 <div class="alert alert-@((string)ViewData["MessageType"])">
                     <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
                 </div>
@@ -108,7 +108,7 @@
 
             <script type="text/javascript">
                 $(function () {
-                    $("#message-flash").fadeIn();
+                    $("#message-flash").css('visibility', 'visible').hide().fadeIn('slow');
                 });
             </script>
         }
