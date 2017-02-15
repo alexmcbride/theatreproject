@@ -30,12 +30,12 @@ namespace TheatreProject.Controllers
             switch(message ?? AccountMessageId.None)
             {
                 case AccountMessageId.SignedIn:
-                    ViewData["Message"] = "You have signed in.";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "You have signed in.";
+                    ViewBag.MessageType = "success";
                     break;
                 case AccountMessageId.SignedOut:
-                    ViewData["Message"] = "You have signed out.";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "You have signed out.";
+                    ViewBag.MessageType = "success";
                     break;
             }
         }

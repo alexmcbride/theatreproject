@@ -119,16 +119,16 @@ namespace TheatreProject.Controllers
             switch (message ?? CategoryMessageId.None)
             {
                 case CategoryMessageId.Added:
-                    ViewData["Message"] = "The category has been added";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The category has been added";
+                    ViewBag.MessageType = "success";
                     break;
                 case CategoryMessageId.Edited:
-                    ViewData["Message"] = "The category has been edited";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The category has been edited";
+                    ViewBag.MessageType = "success";
                     break;
                 case CategoryMessageId.Deleted:
-                    ViewData["Message"] = "The category has been deleted";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The category has been deleted";
+                    ViewBag.MessageType = "success";
                     break;
 
             }

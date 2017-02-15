@@ -317,32 +317,32 @@ namespace TheatreProject.Controllers
             switch (message ?? UsersMessageId.None)
             {
                 case UsersMessageId.Added:
-                    ViewData["Message"] = "A new user has been added";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "A new user has been added";
+                    ViewBag.MessageType = "success";
                     break;
                 case UsersMessageId.Edited:
-                    ViewData["Message"] = "The user has been edited";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The user has been edited";
+                    ViewBag.MessageType = "success";
                     break;
                 case UsersMessageId.Deleted:
-                    ViewData["Message"] = "The user has been deleted";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The user has been deleted";
+                    ViewBag.MessageType = "success";
                     break;
                 case UsersMessageId.RoleChanged:
-                    ViewData["Message"] = "The user's role has been changed";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The user's role has been changed";
+                    ViewBag.MessageType = "success";
                     break;
                 case UsersMessageId.RoleChangeError:
-                    ViewData["Message"] = "Your cannot change your own role";
-                    ViewData["MessageType"] = "warning";
+                    ViewBag.Message = "Your cannot change your own role";
+                    ViewBag.MessageType = "danger";
                     break;
                 case UsersMessageId.RoleNotChanged:
-                    ViewData["Message"] = "The user already has this role";
-                    ViewData["MessageType"] = "warning";
+                    ViewBag.Message = "The user already has this role";
+                    ViewBag.MessageType = "danger";
                     break;
                 case UsersMessageId.DeleteError:
-                    ViewData["Message"] = "You cannot delete your own account";
-                    ViewData["MessageType"] = "warning";
+                    ViewBag.Message = "You cannot delete your own account";
+                    ViewBag.MessageType = "danger";
                     break;
             }
         }

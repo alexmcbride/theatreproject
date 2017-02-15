@@ -20,19 +20,15 @@
                 var admin = User.IsInRole("Admin");
             }
 
-            @if (Model.IsApproved)
-            {                    
-                @Html.ActionLink("Disallow", "Disallow", new { id = Model.PostId }) @:|
-            }
-            else
+            @if (admin)
             {
-                if (admin)
+                if (Model.IsApproved)
                 {
-                    @Html.ActionLink("Approve", "approve", new { id = Model.PostId }) @:|
+                    @Html.ActionLink("Disallow", "Disallow", new { id = Model.PostId }) @:|
                 }
                 else
                 {
-                    @:[Needs Approval] |
+                    @Html.ActionLink("Approve", "approve", new { id = Model.PostId }) @:|
                 }
             }
 

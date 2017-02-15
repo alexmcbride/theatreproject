@@ -8,40 +8,32 @@
     @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Title
 }
 
-<div class="row">
-    <hr />
+<h2>@ViewBag.Title.</h2>
 
-    <h2>@ViewBag.Title.</h2>
+<p>Manage the list of blog categories that are available.</p>
 
-    <p>Manage the list of blog categories that are available.</p>
-
-    @if (Model.Any())
+@if (Model.Any())
+{
+<table class="table">
+    @foreach (var item in Model)
     {
-    <table class="table">
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td class="text-right">
-                    @Html.ActionLink("Edit", "edit", new { id = item.CategoryId }) |
-                    @Html.ActionLink("Delete", "delete", new { id = item.CategoryId })
-                </td>
-            </tr>
-        }
-    </table>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="text-right">
+                @Html.ActionLink("Edit", "edit", new { id = item.CategoryId }) |
+                @Html.ActionLink("Delete", "delete", new { id = item.CategoryId })
+            </td>
+        </tr>
     }
-    else
-    {
-        <p><em>There are no categories to display</em></p>
-    }
+</table>
+}
+else
+{
+    <p><em>There are no categories to display</em></p>
+}
 
-    <p>
-        @Html.ActionLink("Create New Category", "create")
-    </p>
-</div>
-
-<div class="row">
-    <hr>
-</div>
+<p>
+    @Html.ActionLink("Create New Category", "create")
+</p>

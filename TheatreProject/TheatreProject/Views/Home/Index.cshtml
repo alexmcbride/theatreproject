@@ -18,45 +18,43 @@
         .intro-header .site-heading .subheading, .intro-header .page-heading .subheading {
             font-size: 22px;
         }
+
+        #top-hr {
+            display: none;
+        }
     </style>
 }
 
-<div class="row">
-    <div class="col-md-6">
-        <h2>Welcome All.</h2>
-        <div>
-            Welcome to the blog for the Local Theatre Company. Here you'll find update-to-date information about our theatre and activities.
-            There are announcements, movie and performance reviews, as well as a whole host of other things to keep you occupied. Please choose a
-            category from the list to the right to get started. Make sure to register and leave a comment to let us know what you think!
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <h2>@Html.ActionLink("Blog Categories", "index", "posts").</h2>
-
-        @if (Model.Any())
-        {
-            <div class="list-group">
-                @foreach (var category in Model)
-                {
-                    <a href="@Url.Action("category", "posts", new { id = category.CategoryId })" class="list-group-item list-group-item-action justify-content-between">
-                        @category.Name
-
-                        @if (category.HasApprovedPosts)
-                        {
-                            <span class="badge badge-default badge-pin">@category.ApprovedPostCount</span>
-                        }
-                    </a>
-                }
-            </div>
-        }
-        else
-        {
-            <p><em>There are no categories to display</em></p>
-        }
+<div class="col-md-6">
+    <h2>Welcome All.</h2>
+    <div>
+        Welcome to the blog for the Local Theatre Company. Here you'll find update-to-date information about our theatre and activities.
+        There are announcements, movie and performance reviews, as well as a whole host of other things to keep you occupied. Please choose a
+        category from the list to the right to get started. Make sure to register and leave a comment to let us know what you think!
     </div>
 </div>
 
-<div class="row">
-    <hr>
+<div class="col-md-6">
+    <h2>@Html.ActionLink("Blog Categories", "index", "posts").</h2>
+
+    @if (Model.Any())
+    {
+        <div class="list-group">
+            @foreach (var category in Model)
+            {
+                <a href="@Url.Action("category", "posts", new { id = category.CategoryId })" class="list-group-item list-group-item-action justify-content-between">
+                    @category.Name
+
+                    @if (category.HasApprovedPosts)
+                    {
+                        <span class="badge badge-default badge-pin">@category.ApprovedPostCount</span>
+                    }
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <p><em>There are no categories to display</em></p>
+    }
 </div>

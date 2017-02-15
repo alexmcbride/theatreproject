@@ -353,32 +353,32 @@ namespace TheatreProject.Controllers
             switch (message ?? PostsMessageId.None)
             {
                 case PostsMessageId.Added:
-                    ViewData["Message"] = "The post has been added";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The post has been added";
+                    ViewBag.MessageType = "success";
                     break;
                 case PostsMessageId.Edited:
-                    ViewData["Message"] = "The post has been edited";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The post has been edited";
+                    ViewBag.MessageType = "success";
                     break;
                 case PostsMessageId.Deleted:
-                    ViewData["Message"] = "The post has been deleted";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The post has been deleted";
+                    ViewBag.MessageType = "success";
                     break;
                 case PostsMessageId.Approved:
-                    ViewData["Message"] = "The post has been approved";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The post has been approved";
+                    ViewBag.MessageType = "success";
                     break;
                 case PostsMessageId.Disallowed:
-                    ViewData["Message"] = "The post has been disallowed";
-                    ViewData["MessageType"] = "warning";
+                    ViewBag.Message = "The post has been disallowed";
+                    ViewBag.MessageType = "danger";
                     break;
                 case PostsMessageId.AppovalNeeded:
-                    ViewData["Message"] = "The post needs to be approved by an admin before it will be displayed";
-                    ViewData["MessageType"] = "warning";
+                    ViewBag.Message = "The post needs to be approved by an admin before it will be displayed";
+                    ViewBag.MessageType = "danger";
                     break;
                 case PostsMessageId.Commented:
-                    ViewData["Message"] = "The comment has been added";
-                    ViewData["MessageType"] = "success";
+                    ViewBag.Message = "The comment has been added";
+                    ViewBag.MessageType = "success";
                     break;
             }
         }

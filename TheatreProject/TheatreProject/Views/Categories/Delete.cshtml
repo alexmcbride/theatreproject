@@ -8,29 +8,21 @@
     @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Manage Categories", "index") &raquo; @ViewBag.Title
 }
 
-<div class="row">
-    <hr />
+<h2>@ViewBag.Title.</h2>
 
-    <h2>@ViewBag.Title.</h2>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+    @*<h4>Delete a blog category.</h4>*@
 
-        @*<h4>Delete a blog category.</h4>*@
+    <p>Are you sure you want to delete this category?</p>
 
-        <p>Are you sure you want to delete this category?</p>
+    <h4>@Model.Name</h4>
 
-        <h4>@Model.Name</h4>
+    <p><em>Note: this will delete all the posts in the category as well.</em></p>
 
-        <p><em>Note: this will delete all the posts in the category as well.</em></p>
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("No, thanks!", "index")
-        </div>
-    }
-</div>
-
-<div class="row">
-    <hr>
-</div>
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        @Html.ActionLink("No, thanks!", "index")
+    </div>
+}

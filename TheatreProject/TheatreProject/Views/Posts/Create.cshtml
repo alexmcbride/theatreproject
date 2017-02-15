@@ -8,17 +8,9 @@
     @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Blog", "index") &raquo; @ViewBag.Title
 }
 
-<div class="row">
-    <hr />
+<h2>@ViewBag.Title.</h2>
 
-    <h2>@ViewBag.Title.</h2>
-
-    @Html.EditorForModel()
-</div>
-
-<div class="row">
-    <hr>
-</div>
+@Html.EditorForModel()
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

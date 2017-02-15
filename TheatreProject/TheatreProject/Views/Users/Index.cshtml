@@ -9,67 +9,59 @@
     @Html.ActionLink("Home", "index", "home") &raquo; @ViewBag.Title
 }
 
-<div class="row">
-    <hr />
+<h2>@ViewBag.Title.</h2>
 
-    <h2>@ViewBag.Title.</h2>
+<p>Manage users of the site and create new staff.</p>
 
-    <p>Manage users of the site and create new staff.</p>
+<table class="table table-hover">
+    <tr>
+        <th>
+            Username
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Joined
+        </th>
+        <th>Role</th>
+        <th></th>
+    </tr>
 
-    <table class="table table-hover">
+    @foreach (var user in Model.Items)
+    {
         <tr>
-            <th>
-                Username
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Joined
-            </th>
-            <th>Role</th>
-            <th></th>
+            <td>
+                @Html.DisplayFor(modelItem => user.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => user.Email)
+            </td>
+            <td>
+                @user.Joined.ToShortDateString()
+            </td>
+            <td>
+                @user.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = user.Id }))
+            </td>
+            <td>
+                @if (user is Staff)
+                {
+                    @Html.ActionLink("Edit", "editstaff", new { id = user.Id })
+                }
+                else if (user is Member)
+                {
+                    @Html.ActionLink("Edit", "editmember", new { id = user.Id })
+                } |
+                @Html.ActionLink("Details", "details", new { id = user.Id }) |
+                @Html.ActionLink("Delete", "delete", new { id = user.Id })
+            </td>
         </tr>
+    }
 
-        @foreach (var user in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => user.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => user.Email)
-                </td>
-                <td>
-                    @user.Joined.ToShortDateString()
-                </td>
-                <td>
-                    @user.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = user.Id }))
-                </td>
-                <td>
-                    @if (user is Staff)
-                    {
-                        @Html.ActionLink("Edit", "editstaff", new { id = user.Id })
-                    }
-                    else if (user is Member)
-                    {
-                        @Html.ActionLink("Edit", "editmember", new { id = user.Id })
-                    } |
-                    @Html.ActionLink("Details", "details", new { id = user.Id }) |
-                    @Html.ActionLink("Delete", "delete", new { id = user.Id })
-                </td>
-            </tr>
-        }
+</table>
 
-    </table>
+@Html.DisplayFor(m => m, "Paginator")
 
-    @Html.DisplayFor(m => m, "Paginator")
-
-    <p>
-        @Html.ActionLink("Create New Staff", "create")
-    </p>
-</div>
-
-<div class="row">
-    <hr>
-</div>
+<p>
+    @Html.ActionLink("Create New Staff", "create")
+</p>

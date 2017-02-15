@@ -96,15 +96,17 @@
             @RenderSection("breadcrumb", required: false)
         </div>
 
-        @if (ViewData.ContainsKey("Message"))
+        <!-- Display messages passed from pages. -->
+        @if (ViewBag.Message != null)
         {
             <div id="message-flash" class="row">
-                <div class="alert alert-@((string)ViewData["MessageType"]) alert-dismissable">
+                <div class="alert alert-@ViewBag.MessageType alert-dismissable">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
+                    @ViewBag.Message
                 </div>
             </div>
 
+            <!-- Script to make flashed message fade in gradually. -->
             <script type="text/javascript">
                 $(function () {
                     $("#message-flash").css('visibility', 'visible').hide().fadeIn('slow');
@@ -112,7 +114,16 @@
             </script>
         }
 
-        @RenderBody()
+        <!-- Main Content -->
+        <div class="row">
+            <hr id="top-hr">
+
+            @RenderBody()
+        </div>
+
+        <div class="row">
+            <hr>
+        </div>
     </div>
 
     <footer>

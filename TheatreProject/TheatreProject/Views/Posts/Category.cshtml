@@ -8,17 +8,13 @@
     @Html.ActionLink("Home", "index", "home") &raquo; @Html.ActionLink("Blog", "index") &raquo; @ViewBag.Title
 }
 
-<div class="row">
-    <hr />
+@if (Model.Items.Any())
+{
+    @Html.DisplayFor(m => m.Items)
 
-    @if (Model.Items.Any())
-    {
-        @Html.DisplayFor(m => m.Items)
-
-        @Html.DisplayFor(m => m, "Paginator")
-    }
-    else
-    {
-        <p><em>There are no posts in the @ViewBag.Category.ToLower() category.</em></p>
-    }
-</div>
+    @Html.DisplayFor(m => m, "Paginator")
+}
+else
+{
+    <p><em>There are no posts in the @ViewBag.Category.ToLower() category.</em></p>
+}
