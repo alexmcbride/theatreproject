@@ -1,6 +1,6 @@
-﻿@model IEnumerable<TheatreProject.Models.Post>
+﻿@model TheatreProject.Helpers.Paginator<TheatreProject.Models.Post>
 
-@{ 
+@{
     ViewBag.Title = "Member's Posts";
 }
 
@@ -15,14 +15,16 @@
 
     <p>All the posts by the member <strong>@ViewBag.UserName</strong>.</p>
 
-    @if (Model.Any())
+    @if (Model.Items.Any())
     {
         <div class="list-group">
-            @foreach (var post in Model)
+            @foreach (var post in Model.Items)
             {
-                @Html.ActionLink(post.Title, "details", new { id = post.PostId }, new { @class = "list-group-item" })  
-           }
+                @Html.ActionLink(post.Title, "details", new { id = post.PostId }, new { @class = "list-group-item" })
+            }
         </div>
+
+        @Html.DisplayFor(m => m, "Paginator")
     }
     else
     {

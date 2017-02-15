@@ -245,8 +245,10 @@ namespace TheatreProject.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Staff(string id)
+        public ActionResult Staff(string id, int? page)
         {
+            const int PostsPerPage = 2;
+
             var staff = db.Users.Find(id) as Staff;
             if (staff == null)
             {
@@ -259,8 +261,8 @@ namespace TheatreProject.Controllers
                 .OrderByDescending(p => p.Published);
 
             ViewBag.UserName = staff.UserName;
-
-            return View(posts.ToList());
+            var paginator = new Paginator<Post>(posts, page ?? 0, PostsPerPage);
+            return View(paginator);
         }
 
         // Gets posts that this user can see.

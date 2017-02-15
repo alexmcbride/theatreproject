@@ -25,6 +25,11 @@ namespace TheatreProject.Helpers
             get { return currentPage > 0; }
         }
 
+        public bool IsPaginated
+        {
+            get { return HasNextPage || HasPreviousPage; }
+        }
+
         public int NextPageNumber
         {
             get { return currentPage + 1; }
