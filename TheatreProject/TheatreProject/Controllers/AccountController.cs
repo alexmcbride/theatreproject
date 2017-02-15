@@ -482,6 +482,19 @@ namespace TheatreProject.Controllers
             base.Dispose(disposing);
         }
 
+        [HttpGet]
+        public ActionResult DebugLogout()
+        {
+#if DEBUG
+            User user = UserManager.FindByName(User.Identity.Name);
+            if (User.Identity.GetUserId() == user.Id)
+            {
+                return LogOff();
+            }
+#endif
+            return RedirectToAction("index", "home");
+        }
+
 #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
