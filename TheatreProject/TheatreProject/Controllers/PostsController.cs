@@ -110,23 +110,23 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
+        public ActionResult Create([Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Update post from model state.
                 Post post = new Post();
                 UpdateModel(post);
 
-                UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
-                post.Staff = (Staff)await userManager.FindByNameAsync(User.Identity.Name);
+                // Set our properties.
+                post.StaffId = User.Identity.GetUserId();
                 post.Published = DateTime.Now;
                 post.IsApproved = false;
 
+                // Add new post to database.
                 db.Posts.Add(post);
                 db.SaveChanges();
 
@@ -167,7 +167,6 @@ namespace TheatreProject.Controllers
         public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
             Post post = db.Posts.Find(id);
-
             if (post == null)
             {
                 return HttpNotFound();
@@ -221,27 +220,36 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Approve(int id)
         {
-            Post post = db.Posts.Find(id);
-            if (!post.IsApproved)
-            {
-                post.IsApproved = true;
-                db.Entry(post).State = EntityState.Modified;
-                db.SaveChanges();
-            }
-            return RedirectToAction("details", "posts", new { id = post.PostId, message = PostsMessageId.Approved });
+            return UpdatePostApproval(id, approved: true);
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult Disallow(int id)
         {
+            return UpdatePostApproval(id, approved: false);
+        }
+
+        private ActionResult UpdatePostApproval(int id, bool approved)
+        {
             Post post = db.Posts.Find(id);
-            if (post.IsApproved)
+
+            if (post == null)
             {
-                post.IsApproved = false;
+                return HttpNotFound();
+            }
+
+            if (post.IsApproved != approved)
+            {
+                post.IsApproved = approved;
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
             }
-            return RedirectToAction("details", "posts", new { id = post.PostId, message = PostsMessageId.Disallowed });
+
+            return RedirectToAction("details", "posts", new
+            {
+                id = post.PostId,
+                message = approved ? PostsMessageId.Approved : PostsMessageId.Disallowed
+            });
         }
 
         // Gets posts that this user can see.

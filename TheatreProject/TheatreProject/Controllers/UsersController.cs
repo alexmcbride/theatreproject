@@ -10,7 +10,7 @@ using TheatreProject.ViewModels;
 
 namespace TheatreProject.Controllers
 {
-    // This controller inherits from AccountController so we can borrow login/registration stuff.
+    // Controller inherits from AccountController so we can borrow login/registration stuff.
     [Authorize(Roles = "Admin")]
     public class UsersController : AccountController
     {
@@ -147,14 +147,14 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Users/EditMember/5
-        public ActionResult EditMember(string id)
+        public async Task<ActionResult> EditMember(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Member member = db.Users.Find(id) as Member;
+            Member member = await UserManager.FindByIdAsync(id) as Member;
 
             if (member == null)
             {
@@ -245,7 +245,7 @@ namespace TheatreProject.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            if (User.Identity.GetUserId() == null || id == User.Identity.GetUserId())
+            if (id == User.Identity.GetUserId())
             {
                 return RedirectToAction("index", "users", new { message = UsersMessageId.RoleChangeError });
             }
@@ -281,7 +281,8 @@ namespace TheatreProject.Controllers
                 {
                     return RedirectToAction("index", "users", new { id = id, message = UsersMessageId.RoleNotChanged });
                 }
-                else { 
+                else
+                { 
                     await UserManager.RemoveFromRoleAsync(id, oldRole);
                     await UserManager.AddToRoleAsync(id, model.Role);
 
