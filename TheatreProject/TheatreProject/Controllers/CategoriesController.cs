@@ -12,8 +12,10 @@ namespace TheatreProject.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Categories
-        public ActionResult Index()
+        public ActionResult Index(CategoryMessageId? message)
         {
+            UpdateMessage(message);
+
             return View(db.Categories.ToList());
         }
 
@@ -34,7 +36,7 @@ namespace TheatreProject.Controllers
             {
                 db.Categories.Add(category);
                 db.SaveChanges();
-                return RedirectToAction("index");
+                return RedirectToAction("index", "categories", new { message = CategoryMessageId.Added });
             }
 
             return View(category);
@@ -66,7 +68,7 @@ namespace TheatreProject.Controllers
             {
                 db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("index");
+                return RedirectToAction("index", "categories", new { message = CategoryMessageId.Edited });
             }
             return View(category);
         }
@@ -94,7 +96,35 @@ namespace TheatreProject.Controllers
             Category category = db.Categories.Find(id);
             db.Categories.Remove(category);
             db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("index", "categories", new { message = CategoryMessageId.Deleted });
+        }
+
+        public enum CategoryMessageId
+        {
+            None,
+            Added,
+            Edited,
+            Deleted
+        }
+
+        private void UpdateMessage(CategoryMessageId? message)
+        {
+            switch (message ?? CategoryMessageId.None)
+            {
+                case CategoryMessageId.Added:
+                    ViewBag.Message = "The category has been added";
+                    ViewBag.MessageType = "Added";
+                    break;
+                case CategoryMessageId.Edited:
+                    ViewBag.Message = "The category has been edited";
+                    ViewBag.MessageType = "Edited";
+                    break;
+                case CategoryMessageId.Deleted:
+                    ViewBag.Message = "The category has been deleted";
+                    ViewBag.MessageType = "Deleted";
+                    break;
+
+            }
         }
 
         protected override void Dispose(bool disposing)

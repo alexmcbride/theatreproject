@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {

@@ -91,7 +91,7 @@ namespace TheatreProject.Controllers
                     IsApproved = true
                 });
                 db.SaveChanges();
-                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.CommentAdded });
+                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Commented });
             }
 
             model.Post = post;
@@ -133,7 +133,7 @@ namespace TheatreProject.Controllers
                 // Redirect to details if approved, otherwise show approval needed warning.
                 if (post.IsApproved)
                 {
-                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostAdded });
+                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Added });
                 }
 
                 return RedirectToAction("approvalneeded", new { id = post.PostId });
@@ -203,9 +203,9 @@ namespace TheatreProject.Controllers
 
                 if (showApprovedMessage)
                 {
-                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostApproved });
+                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Approved });
                 }
-                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostEdited });
+                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Edited });
             }
 
             model.Category = post.Category;
@@ -242,7 +242,7 @@ namespace TheatreProject.Controllers
             // Save changes to 
             db.Posts.Remove(post);
             db.SaveChanges();
-            return RedirectToAction("index", new { message = PostsMessageId.PostDeleted });
+            return RedirectToAction("index", new { message = PostsMessageId.Deleted });
         }
 
         [AllowAnonymous]
@@ -351,34 +351,34 @@ namespace TheatreProject.Controllers
         public enum PostsMessageId
         {
             None,
-            PostAdded,
-            PostEdited,
-            PostDeleted,
-            PostApproved,
-            CommentAdded,
+            Added,
+            Edited,
+            Deleted,
+            Approved,
+            Commented,
         }
 
         private void UpdatePostsMessage(PostsMessageId? message)
         {
             switch (message ?? PostsMessageId.None)
             {
-                case PostsMessageId.PostAdded:
+                case PostsMessageId.Added:
                     ViewBag.Message = "The post has been added";
                     ViewBag.MessageType = "Added";
                     break;
-                case PostsMessageId.PostEdited:
+                case PostsMessageId.Edited:
                     ViewBag.Message = "The post has been edited";
                     ViewBag.MessageType = "Edited";
                     break;
-                case PostsMessageId.PostDeleted:
+                case PostsMessageId.Deleted:
                     ViewBag.Message = "The post has been deleted";
                     ViewBag.MessageType = "Deleted";
                     break;
-                case PostsMessageId.PostApproved:
+                case PostsMessageId.Approved:
                     ViewBag.Message = "The post has been approved";
                     ViewBag.MessageType = "Approved";
                     break;
-                case PostsMessageId.CommentAdded:
+                case PostsMessageId.Commented:
                     ViewBag.Message = "The comment has been added";
                     ViewBag.MessageType = "Added";
                     break;

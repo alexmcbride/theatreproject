@@ -15,15 +15,6 @@
 <div class="row">
     <hr />
 
-    @if (ViewBag.Message != null)
-    {
-        <p class="text-success">
-            <div class="alert alert-success">
-                <strong>@ViewBag.MessageType!</strong> @ViewBag.Message
-            </div>
-        </p>
-    }
-
     @Html.DisplayFor(model => model.Post)
 
     <h3>Comments.</h3>
