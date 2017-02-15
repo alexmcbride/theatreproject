@@ -437,3 +437,9 @@ body {
 .unapproved-post hr {
     margin: 0px;
 }
+
+#message-flash {
+    visibility: hidden;
+    margin-top: 24px;
+    margin-bottom:0px;
+}

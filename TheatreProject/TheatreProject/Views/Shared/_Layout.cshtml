@@ -98,10 +98,9 @@
 
         @if (ViewData.ContainsKey("Message"))
         {
-            <br>
-
-            <div id="message-flash" class="row" style="visibility: hidden;">
-                <div class="alert alert-@((string)ViewData["MessageType"])">
+            <div id="message-flash" class="row">
+                <div class="alert alert-@((string)ViewData["MessageType"]) alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>@Html.Capitalize((string)ViewData["MessageType"])!</strong> @ViewData["Message"]
                 </div>
             </div>
