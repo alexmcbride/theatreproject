@@ -14,7 +14,7 @@ namespace TheatreProject.Controllers
     [Authorize]
     public class PostsController : Controller
     {
-        private const int MaxPostsPerPage = 6;
+        private const int MaxPostsPerPage = 5;
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -247,7 +247,7 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Staff(string id, int? page)
         {
-            const int PostsPerPage = 2;
+            const int PostsPerPage = 20;
 
             var staff = db.Users.Find(id) as Staff;
             if (staff == null)
