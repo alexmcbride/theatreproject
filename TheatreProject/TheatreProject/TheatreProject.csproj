@@ -173,6 +173,7 @@
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Helpers\Paginator.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
+    <Compile Include="SecretConfig.cs" />
     <Compile Include="ViewModels\ChangeRoleConfirmViewModel.cs" />
     <Compile Include="ViewModels\ChangeRoleViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -216,6 +217,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\CSS\Site.css" />
+    <Content Include="ReadMe.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -321,13 +323,13 @@
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Views\Posts\Staff.cshtml" />
     <Content Include="Views\Posts\ApprovalNeeded.cshtml" />
+    <Content Include="Secret.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

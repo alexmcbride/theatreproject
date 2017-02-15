@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Configuration;
+using System.Linq;
 using System.Web.Mvc;
+
 using TheatreProject.Models;
 
 namespace TheatreProject.Controllers

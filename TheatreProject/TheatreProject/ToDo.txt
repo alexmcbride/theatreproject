@@ -1,8 +1,6 @@
 ﻿** Big **
 
-- Edit/Delete posts
 - Post/Edit/Delete comments
-- View all user's posts (and your own)
 - View all user's comments (and your own)
 
 ** Small **
@@ -16,5 +14,7 @@
 
 ** Done **
 
+- View all user's posts (and your own)
+- Edit/Delete posts
 - What happens with non-confirmed email?
 - Resend activation email

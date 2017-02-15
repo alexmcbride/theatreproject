@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
+using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -16,9 +17,17 @@ namespace TheatreProject
     {
         public Task SendAsync(IdentityMessage message)
         {
+            // Get password from 'Secret.config' file.
+            string password = SecretConfig.Config.EmailPassword;
+
+            if (password == null)
+            {
+                throw new ApplicationException("Email password added to 'Secret.config' file?");
+            }
+
             SmtpClient client = new SmtpClient("smtp.gmail.com");
             client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", "cogc2016");
+            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", password);
 
             MailMessage messaage = new MailMessage();
             messaage.From = new MailAddress("apptechcogc@gmail.com");
