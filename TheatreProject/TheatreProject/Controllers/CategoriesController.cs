@@ -93,9 +93,16 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Categories.Find(id);
+            Category category = db.Categories
+                .Include(c => c.Posts)
+                .Single(c => c.CategoryId == id);
+
+            // Remove all posts from this category.
+            db.Posts.RemoveRange(category.Posts.ToList());
+
             db.Categories.Remove(category);
             db.SaveChanges();
+
             return RedirectToAction("index", "categories", new { message = CategoryMessageId.Deleted });
         }
 
