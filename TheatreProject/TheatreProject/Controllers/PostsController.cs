@@ -18,39 +18,12 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public enum PostsMessageId
-        {
-            None,
-            PostAdded,
-            PostEdited,
-            PostDeleted,
-            PostApproved,
-            CommentAdded,
-        }
-
-        private string GetPostsMessage(PostsMessageId message)
-        {
-            switch (message)
-            {
-                case PostsMessageId.PostAdded:
-                    return "The blog post has been added";
-                case PostsMessageId.PostEdited:
-                    return "The blog post has been edited";
-                case PostsMessageId.PostDeleted:
-                    return "The blog post has been deleted";
-                case PostsMessageId.PostApproved:
-                    return "The blog post has been approved";
-                case PostsMessageId.CommentAdded:
-                    return "The new comment has been added";
-            }
-            return null;
-        }
-
         // GET: Posts
         [AllowAnonymous]
         public ActionResult Index(int? page, PostsMessageId? message)
         {
-            ViewBag.Message = GetPostsMessage(message ?? PostsMessageId.None);
+            ViewBag.Message = GetPostsMessage(message);
+            ViewBag.MessageType = GetMessageType(message);
 
             IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
@@ -80,7 +53,8 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Details(int id, PostsMessageId? message)
         {
-            ViewBag.Message = GetPostsMessage(message ?? PostsMessageId.None);
+            ViewBag.Message = GetPostsMessage(message);
+            ViewBag.MessageType = GetMessageType(message);
 
             Post post = GetAllowedPost(id, allowApproved: true);
             if (post == null)
@@ -374,6 +348,52 @@ namespace TheatreProject.Controllers
                 .Include(c => c.User)
                 .Where(c => c.PostId == post.PostId)
                 .OrderByDescending(c => c.Posted);
+        }
+
+        public enum PostsMessageId
+        {
+            None,
+            PostAdded,
+            PostEdited,
+            PostDeleted,
+            PostApproved,
+            CommentAdded,
+        }
+
+        private string GetPostsMessage(PostsMessageId? message)
+        {
+            switch (message ?? PostsMessageId.None)
+            {
+                case PostsMessageId.PostAdded:
+                    return "The post has been added";
+                case PostsMessageId.PostEdited:
+                    return "The post has been edited";
+                case PostsMessageId.PostDeleted:
+                    return "The post has been deleted";
+                case PostsMessageId.PostApproved:
+                    return "The post has been approved";
+                case PostsMessageId.CommentAdded:
+                    return "The comment has been added";
+            }
+            return null;
+        }
+
+        private string GetMessageType(PostsMessageId? message)
+        {
+            switch (message ?? PostsMessageId.None)
+            {
+                case PostsMessageId.PostAdded:
+                    return "Added";
+                case PostsMessageId.PostEdited:
+                    return "Edited";
+                case PostsMessageId.PostDeleted:
+                    return "Deleted";
+                case PostsMessageId.PostApproved:
+                    return "Approved";
+                case PostsMessageId.CommentAdded:
+                    return "Added";
+            }
+            return null;
         }
 
         protected override void Dispose(bool disposing)
