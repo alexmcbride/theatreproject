@@ -22,8 +22,7 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Index(int? page, PostsMessageId? message)
         {
-            ViewBag.Message = GetPostsMessage(message);
-            ViewBag.MessageType = GetMessageType(message);
+            UpdatePostsMessage(message);
 
             IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
@@ -53,8 +52,7 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Details(int id, PostsMessageId? message)
         {
-            ViewBag.Message = GetPostsMessage(message);
-            ViewBag.MessageType = GetMessageType(message);
+            UpdatePostsMessage(message);
 
             Post post = GetAllowedPost(id, allowApproved: true);
             if (post == null)
@@ -360,40 +358,31 @@ namespace TheatreProject.Controllers
             CommentAdded,
         }
 
-        private string GetPostsMessage(PostsMessageId? message)
+        private void UpdatePostsMessage(PostsMessageId? message)
         {
             switch (message ?? PostsMessageId.None)
             {
                 case PostsMessageId.PostAdded:
-                    return "The post has been added";
+                    ViewBag.Message = "The post has been added";
+                    ViewBag.MessageType = "Added";
+                    break;
                 case PostsMessageId.PostEdited:
-                    return "The post has been edited";
+                    ViewBag.Message = "The post has been edited";
+                    ViewBag.MessageType = "Edited";
+                    break;
                 case PostsMessageId.PostDeleted:
-                    return "The post has been deleted";
+                    ViewBag.Message = "The post has been deleted";
+                    ViewBag.MessageType = "Deleted";
+                    break;
                 case PostsMessageId.PostApproved:
-                    return "The post has been approved";
+                    ViewBag.Message = "The post has been approved";
+                    ViewBag.MessageType = "Approved";
+                    break;
                 case PostsMessageId.CommentAdded:
-                    return "The comment has been added";
+                    ViewBag.Message = "The comment has been added";
+                    ViewBag.MessageType = "Added";
+                    break;
             }
-            return null;
-        }
-
-        private string GetMessageType(PostsMessageId? message)
-        {
-            switch (message ?? PostsMessageId.None)
-            {
-                case PostsMessageId.PostAdded:
-                    return "Added";
-                case PostsMessageId.PostEdited:
-                    return "Edited";
-                case PostsMessageId.PostDeleted:
-                    return "Deleted";
-                case PostsMessageId.PostApproved:
-                    return "Approved";
-                case PostsMessageId.CommentAdded:
-                    return "Added";
-            }
-            return null;
         }
 
         protected override void Dispose(bool disposing)
