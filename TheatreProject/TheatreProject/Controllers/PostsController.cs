@@ -19,77 +19,11 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // Gets posts that this user can see.
-        private IQueryable<Post> GetPostsForUser(bool includeCategory = false, int categoryId = 0)
-        {
-            IQueryable<Post> posts = db.Posts
-                .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .OrderByDescending(p => p.Published);
-
-            // Filter posts by category.
-            if (includeCategory)
-            {
-                posts = posts.Where(p => p.CategoryId == categoryId);
-            }
-
-            // Admin can see all posts, so no filtering needed.
-            if (!User.IsInRole("Admin"))
-            {
-                // Staff see approved posts and posts they've created.
-                if (User.IsInRole("Staff"))
-                {
-                    string userId = User.Identity.GetUserId();
-                    posts = posts.Where(p => p.IsApproved || p.StaffId == userId);
-                }
-                else
-                {
-                    // Everyone else sees only approved posts.
-                    posts = posts.Where(p => p.IsApproved);
-                }
-            }
-
-            return posts;
-        }
-
-        // Gets a single post if this user can access it.
-        private Post GetPostForUser(int id, bool allowApproved = false)
-        {
-            var post = db.Posts
-                .Include(p => p.Staff)
-                .Include(p => p.Category)
-                .SingleOrDefault(p => p.PostId == id);
-
-            if (post != null)
-            {
-                // Allow all approved posts.
-                if (allowApproved && post.IsApproved)
-                {
-                    return post;
-                }
-
-                // Admin always see posts.
-                if (User.IsInRole("Admin"))
-                {
-                    return post;
-                }
-
-                // Staff can only view their own posts.
-                string userId = User.Identity.GetUserId();
-                if (User.IsInRole("Staff") && post.StaffId == userId)
-                {
-                    return post;
-                }
-            }
-
-            return null;
-        }
-
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? category, int? page)
         {
-            var posts = GetPostsForUser();
+            IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
             return View(paginator);
         }
@@ -108,7 +42,7 @@ namespace TheatreProject.Controllers
             ViewBag.Category = category.Name;
 
             // Get posts.
-            var posts = GetPostsForUser(includeCategory: true, categoryId: id);
+            IQueryable<Post> posts = GetAllowedPosts(includeCategory: true, categoryId: id);
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
             return View(paginator);
         }
@@ -117,7 +51,7 @@ namespace TheatreProject.Controllers
         [AllowAnonymous]
         public ActionResult Details(int id)
         {
-            Post post = GetPostForUser(id, allowApproved: true);
+            Post post = GetAllowedPost(id, allowApproved: true);
             if (post == null)
             {
                 return HttpNotFound();
@@ -136,7 +70,8 @@ namespace TheatreProject.Controllers
         [ActionName("Details")]
         public ActionResult CreateComment(int id, PostDetailsViewModel model)
         {
-            Post post = GetPostForUser(id, allowApproved: true);
+            Post post = GetAllowedPost(id, allowApproved: true);
+
             if (post == null)
             {
                 return HttpNotFound();
@@ -159,14 +94,6 @@ namespace TheatreProject.Controllers
             model.Post = post;
             model.Comments = GetCommentsForPost(post).ToList();
             return View(model);
-        }
-
-        private IOrderedQueryable<Comment> GetCommentsForPost(Post post)
-        {
-            return db.Comments
-                .Include(c => c.User)
-                .Where(c => c.PostId == post.PostId)
-                .OrderByDescending(c => c.Posted);
         }
 
         // GET: Posts/Create
@@ -211,7 +138,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public ActionResult ApprovalNeeded(int id)
         {
-            Post post = GetPostForUser(id);
+            Post post = GetAllowedPost(id);
 
             if (post == null)
             {
@@ -225,7 +152,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public ActionResult Edit(int id)
         {
-            Post post = GetPostForUser(id);
+            Post post = GetAllowedPost(id);
 
             if (post == null)
             {
@@ -236,7 +163,7 @@ namespace TheatreProject.Controllers
             {
                 Content = post.Content,
                 Title = post.Title,
-                IsApproved = post.IsApproved,
+                IsApproved = post.IsApproved && User.IsInRole("Admin"), // Only admin can set this.
                 Categories = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId),
                 CategoryId = post.CategoryId,
                 Category = post.Category
@@ -277,7 +204,7 @@ namespace TheatreProject.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public ActionResult Delete(int id)
         {
-            Post post = GetPostForUser(id);
+            Post post = GetAllowedPost(id);
             if (post == null)
             {
                 return HttpNotFound();
@@ -321,6 +248,90 @@ namespace TheatreProject.Controllers
             ViewBag.UserName = staff.UserName;
 
             return View(posts.ToList());
+        }
+
+        // Gets posts that this user can see.
+        private IQueryable<Post> GetAllowedPosts()
+        {
+            return GetAllowedPosts(false, 0);
+        }
+
+        private IQueryable<Post> GetAllowedPosts(bool includeCategory, int categoryId)
+        {
+            IQueryable<Post> posts = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.Published);
+
+            // Filter posts by category.
+            if (includeCategory)
+            {
+                posts = posts.Where(p => p.CategoryId == categoryId);
+            }
+
+            // Admin can see all posts, so no filtering needed.
+            if (!User.IsInRole("Admin"))
+            {
+                // Staff see approved posts and posts they've created.
+                if (User.IsInRole("Staff"))
+                {
+                    string userId = User.Identity.GetUserId();
+                    posts = posts.Where(p => p.IsApproved || p.StaffId == userId);
+                }
+                else
+                {
+                    // Everyone else sees only approved posts.
+                    posts = posts.Where(p => p.IsApproved);
+                }
+            }
+
+            return posts;
+        }
+
+        // Gets a single post if this user can access it.
+        private Post GetAllowedPost(int id)
+        {
+            return GetAllowedPost(id, false);
+        }
+
+        private Post GetAllowedPost(int id, bool allowApproved)
+        {
+            var post = db.Posts
+                .Include(p => p.Staff)
+                .Include(p => p.Category)
+                .SingleOrDefault(p => p.PostId == id);
+
+            if (post != null)
+            {
+                // Allow all approved posts.
+                if (allowApproved && post.IsApproved)
+                {
+                    return post;
+                }
+
+                // Admin always see posts.
+                if (User.IsInRole("Admin"))
+                {
+                    return post;
+                }
+
+                // Staff can only view their own posts.
+                string userId = User.Identity.GetUserId();
+                if (User.IsInRole("Staff") && post.StaffId == userId)
+                {
+                    return post;
+                }
+            }
+
+            return null;
+        }
+
+        private IOrderedQueryable<Comment> GetCommentsForPost(Post post)
+        {
+            return db.Comments
+                .Include(c => c.User)
+                .Where(c => c.PostId == post.PostId)
+                .OrderByDescending(c => c.Posted);
         }
 
         protected override void Dispose(bool disposing)
