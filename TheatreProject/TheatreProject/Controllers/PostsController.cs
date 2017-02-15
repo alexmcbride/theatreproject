@@ -244,27 +244,6 @@ namespace TheatreProject.Controllers
             return RedirectToAction("details", "posts", new { id = post.PostId, message = PostsMessageId.Disallowed });
         }
 
-        [AllowAnonymous]
-        public ActionResult Staff(string id, int? page)
-        {
-            const int PostsPerPage = 20;
-
-            var staff = db.Users.Find(id) as Staff;
-            if (staff == null)
-            {
-                return HttpNotFound();
-            }
-
-            // Get all of this member's posts.
-            var posts = db.Posts
-                .Where(p => p.StaffId == staff.Id && p.IsApproved)
-                .OrderByDescending(p => p.Published);
-
-            ViewBag.UserName = staff.UserName;
-            var paginator = new Paginator<Post>(posts, page ?? 0, PostsPerPage);
-            return View(paginator);
-        }
-
         // Gets posts that this user can see.
         private IQueryable<Post> GetAllowedPosts()
         {

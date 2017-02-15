@@ -4,13 +4,22 @@
     <div class="col-sm-6">
         @if (Model.HasPreviousPage)
         {
-            @:&laquo;  @Html.ActionLink("Previous", null, new { page = Model.PreviousPageNumber })
+            @:&laquo;  
+            if (Model.PreviousPageNumber == 0)
+            {
+                @Html.ActionLink("Previous", null)
+            }
+            else
+            {
+                @Html.ActionLink("Previous", null, new { page = Model.PreviousPageNumber })
+            }
         }
     </div>
 
     <div class="col-sm-6 text-right">
         @if (Model.HasNextPage) { 
-            @Html.ActionLink("Next", null, new { page = Model.NextPageNumber }) @:&raquo;
+            @Html.ActionLink("Next", null, new { page = Model.NextPageNumber }) 
+            @:&raquo;
         }
     </div>
 </div>

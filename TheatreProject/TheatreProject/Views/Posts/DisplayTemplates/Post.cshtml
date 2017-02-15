@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col-sm-8 text-muted small">
-            Posted by @Html.ActionLink(Model.Staff.UserName, "staff", "posts", new { id = Model.StaffId }, null)
+            Posted by @Model.Staff.UserName
             @Html.RelativeDate(Model.Published)
             in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
         </div>
