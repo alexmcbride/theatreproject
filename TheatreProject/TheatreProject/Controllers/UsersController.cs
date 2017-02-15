@@ -23,8 +23,10 @@ namespace TheatreProject.Controllers
             : base(userManager, signInManager) { }
 
         // GET: Users
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, UsersMessageId? message)
         {
+            UpdateMessage(message);
+
             var users = db.Users.OrderBy(u => u.Joined);
             var paginator = new Paginator<User>(users, page ?? 0, MaxUsersPerPage);
 
@@ -82,7 +84,7 @@ namespace TheatreProject.Controllers
                     // Assign roles to this staff member.
                     await UserManager.AddToRolesAsync(staff.Id, "Staff");
 
-                    return RedirectToAction("index");
+                    return RedirectToAction("index", "users", new { message = UsersMessageId.Added });
                 }
                 else
                 {
@@ -136,7 +138,7 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(staff);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index");
+                    return RedirectToAction("index", "users", new { message = UsersMessageId.Edited });
                 }
                 AddErrors(result);
             }
@@ -181,7 +183,7 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(member);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index");
+                    return RedirectToAction("index", "users", new { message = UsersMessageId.Edited });
                 }
                 AddErrors(result);
             }
@@ -199,7 +201,7 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                return View("DeleteOwnAccountError");
+                return RedirectToAction("index", "users", new { message = UsersMessageId.DeleteError });
             }
 
             User user = db.Users.Find(id);
@@ -232,7 +234,7 @@ namespace TheatreProject.Controllers
 
             // Delete user.
             await UserManager.DeleteAsync(user);
-            return RedirectToAction("index");
+            return RedirectToAction("index", "users", new { message = UsersMessageId.Deleted });
         }
 
         // GET: Users/ChangeRole/5
@@ -245,7 +247,7 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                return View("ChangeOwnRoleError");
+                return RedirectToAction("index", "users", new { message = UsersMessageId.RoleChangeError });
             }
 
             User user = await UserManager.FindByIdAsync(id);
@@ -288,33 +290,52 @@ namespace TheatreProject.Controllers
                 }
 
                 // Redirect after change to make sure new user type is loaded.
-                return RedirectToAction("ChangeRoleConfirmed", new { id = id, oldRole = oldRole });
+                return RedirectToAction("index", "users", new { id = id, oldRole = oldRole, message = UsersMessageId.RoleChanged });
             }
 
             return View(model);
         }
 
-        // GET: Users/ChangeRoleConfirmed/5
-        public async Task<ActionResult> ChangeRoleConfirmed(string id)
+        public enum UsersMessageId
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            None,
+            Added,
+            Edited,
+            Deleted,
+            RoleChanged,
+            RoleChangeError,
+            DeleteError,
+        }
 
-            User user = await UserManager.FindByIdAsync(id);
-            if (user == null)
+        private void UpdateMessage(UsersMessageId? message)
+        {
+            switch (message ?? UsersMessageId.None)
             {
-                return HttpNotFound();
+                case UsersMessageId.Added:
+                    ViewBag.Message = "A new user has been added";
+                    ViewBag.MessageType = "Added";
+                    break;
+                case UsersMessageId.Edited:
+                    ViewBag.Message = "The user has been edited";
+                    ViewBag.MessageType = "Edited";
+                    break;
+                case UsersMessageId.Deleted:
+                    ViewBag.Message = "The user has been deleted";
+                    ViewBag.MessageType = "Deleted";
+                    break;
+                case UsersMessageId.RoleChanged:
+                    ViewBag.Message = "The user's role has been changed";
+                    ViewBag.MessageType = "Role Changed";
+                    break;
+                case UsersMessageId.RoleChangeError:
+                    ViewBag.Message = "Your cannot change your own role";
+                    ViewBag.MessageType = "Role Change Error";
+                    break;
+                case UsersMessageId.DeleteError:
+                    ViewBag.Message = "You cannot delete your own account";
+                    ViewBag.MessageType = "Delete Error";
+                    break;
             }
-
-            return View(new ChangeRoleConfirmViewModel
-            {
-                UserId = id,
-                UserName = user.UserName,
-                NewRole = user.CurrentRole,
-                OldRole = Request.Params["oldRole"],
-            });
         }
 
         protected override void Dispose(bool disposing)

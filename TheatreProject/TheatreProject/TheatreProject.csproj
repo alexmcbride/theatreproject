@@ -302,7 +302,6 @@
     <Content Include="Views\Users\EditMember.cshtml" />
     <Content Include="Views\Users\DetailsStaff.cshtml" />
     <Content Include="Views\Users\DetailsMember.cshtml" />
-    <Content Include="Views\Users\DeleteOwnAccountError.cshtml" />
     <Content Include="Views\Manage\ChangeEmail.cshtml" />
     <Content Include="Views\Posts\Create.cshtml" />
     <Content Include="Views\Posts\Delete.cshtml" />
@@ -311,8 +310,6 @@
     <Content Include="Views\Posts\Category.cshtml" />
     <Content Include="Views\Posts\DisplayTemplates\Post.cshtml" />
     <Content Include="Views\Users\ChangeRole.cshtml" />
-    <Content Include="Views\Users\ChangeRoleConfirmed.cshtml" />
-    <Content Include="Views\Users\ChangeOwnRoleError.cshtml" />
     <Content Include="Views\Posts\Index.cshtml" />
     <Content Include="Views\Account\ResendConfirmEmail.cshtml" />
     <Content Include="Views\Comments\Create.cshtml" />
