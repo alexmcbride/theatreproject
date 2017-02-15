@@ -10,7 +10,14 @@
 <div class="row">
     <hr>
 
-    @Html.DisplayFor(m => m.Items)
+    @if (Model.Items.Any())
+    {
+        @Html.DisplayFor(m => m.Items)
 
-    @Html.DisplayFor(m => m, "Paginator")
+        @Html.DisplayFor(m => m, "Paginator")
+    }
+    else
+    {
+        <p><em>Sorry - there are no posts to display.</em></p>
+    }
 </div>
