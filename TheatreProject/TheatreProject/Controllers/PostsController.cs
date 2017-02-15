@@ -18,10 +18,40 @@ namespace TheatreProject.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public enum PostsMessageId
+        {
+            None,
+            PostAdded,
+            PostEdited,
+            PostDeleted,
+            PostApproved,
+            CommentAdded,
+        }
+
+        private string GetPostsMessage(PostsMessageId message)
+        {
+            switch (message)
+            {
+                case PostsMessageId.PostAdded:
+                    return "The blog post has been added";
+                case PostsMessageId.PostEdited:
+                    return "The blog post has been edited";
+                case PostsMessageId.PostDeleted:
+                    return "The blog post has been deleted";
+                case PostsMessageId.PostApproved:
+                    return "The blog post has been approved";
+                case PostsMessageId.CommentAdded:
+                    return "The new comment has been added";
+            }
+            return null;
+        }
+
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, PostsMessageId? message)
         {
+            ViewBag.Message = GetPostsMessage(message ?? PostsMessageId.None);
+
             IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
             return View(paginator);
@@ -48,8 +78,10 @@ namespace TheatreProject.Controllers
 
         // GET: Posts/Details/5
         [AllowAnonymous]
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, PostsMessageId? message)
         {
+            ViewBag.Message = GetPostsMessage(message ?? PostsMessageId.None);
+
             Post post = GetAllowedPost(id, allowApproved: true);
             if (post == null)
             {
@@ -87,7 +119,7 @@ namespace TheatreProject.Controllers
                     IsApproved = true
                 });
                 db.SaveChanges();
-                return RedirectToAction("details", new { id = post.PostId });
+                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.CommentAdded });
             }
 
             model.Post = post;
@@ -127,7 +159,12 @@ namespace TheatreProject.Controllers
                 db.SaveChanges();
 
                 // Redirect to details if approved, otherwise show approval needed warning.
-                return RedirectToAction(post.IsApproved ? "details" : "approvalneeded", new { id = post.PostId });
+                if (post.IsApproved)
+                {
+                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostAdded });
+                }
+
+                return RedirectToAction("approvalneeded", new { id = post.PostId });
             }
 
             model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
@@ -186,11 +223,17 @@ namespace TheatreProject.Controllers
 
             if (ModelState.IsValid)
             {
+                bool showApprovedMessage = !post.IsApproved && model.IsApproved;
+
                 UpdateModel(post);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
 
-                return RedirectToAction("details", new { id = post.PostId });
+                if (showApprovedMessage)
+                {
+                    return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostApproved });
+                }
+                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.PostEdited });
             }
 
             model.Category = post.Category;
@@ -227,7 +270,7 @@ namespace TheatreProject.Controllers
             // Save changes to 
             db.Posts.Remove(post);
             db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("index", new { message = PostsMessageId.PostDeleted });
         }
 
         [AllowAnonymous]
