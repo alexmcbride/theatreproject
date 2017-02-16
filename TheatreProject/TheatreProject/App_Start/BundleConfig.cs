@@ -28,8 +28,8 @@ namespace TheatreProject
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/CSS/bootstrap.css",
-                      "~/Content/CSS/clean-blog.css",
-                      "~/fonts/font-awesome.min.css"));
+                      "~/fonts/font-awesome.min.css",
+                      "~/Content/CSS/clean-blog.css"));
         }
     }
 }

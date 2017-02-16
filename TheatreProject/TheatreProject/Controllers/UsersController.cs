@@ -254,7 +254,7 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                Flash.Instance.Info("Change Role Warning", "You cannot change your own role");
+                Flash.Instance.Info("Change Role", "You cannot change your own role");
                 return RedirectToAction("index", "users");
             }
 
