@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using MvcFlash.Core;
+using System.Linq;
 using System.Web.Mvc;
+using MvcFlash.Core.Extensions;
 
 using TheatreProject.Models;
 
@@ -11,10 +13,8 @@ namespace TheatreProject.Controllers
 
         // GET: /Home/Index
         [AllowAnonymous]
-        public ActionResult Index(AccountMessageId? message)
+        public ActionResult Index()
         {
-            UpdateMessage(message);
-
             return View(db.Categories.ToList());
         }
 
@@ -23,21 +23,6 @@ namespace TheatreProject.Controllers
         public ActionResult Contact()
         {
             return View();
-        }
-
-        private void UpdateMessage(AccountMessageId? message)
-        {
-            switch(message ?? AccountMessageId.None)
-            {
-                case AccountMessageId.SignedIn:
-                    ViewBag.Message = "You have signed in.";
-                    ViewBag.MessageType = "success";
-                    break;
-                case AccountMessageId.SignedOut:
-                    ViewBag.Message = "You have signed out.";
-                    ViewBag.MessageType = "success";
-                    break;
-            }
         }
     }
 }

@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using TheatreProject.Helpers;
 using TheatreProject.Models;
 using TheatreProject.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
 
 namespace TheatreProject.Controllers
 {
@@ -23,10 +25,8 @@ namespace TheatreProject.Controllers
             : base(userManager, signInManager) { }
 
         // GET: Users
-        public ActionResult Index(int? page, UsersMessageId? message)
+        public ActionResult Index(int? page)
         {
-            UpdateMessage(message);
-
             var users = db.Users.OrderBy(u => u.Joined);
             var paginator = new Paginator<User>(users, page ?? 0, MaxUsersPerPage);
 
@@ -84,7 +84,9 @@ namespace TheatreProject.Controllers
                     // Assign roles to this staff member.
                     await UserManager.AddToRolesAsync(staff.Id, "Staff");
 
-                    return RedirectToAction("index", "users", new { message = UsersMessageId.Added });
+                    Flash.Instance.Success("Created", "The user has been created");
+
+                    return RedirectToAction("index", "users");
                 }
                 else
                 {
@@ -138,7 +140,8 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(staff);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index", "users", new { message = UsersMessageId.Edited });
+                    Flash.Instance.Success("Edited", "The staff member has been edited");
+                    return RedirectToAction("index", "users");
                 }
                 AddErrors(result);
             }
@@ -183,7 +186,8 @@ namespace TheatreProject.Controllers
                 IdentityResult result = await UserManager.UpdateAsync(member);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index", "users", new { message = UsersMessageId.Edited });
+                    Flash.Instance.Success("Edited", "The member has been edited");
+                    return RedirectToAction("index", "users");
                 }
                 AddErrors(result);
             }
@@ -201,7 +205,8 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                return RedirectToAction("index", "users", new { message = UsersMessageId.DeleteError });
+                Flash.Instance.Info("Delete Error", "You cannot delete your own account");
+                return RedirectToAction("index", "users");
             }
 
             User user = db.Users.Find(id);
@@ -234,7 +239,9 @@ namespace TheatreProject.Controllers
 
             // Delete user.
             await UserManager.DeleteAsync(user);
-            return RedirectToAction("index", "users", new { message = UsersMessageId.Deleted });
+
+            Flash.Instance.Success("Deleted", "The user has been deleted");
+            return RedirectToAction("index", "users");
         }
 
         // GET: Users/ChangeRole/5
@@ -247,7 +254,8 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                return RedirectToAction("index", "users", new { message = UsersMessageId.RoleChangeError });
+                Flash.Instance.Info("Change Role Warning", "You cannot change your own role");
+                return RedirectToAction("index", "users");
             }
 
             User user = await UserManager.FindByIdAsync(id);
@@ -279,7 +287,8 @@ namespace TheatreProject.Controllers
 
                 if (oldRole == model.Role)
                 {
-                    return RedirectToAction("index", "users", new { id = id, message = UsersMessageId.RoleNotChanged });
+                    Flash.Instance.Info("Role Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
+                    return RedirectToAction("index", "users");
                 }
                 else
                 { 
@@ -293,58 +302,12 @@ namespace TheatreProject.Controllers
                         id);
 
                     // Redirect after change to make sure new user type is loaded.
-                    return RedirectToAction("index", "users", new { id = id, message = UsersMessageId.RoleChanged });
+                    Flash.Instance.Success("Role Changed", string.Format("The user {0} has had their role changed to {1}", user.UserName, model.Role));
+                    return RedirectToAction("index", "users");
                 }
             }
 
             return View(model);
-        }
-
-        public enum UsersMessageId
-        {
-            None,
-            Added,
-            Edited,
-            Deleted,
-            RoleChanged,
-            RoleChangeError,
-            RoleNotChanged,
-            DeleteError,
-        }
-
-        private void UpdateMessage(UsersMessageId? message)
-        {
-            switch (message ?? UsersMessageId.None)
-            {
-                case UsersMessageId.Added:
-                    ViewBag.Message = "A new user has been added";
-                    ViewBag.MessageType = "success";
-                    break;
-                case UsersMessageId.Edited:
-                    ViewBag.Message = "The user has been edited";
-                    ViewBag.MessageType = "success";
-                    break;
-                case UsersMessageId.Deleted:
-                    ViewBag.Message = "The user has been deleted";
-                    ViewBag.MessageType = "success";
-                    break;
-                case UsersMessageId.RoleChanged:
-                    ViewBag.Message = "The user's role has been changed";
-                    ViewBag.MessageType = "success";
-                    break;
-                case UsersMessageId.RoleChangeError:
-                    ViewBag.Message = "Your cannot change your own role";
-                    ViewBag.MessageType = "danger";
-                    break;
-                case UsersMessageId.RoleNotChanged:
-                    ViewBag.Message = "The user already has this role";
-                    ViewBag.MessageType = "danger";
-                    break;
-                case UsersMessageId.DeleteError:
-                    ViewBag.Message = "You cannot delete your own account";
-                    ViewBag.MessageType = "danger";
-                    break;
-            }
         }
 
         protected override void Dispose(bool disposing)

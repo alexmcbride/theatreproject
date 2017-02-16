@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using TheatreProject.Helpers;
 using TheatreProject.Models;
 using TheatreProject.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
+
 
 namespace TheatreProject.Controllers
 {
@@ -20,10 +21,8 @@ namespace TheatreProject.Controllers
 
         // GET: Posts
         [AllowAnonymous]
-        public ActionResult Index(int? page, PostsMessageId? message)
+        public ActionResult Index(int? page)
         {
-            UpdatePostsMessage(message);
-
             IQueryable<Post> posts = GetAllowedPosts();
             var paginator = new Paginator<Post>(posts, page ?? 0, MaxPostsPerPage);
             return View(paginator);
@@ -50,10 +49,8 @@ namespace TheatreProject.Controllers
 
         // GET: Posts/Details/5
         [AllowAnonymous]
-        public ActionResult Details(int id, PostsMessageId? message)
+        public ActionResult Details(int id)
         {
-            UpdatePostsMessage(message);
-
             Post post = GetAllowedPost(id, allowApproved: true);
             if (post == null)
             {
@@ -91,7 +88,10 @@ namespace TheatreProject.Controllers
                     IsApproved = true
                 });
                 db.SaveChanges();
-                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Commented });
+
+                Flash.Instance.Success("Comment Posted", "Your comment has been posted");
+
+                return RedirectToAction("details", new { id = post.PostId });
             }
 
             model.Post = post;
@@ -130,7 +130,9 @@ namespace TheatreProject.Controllers
                 db.Posts.Add(post);
                 db.SaveChanges();
 
-                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.AppovalNeeded });
+                Flash.Instance.Warning("Approval Needed", string.Format("The post '{0}' will need to be approved before it is displayed", post.Title));
+
+                return RedirectToAction("details", new { id = post.PostId });
             }
 
             model.Categories = new SelectList(db.Categories, "CategoryId", "Name", model.CategoryId);
@@ -177,7 +179,10 @@ namespace TheatreProject.Controllers
                 UpdateModel(post);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("details", new { id = post.PostId, message = PostsMessageId.Edited });
+
+                Flash.Instance.Success("Edited", string.Format("The post '{0}' has been edited", post.Title));
+
+                return RedirectToAction("details", new { id = post.PostId });
             }
 
             model.Category = post.Category;
@@ -208,13 +213,18 @@ namespace TheatreProject.Controllers
                 .Include(p => p.Comments)
                 .SingleOrDefault(p => p.PostId == id);
 
+            string title = post.Title;
+
             // Remove any comments associated with this post.
             db.Comments.RemoveRange(post.Comments.ToList());
 
             // Save changes to 
             db.Posts.Remove(post);
             db.SaveChanges();
-            return RedirectToAction("index", new { message = PostsMessageId.Deleted });
+
+            Flash.Instance.Success("Deleted", string.Format("The post '{0}' has been successfully deleted", title));
+
+            return RedirectToAction("index");
         }
 
         [Authorize(Roles = "Admin")]
@@ -245,11 +255,16 @@ namespace TheatreProject.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("details", "posts", new
+            if (post.IsApproved)
             {
-                id = post.PostId,
-                message = approved ? PostsMessageId.Approved : PostsMessageId.Disallowed
-            });
+                Flash.Instance.Success("Approved", string.Format("The post '{0}' has been approved", post.Title));
+            }
+            else
+            {
+                Flash.Instance.Success("Disallowed", string.Format("The post '{0}' has been disallowed", post.Title));
+            }
+
+            return RedirectToAction("details", "posts", new { id = post.PostId });
         }
 
         // Gets posts that this user can see.
@@ -334,53 +349,6 @@ namespace TheatreProject.Controllers
                 .Include(c => c.User)
                 .Where(c => c.PostId == post.PostId)
                 .OrderByDescending(c => c.Posted);
-        }
-
-        public enum PostsMessageId
-        {
-            None,
-            Added,
-            Edited,
-            Deleted,
-            Approved,
-            Disallowed,
-            AppovalNeeded,
-            Commented,
-        }
-
-        private void UpdatePostsMessage(PostsMessageId? message)
-        {
-            switch (message ?? PostsMessageId.None)
-            {
-                case PostsMessageId.Added:
-                    ViewBag.Message = "The post has been added";
-                    ViewBag.MessageType = "success";
-                    break;
-                case PostsMessageId.Edited:
-                    ViewBag.Message = "The post has been edited";
-                    ViewBag.MessageType = "success";
-                    break;
-                case PostsMessageId.Deleted:
-                    ViewBag.Message = "The post has been deleted";
-                    ViewBag.MessageType = "success";
-                    break;
-                case PostsMessageId.Approved:
-                    ViewBag.Message = "The post has been approved";
-                    ViewBag.MessageType = "success";
-                    break;
-                case PostsMessageId.Disallowed:
-                    ViewBag.Message = "The post has been disallowed";
-                    ViewBag.MessageType = "danger";
-                    break;
-                case PostsMessageId.AppovalNeeded:
-                    ViewBag.Message = "The post needs to be approved by an admin before it will be displayed";
-                    ViewBag.MessageType = "danger";
-                    break;
-                case PostsMessageId.Commented:
-                    ViewBag.Message = "The comment has been added";
-                    ViewBag.MessageType = "success";
-                    break;
-            }
         }
 
         protected override void Dispose(bool disposing)

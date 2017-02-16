@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using TheatreProject.Models;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
 
 namespace TheatreProject.Controllers
 {
@@ -12,10 +14,8 @@ namespace TheatreProject.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Categories
-        public ActionResult Index(CategoryMessageId? message)
+        public ActionResult Index()
         {
-            UpdateMessage(message);
-
             return View(db.Categories.ToList());
         }
 
@@ -36,7 +36,10 @@ namespace TheatreProject.Controllers
             {
                 db.Categories.Add(category);
                 db.SaveChanges();
-                return RedirectToAction("index", "categories", new { message = CategoryMessageId.Added });
+
+                Flash.Instance.Success("Created", "The category has been created");
+
+                return RedirectToAction("index", "categories");
             }
 
             return View(category);
@@ -68,7 +71,10 @@ namespace TheatreProject.Controllers
             {
                 db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("index", "categories", new { message = CategoryMessageId.Edited });
+
+                Flash.Instance.Success("Edited", "The category has been edited");
+
+                return RedirectToAction("index", "categories");
             }
             return View(category);
         }
@@ -103,35 +109,9 @@ namespace TheatreProject.Controllers
             db.Categories.Remove(category);
             db.SaveChanges();
 
-            return RedirectToAction("index", "categories", new { message = CategoryMessageId.Deleted });
-        }
+            Flash.Instance.Success("Deleted", "The category has been deleted");
 
-        public enum CategoryMessageId
-        {
-            None,
-            Added,
-            Edited,
-            Deleted
-        }
-
-        private void UpdateMessage(CategoryMessageId? message)
-        {
-            switch (message ?? CategoryMessageId.None)
-            {
-                case CategoryMessageId.Added:
-                    ViewBag.Message = "The category has been added";
-                    ViewBag.MessageType = "success";
-                    break;
-                case CategoryMessageId.Edited:
-                    ViewBag.Message = "The category has been edited";
-                    ViewBag.MessageType = "success";
-                    break;
-                case CategoryMessageId.Deleted:
-                    ViewBag.Message = "The category has been deleted";
-                    ViewBag.MessageType = "success";
-                    break;
-
-            }
+            return RedirectToAction("index", "categories");
         }
 
         protected override void Dispose(bool disposing)

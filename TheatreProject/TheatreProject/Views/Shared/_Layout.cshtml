@@ -1,4 +1,4 @@
-﻿@using TheatreProject.Helpers
+﻿@using MvcFlash.Core.Extensions;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,23 +96,9 @@
             @RenderSection("breadcrumb", required: false)
         </div>
 
-        <!-- Display messages passed from pages. -->
-        @if (ViewBag.Message != null)
-        {
-            <div id="message-flash" class="row">
-                <div class="alert alert-@ViewBag.MessageType alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @ViewBag.Message
-                </div>
-            </div>
-
-            <!-- Script to make flashed message fade in gradually. -->
-            <script type="text/javascript">
-                $(function () {
-                    $("#message-flash").css('visibility', 'visible').hide().fadeIn('slow');
-                });
-            </script>
-        }
+        <div class="row">
+            @Html.Flash()
+        </div>
 
         <!-- Main Content -->
         <div class="row">

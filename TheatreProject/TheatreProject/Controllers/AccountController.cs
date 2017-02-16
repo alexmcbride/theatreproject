@@ -8,16 +8,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
 
 namespace TheatreProject.Controllers
 {
-    public enum AccountMessageId
-    {
-        None,
-        SignedIn,
-        SignedOut
-    }
-
     [Authorize]
     public class AccountController : Controller
     {
@@ -26,7 +21,7 @@ namespace TheatreProject.Controllers
 
         public AccountController()
         {
-             
+
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -95,10 +90,7 @@ namespace TheatreProject.Controllers
                 switch (result)
                 {
                     case SignInStatus.Success:
-                        if (string.IsNullOrEmpty(returnUrl))
-                        {
-                            return RedirectToAction("index", "home", new { message = AccountMessageId.SignedIn });
-                        }                        
+                        Flash.Instance.Success("Logged In", "You have successfully logged in");
                         return RedirectToLocal(returnUrl);
                     case SignInStatus.LockedOut:
                         return View("Lockout");
@@ -235,13 +227,13 @@ namespace TheatreProject.Controllers
         // GET: /Account/ConfirmEmail/Sent
         [AllowAnonymous]
         public ActionResult ResendConfirmEmail()
-        { 
+        {
             return View();
         }
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ResendConfirmEmail(ForgotViewModel model)
-        { 
+        {
             if (ModelState.IsValid)
             {
                 // We don't give any indication whether sending was successful or not, for security purposes.
@@ -461,8 +453,9 @@ namespace TheatreProject.Controllers
         [HttpGet]
         public ActionResult LogOff()
         {
+            Flash.Instance.Success("Logged Off", "You have successfully logged off");
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("index", "home",  new { message = AccountMessageId.SignedOut });
+            return RedirectToAction("index", "home");
         }
 
         //
@@ -512,7 +505,7 @@ namespace TheatreProject.Controllers
             return RedirectToAction("index", "home");
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -569,6 +562,6 @@ namespace TheatreProject.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-#endregion
+        #endregion
     }
 }
