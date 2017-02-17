@@ -11,8 +11,11 @@
     <div>@Html.KeepLineBreaks(Model.Content)</div>
 
     <div class="text-muted text-right small" style="margin-top: 10px;">
+        Posted by @Model.User.UserName @Html.RelativeDate(Model.Posted)
+
         @if (User.IsInRole("Admin"))
         {
+            @:|
             if (Model.IsApproved)
             {
                 @Html.ActionLink("Disallow", "disallow", "comments", new { id = Model.CommentId }, null)
@@ -25,9 +28,6 @@
             @Html.ActionLink("Edit", "edit", "comments", new { id = Model.CommentId }, null)
             @:|
             @Html.ActionLink("Delete", "delete", "comments", new { id = Model.CommentId }, null)
-            @:|
         }
-
-        Posted by @Model.User.UserName @Html.RelativeDate(Model.Posted)
     </div>
 </div>

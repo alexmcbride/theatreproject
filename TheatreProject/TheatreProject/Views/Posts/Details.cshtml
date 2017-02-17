@@ -1,5 +1,4 @@
 ﻿@model TheatreProject.ViewModels.PostDetailsViewModel
-@using TheatreProject.Helpers
 
 @{
     ViewBag.Title = Model.Post.Title;
@@ -16,18 +15,24 @@
 
 <h3><a name="comments">Comments.</a></h3>
 
-@if (User.Identity.IsAuthenticated)
+@if (!User.Identity.IsAuthenticated)
 {
-    if (User.IsInRole("Suspended"))
-    {
-        <div class="alert alert-danger">You have been suspeded from posting</div>
-    }
-    else
-    {
+    <div class="alert alert-warning">You must be @Html.ActionLink("logged in", "login", "account", new { returnUrl = Request.Url.PathAndQuery }, null) to leave a comment.</div>
+}
+else if (User.IsInRole("Suspended"))
+{
+    <div class="alert alert-danger">You have been suspeded from commenting</div>
+}
+else if (!Model.Post.IsApproved)
+{
+    <div class="alert alert-danger">You cannot comment on a post that is not approved</div>
+}
+else
+{
     <div class="text-muted">Leave a comment using the form below.</div>
 
-        using (Html.BeginForm())
-        {
+    using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -45,12 +50,7 @@
                 </div>
             </div>
         </div>
-        }
     }
-}
-else
-{
-    <div class="alert alert-success">You must be @Html.ActionLink("logged in", "login", "account", new { returnUrl=(Request.Url.PathAndQuery) }, null) to leave a comment.</div>
 }
 
 @Html.DisplayFor(m => m.Comments)
