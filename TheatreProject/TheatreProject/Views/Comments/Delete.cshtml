@@ -1,30 +1,46 @@
-﻿@model TheatreProject.Models.Comment
+﻿@model TheatreProject.ViewModels.CommentDeleteViewModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Comment";
 }
 
-<h2>Delete</h2>
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home")
+    &raquo; @Html.ActionLink("Blog", "index", "posts")
+    &raquo; @Html.ActionLink(Model.CategoryName, "category", "posts", new { id = Model.CategoryId }, null)
+    &raquo; @Html.ActionLink(Model.PostTitle, "details", "posts", new { id = Model.PostId }, null)
+    &raquo; Edit Comment
+}
 
-<h3>Are you sure you want to delete this?</h3>
+<h2>@ViewBag.Title</h2>
+
+<h3>Are you sure you want to delete this comment?</h3>
 <div>
-    <h4>Comment</h4>
     <hr />
     <dl class="dl-horizontal">
+
         <dt>
-            @Html.DisplayNameFor(model => model.Post.StaffId)
+            @Html.DisplayNameFor(model => model.PostTitle)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Post.StaffId)
+            @Html.DisplayFor(model => model.PostTitle)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.User.Email)
+            @Html.DisplayNameFor(model => model.UserName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.Email)
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
         </dd>
 
         <dt>
@@ -35,30 +51,15 @@
             @Html.DisplayFor(model => model.Posted)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsApproved)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsApproved)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("No, thanks!", "details", "posts", new { id = Model.PostId }, null)
         </div>
     }
 </div>

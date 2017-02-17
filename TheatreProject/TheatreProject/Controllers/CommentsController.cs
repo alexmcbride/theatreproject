@@ -97,6 +97,7 @@ namespace TheatreProject.Controllers
                 return RedirectToAction("details", "posts", new { id = comment.PostId });
             }
 
+            // Get stuff for breadcrumb.
             model.CategoryId = comment.Post.CategoryId;
             model.CategoryName = comment.Post.Category.Name;
             model.PostTitle = comment.Post.Title;
@@ -111,12 +112,28 @@ namespace TheatreProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comment comment = db.Comments.Find(id);
+
+            Comment comment = db.Comments
+                .Include(c => c.Post)
+                .Include(c => c.User)
+                .SingleOrDefault(c => c.CommentId == id);
             if (comment == null)
             {
                 return HttpNotFound();
             }
-            return View(comment);
+
+            ViewBag.CategoryId = comment.Post.CategoryId;
+            ViewBag.CategoryName = comment.Post.Category.Name;
+            return View(new CommentDeleteViewModel
+            {
+                UserName = comment.User.UserName,
+                Posted = comment.Posted,
+                Email = comment.User.Email,
+                PostId = comment.PostId,
+                PostTitle = comment.Post.Title,
+                CategoryId = comment.Post.CategoryId,
+                CategoryName = comment.Post.Category.Name
+            });
         }
 
         // POST: Comments/Delete/5
@@ -127,7 +144,9 @@ namespace TheatreProject.Controllers
             Comment comment = db.Comments.Find(id);
             db.Comments.Remove(comment);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            Flash.Instance.Success("Comment Deleted", "The comment has been deleted");
+            return RedirectToAction("details", "posts", new { id = comment.PostId });
         }
 
         protected override void Dispose(bool disposing)
