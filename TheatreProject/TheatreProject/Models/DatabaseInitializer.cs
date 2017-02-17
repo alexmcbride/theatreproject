@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
     {
         private Random random = new Random();
 
@@ -133,19 +133,17 @@ namespace TheatreProject.Models
                 // some comments to use in posts.
                 var comments = new List<Comment>
                 {
-                    new Comment { User=bill, Content="Pellentesque blandit mattis commodo. Proin tortor neque, pharetra in congue in, tempus nec neque. Curabitur fringilla blandit lectus, vel sodales erat euismod et. Curabitur volutpat euismod fringilla.", IsApproved=false, Posted=new DateTime(2017, 02, 16, 15, 12, 54 )},
+                    new Comment { User=bill, Content="Pellentesque blandit mattis commodo. Proin tortor neque, pharetra in congue in, tempus nec neque. Curabitur fringilla blandit lectus, vel sodales erat euismod et. Curabitur volutpat euismod fringilla.", IsApproved=true, Posted=new DateTime(2017, 02, 16, 15, 12, 54 )},
                     new Comment { User=bob, Content="Nullam at porta libero, ac elementum odio. Morbi vestibulum justo et metus luctus gravida. Ut consequat feugiat rhoncus", IsApproved=true, Posted=new DateTime(2016, 10, 16, 19, 45, 43 )},
-                    new Comment { User=bill, Content="Maecenas at placerat enim, quis mattis mauris. Nunc risus mi, semper et elit ut, accumsan viverra dui. Nulla condimentum, ipsum nec tempus consequat, ex urna vehicula lectus, at feugiat libero lectus quis ligula.", IsApproved=false, Posted=new DateTime(2017, 01, 12, 11, 53, 13 )},
+                    new Comment { User=bill, Content="Maecenas at placerat enim, quis mattis mauris. Nunc risus mi, semper et elit ut, accumsan viverra dui. Nulla condimentum, ipsum nec tempus consequat, ex urna vehicula lectus, at feugiat libero lectus quis ligula.", IsApproved=true, Posted=new DateTime(2017, 01, 12, 11, 53, 13 )},
                     new Comment { User=bob, Content="ras ac efficitur dui. Quisque molestie nulla ut nibh aliquet facilisis ac sed diam. Donec volutpat dolor eget ligula dignissim, sit amet vulputate leo porttitor. Suspendisse potenti.", IsApproved=true, Posted=new DateTime(2016, 03, 27, 03, 25, 24 )},
                     new Comment { User=bob, Content="Nullam eleifend ex urna, id tristique nisl vulputate non. In congue mauris ut lorem suscipit vestibulum non et quam. Vestibulum rhoncus semper dolor dignissim venenatis. Cras posuere ullamcorper est, nec cursus eros.", IsApproved=true, Posted=new DateTime(2016, 07, 04, 17, 42, 42 )},
-                    new Comment { User=gary, Content="Ut molestie nunc at ultrices tincidunt. Nulla consequat efficitur hendrerit. Vestibulum urna eros, fringilla ut bibendum nec, cursus eget turpis. Maecenas tempus, tortor sed interdum cursus, sapien ligula commodo nisl, sed lacinia lectus nisi quis quam.", IsApproved=false, Posted=new DateTime(2015, 11, 30, 15, 14, 37 )},
+                    new Comment { User=gary, Content="Ut molestie nunc at ultrices tincidunt. Nulla consequat efficitur hendrerit. Vestibulum urna eros, fringilla ut bibendum nec, cursus eget turpis. Maecenas tempus, tortor sed interdum cursus, sapien ligula commodo nisl, sed lacinia lectus nisi quis quam.", IsApproved=true, Posted=new DateTime(2015, 11, 30, 15, 14, 37 )},
                     new Comment { User=gary, Content="Maecenas laoreet porttitor dui ac ultricies. Pellentesque et suscipit velit, id finibus felis. Curabitur eu fermentum odio. Aenean venenatis eu eros vel vestibulum.", IsApproved=false, Posted=new DateTime(2016, 12, 15, 19, 44, 46 )},
                     new Comment { User=gary, Content="Nam nec risus ornare libero pellentesque fringilla. Vestibulum leo eros, bibendum vitae urna quis, varius mattis tortor. Aenean porta sagittis diam. Proin vitae mi magna.", IsApproved=true, Posted=new DateTime(2016, 05, 17, 22, 24, 51 )},
                     new Comment { User=gary, Content="Duis finibus commodo nibh, sed consectetur sapien luctus pharetra. Mauris at nisl commodo, tincidunt est non, aliquet leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.", IsApproved=true, Posted=new DateTime(2017, 01, 9, 9, 22, 42 )},
                     new Comment { User=bill, Content="Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed in tellus ac nisi euismod pulvinar. Proin dignissim nulla lacus, eget euismod augue iaculis ac. Suspendisse faucibus non sem sit amet ultricies. Curabitur non tellus malesuada, hendrerit orci id, aliquet metus. Sed finibus justo sem, eget volutpat velit fermentum et. Duis lacinia enim interdum tortor elementum, non consequat purus pretium. ", IsApproved=true, Posted=new DateTime(2017, 02, 11, 13, 18, 52 )},
                 };
-
-
 
                 // Add some posts
                 context.Posts.Add(new Post
@@ -186,6 +184,7 @@ namespace TheatreProject.Models
                     Published = new DateTime(2017, 02, 10, 10, 54, 46, 123),
                     Staff = admin,
                     Title = "Suspendisse euismod mi et ipsum sagittis",
+                    Comments = GetRandomSelectionOfComments(comments).ToList()
                 });
                 context.Posts.Add(new Post
                 {
@@ -205,6 +204,7 @@ namespace TheatreProject.Models
                     Published = new DateTime(2016, 08, 12, 02, 37, 34, 143),
                     Staff = alex,
                     Title = "Quisque a tincidunt augue",
+                    Comments = GetRandomSelectionOfComments(comments).ToList()
                 });
                 context.Posts.Add(new Post
                 {
@@ -234,8 +234,9 @@ namespace TheatreProject.Models
                     Published = new DateTime(2015, 11, 27, 14, 07, 28, 317),
                     Staff = alex,
                     Title = "Nullam quis sapien lectus",
+                    Comments = GetRandomSelectionOfComments(comments).ToList()
                 });
-                var post1 = context.Posts.Add(new Post
+                context.Posts.Add(new Post
                 {
                     Category = announcements,
                     Content = "Ut molestie nunc at ultrices tincidunt. Nulla consequat efficitur hendrerit. Vestibulum urna eros, fringilla ut bibendum nec, cursus eget turpis. Maecenas tempus, tortor sed interdum cursus, sapien ligula commodo nisl, sed lacinia lectus nisi quis quam. Maecenas laoreet porttitor dui ac ultricies. Pellentesque et suscipit velit, id finibus felis. Curabitur eu fermentum odio. Aenean venenatis eu eros vel vestibulum. Nam nec risus ornare libero pellentesque fringilla. Vestibulum leo eros, bibendum vitae urna quis, varius mattis tortor. Aenean porta sagittis diam. Proin vitae mi magna.",
@@ -245,15 +246,25 @@ namespace TheatreProject.Models
                     Title = "Ut molestie nunc at ultrices tincidunt",
                     Comments = GetRandomSelectionOfComments(comments).ToList()
                 });
-
                 context.SaveChanges();
+
             }
         }
 
         private IEnumerable<Comment> GetRandomSelectionOfComments(IList<Comment> comments)
         {
-            int num = random.Next(comments.Count);
-            return comments.OrderBy(c => Guid.NewGuid()).Take(num);
-        } 
+            int num = random.Next(0, comments.Count);
+            return comments.OrderBy(c => Guid.NewGuid()).Take(num).Select(c => new Comment
+            {
+                CommentId = c.CommentId,
+                Content = c.Content,
+                IsApproved = c.IsApproved,
+                Post = c.Post,
+                Posted = c.Posted,
+                PostId = c.PostId,
+                User = c.User,
+                UserId = c.UserId
+            });
+        }
     }
 }

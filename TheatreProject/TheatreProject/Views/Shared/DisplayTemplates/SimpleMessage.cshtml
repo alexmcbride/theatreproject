@@ -1,6 +1,6 @@
 ﻿@model MvcFlash.Core.Messages.SimpleMessage
     <div class="row">
-        <div class="alert alert-@Model.MessageType" style="margin-top: 30px;">
+        <div class="alert alert-@(Model.MessageType == "error" ? "danger" : Model.MessageType)" style="margin-top: 30px;">
             <button type="button" class="close" data-dismiss="alert">×</button>
             <strong>@Model.Title!</strong> @Model.Content
             @if (Model.Data != null)

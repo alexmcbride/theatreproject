@@ -91,7 +91,7 @@ namespace TheatreProject.Controllers
                 });
                 db.SaveChanges();
 
-                Flash.Instance.Success("Approval", "Your comment needs to be approved by an admin before it can be viewed");
+                Flash.Instance.Error("Approval", "Your comment needs to be approved by an admin before it can be viewed");
 
                 return RedirectToAction("details", new { id = post.PostId });
             }
@@ -371,35 +371,6 @@ namespace TheatreProject.Controllers
             return comments;
         }
 
-        //public ActionResult Rss()
-        //{
-        //    IQueryable<Post> posts = db.Posts
-        //        .Include(p => p.Staff)
-        //        .Where(p => p.IsApproved)
-        //        .Take(10)
-        //        .OrderByDescending(p => p.Published);
-
-        //    var items = new List<SyndicationItem>();
-        //    foreach (var post in posts)
-        //    {
-        //        SyndicationItem item = new SyndicationItem();
-        //        item.Title = new TextSyndicationContent(post.Title);
-        //        item.Authors.Add(new SyndicationPerson(post.Staff.Email));
-        //        item.Id = post.PostId.ToString();
-        //        item.PublishDate = post.Published;
-        //        item.Summary = new TextSyndicationContent(post.Content.Substring(100));
-                
-        //        items.Add(item);
-
-       
-        //    }
-
-        //    SyndicationFeed feed = new SyndicationFeed(items);
-        //    feed.Title = new TextSyndicationContent("Local Theatre Company");
-        //    feed.Description = new TextSyndicationContent("A blog about local theatre");
-
-        //    return View();
-        //}
 
         protected override void Dispose(bool disposing)
         {

@@ -37,7 +37,10 @@
                 @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
                 @:|
                 @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
+                @:|
             }
+
+            <a href="@Url.Action("details", "posts", new { id = Model.PostId })#comments">@Model.Comments.Count() Comments</a>
         </div>
     </div>
 
