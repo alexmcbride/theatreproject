@@ -142,10 +142,53 @@ namespace TheatreProject.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Comment comment = db.Comments.Find(id);
+            int postId = comment.PostId;
             db.Comments.Remove(comment);
             db.SaveChanges();
 
             Flash.Instance.Success("Comment Deleted", "The comment has been deleted");
+            return RedirectToAction("details", "posts", new { id = postId });
+        }
+
+        public ActionResult Approve(int? id)
+        {
+            ActionResult result = UpdateCommentApproval(id, approved: true);
+
+            Flash.Instance.Success("Comment Approved", "The comment has been approved");
+
+            return result;
+        }
+
+        public ActionResult Disallow(int id)
+        {
+            ActionResult result = UpdateCommentApproval(id, approved: false);
+
+            Flash.Instance.Success("Comment Disallowed", "The comment has been disallowed");
+
+            return result;
+        }
+
+        private ActionResult UpdateCommentApproval(int? id, bool approved)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Comment comment = db.Comments.Find(id);
+
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (comment.IsApproved != approved)
+            {
+                comment.IsApproved = approved;
+                db.Entry(comment).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
             return RedirectToAction("details", "posts", new { id = comment.PostId });
         }
 

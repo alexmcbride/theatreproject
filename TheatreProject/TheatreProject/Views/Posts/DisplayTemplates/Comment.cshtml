@@ -1,7 +1,7 @@
 ﻿@model TheatreProject.Models.Comment
 @using TheatreProject.Helpers
 
-<div>
+<div @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-comment\"")>
     <hr>
 
     <div>@Html.KeepLineBreaks(Model.Content)</div>
@@ -14,7 +14,7 @@
             }
             else
             {
-                @Html.ActionLink("Allow", "allow", "comments", new { id = Model.CommentId }, null)
+                @Html.ActionLink("Approve", "approve", "comments", new { id = Model.CommentId }, null)
             }
             @:|
             @Html.ActionLink("Edit", "edit", "comments", new { id = Model.CommentId }, null)
