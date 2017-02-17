@@ -37,16 +37,10 @@
             @Html.DisplayFor(model => model.Joined)
         </dd>
 
-        <dt>
-            Is Suspended
-        </dt>
-
-        <dd>
-            @(Model.IsSuspended ?? false ? "Yes" : "No")
-        </dd>
-
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "editmember", new { id = Model.Id })
+    |
+    @Html.ActionLink("Delete", "delete", new { id = Model.Id })
 </p>

@@ -20,11 +20,6 @@ namespace TheatreProject
             // Get password from 'Secret.config' file.
             string password = SecretConfig.Config.EmailPassword;
 
-            if (password == null)
-            {
-                throw new ApplicationException("Email password added to 'Secret.config' file?");
-            }
-
             SmtpClient client = new SmtpClient("smtp.gmail.com");
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential("apptechcogc@gmail.com", password);

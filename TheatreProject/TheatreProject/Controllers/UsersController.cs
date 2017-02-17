@@ -262,6 +262,7 @@ namespace TheatreProject.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            // Can't change your own role.
             if (id == User.Identity.GetUserId())
             {
                 Flash.Instance.Info("Change Role", "You cannot change your own role");
@@ -291,25 +292,30 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Remove old role and add new one.
                 User user = await UserManager.FindByIdAsync(id);
-                string oldRole = (await UserManager.GetRolesAsync(id)).Single();
+                string oldRole = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
 
                 if (oldRole == model.Role)
                 {
+                    // User already has role, so don't change it.
                     Flash.Instance.Info("Role Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
                 else
-                { 
+                {
+                    // Remove old role and add new one.
                     await UserManager.RemoveFromRoleAsync(id, oldRole);
                     await UserManager.AddToRoleAsync(id, model.Role);
 
-                    // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
-                    db.Database.ExecuteSqlCommand(
-                        "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
-                        model.Role == "Admin" ? "Staff" : model.Role,
-                        id);
+                    // If role is anything other than suspended we need to change type.
+                    if (model.Role != "Suspended")
+                    {
+                        // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
+                        db.Database.ExecuteSqlCommand(
+                            "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
+                            model.Role == "Admin" ? "Staff" : model.Role,
+                            id);
+                    }
 
                     // Redirect after change to make sure new user type is loaded.
                     Flash.Instance.Success(
