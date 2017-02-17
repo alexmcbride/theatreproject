@@ -193,7 +193,7 @@ namespace TheatreProject.Controllers
             return View(model);
         }
 
-        private async Task SendEmailConfirmation(User user)
+        protected async Task SendEmailConfirmation(User user)
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);

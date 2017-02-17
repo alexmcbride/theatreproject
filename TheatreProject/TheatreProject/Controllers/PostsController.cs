@@ -8,6 +8,9 @@ using TheatreProject.Models;
 using TheatreProject.ViewModels;
 using MvcFlash.Core;
 using MvcFlash.Core.Extensions;
+using System.ServiceModel.Syndication;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace TheatreProject.Controllers
 {
@@ -344,7 +347,7 @@ namespace TheatreProject.Controllers
 
         private IQueryable<Comment> GetCommentsForPost(Post post)
         {
-            IQueryable<Comment> comments =  db.Comments
+            IQueryable<Comment> comments = db.Comments
                 .Include(c => c.User)
                 .Where(c => c.PostId == post.PostId)
                 .OrderByDescending(c => c.Posted);
@@ -367,6 +370,36 @@ namespace TheatreProject.Controllers
 
             return comments;
         }
+
+        //public ActionResult Rss()
+        //{
+        //    IQueryable<Post> posts = db.Posts
+        //        .Include(p => p.Staff)
+        //        .Where(p => p.IsApproved)
+        //        .Take(10)
+        //        .OrderByDescending(p => p.Published);
+
+        //    var items = new List<SyndicationItem>();
+        //    foreach (var post in posts)
+        //    {
+        //        SyndicationItem item = new SyndicationItem();
+        //        item.Title = new TextSyndicationContent(post.Title);
+        //        item.Authors.Add(new SyndicationPerson(post.Staff.Email));
+        //        item.Id = post.PostId.ToString();
+        //        item.PublishDate = post.Published;
+        //        item.Summary = new TextSyndicationContent(post.Content.Substring(100));
+                
+        //        items.Add(item);
+
+       
+        //    }
+
+        //    SyndicationFeed feed = new SyndicationFeed(items);
+        //    feed.Title = new TextSyndicationContent("Local Theatre Company");
+        //    feed.Description = new TextSyndicationContent("A blog about local theatre");
+
+        //    return View();
+        //}
 
         protected override void Dispose(bool disposing)
         {

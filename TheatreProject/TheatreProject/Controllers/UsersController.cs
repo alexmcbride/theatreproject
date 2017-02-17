@@ -302,7 +302,9 @@ namespace TheatreProject.Controllers
                         id);
 
                     // Redirect after change to make sure new user type is loaded.
-                    Flash.Instance.Success("Role Changed", string.Format("The user {0} has had their role changed to {1}", user.UserName, model.Role));
+                    Flash.Instance.Success(
+                        "Role Changed",
+                        string.Format("The user {0}'s role changed to {1}", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
             }
