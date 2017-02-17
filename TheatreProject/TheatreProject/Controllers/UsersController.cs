@@ -168,7 +168,6 @@ namespace TheatreProject.Controllers
             {
                 Email = member.Email,
                 UserName = member.UserName,
-                IsSuspended = member.IsSuspended ?? false,
                 EmailConfirmed = member.EmailConfirmed
             });
         }
@@ -223,6 +222,7 @@ namespace TheatreProject.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             User user = await UserManager.FindByIdAsync(id);
+            bool save = false;
 
             // Remove any posts owned by this user.
             Staff staff = user as Staff;
@@ -230,12 +230,22 @@ namespace TheatreProject.Controllers
             {
                 var posts = db.Posts.Where(p => p.StaffId == staff.Id).ToList();
                 db.Posts.RemoveRange(posts);
+                save = true;
             }
 
             // Delete comments owned by this user.
             var comments = db.Comments.Where(c => c.UserId == user.Id).ToList();
-            db.Comments.RemoveRange(comments);
-            await db.SaveChangesAsync();
+            if (comments.Any())
+            {
+                db.Comments.RemoveRange(comments);
+                save = true;
+            }
+
+            // Save if needed
+            if (save)
+            {
+                await db.SaveChangesAsync();
+            }
 
             // Delete user.
             await UserManager.DeleteAsync(user);
@@ -259,7 +269,7 @@ namespace TheatreProject.Controllers
             }
 
             User user = await UserManager.FindByIdAsync(id);
-            string role = (await UserManager.GetRolesAsync(id)).Single();
+            string role = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
 
             var items = db.Roles.Select(r => new SelectListItem
             {

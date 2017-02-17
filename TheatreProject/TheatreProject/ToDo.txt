@@ -1,6 +1,6 @@
 ﻿** Big **
 
-- View all user's comments (and your own)
+- Suspend user!!!
 
 ** Small **
 

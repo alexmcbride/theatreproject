@@ -8,9 +8,6 @@ using TheatreProject.Models;
 using TheatreProject.ViewModels;
 using MvcFlash.Core;
 using MvcFlash.Core.Extensions;
-using System.ServiceModel.Syndication;
-using System.Collections.Generic;
-using System.Xml;
 
 namespace TheatreProject.Controllers
 {
@@ -66,7 +63,7 @@ namespace TheatreProject.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Member,Staff,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Details")]

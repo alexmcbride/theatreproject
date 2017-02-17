@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TheatreProject.Models
 {
-    public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         private Random random = new Random();
 
@@ -18,18 +18,10 @@ namespace TheatreProject.Models
 
             // Add roles if they don't exist.
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            if (!roleManager.RoleExists("Admin"))
-            {
-                roleManager.Create(new IdentityRole("Admin"));
-            }
-            if (!roleManager.RoleExists("Staff"))
-            {
-                roleManager.Create(new IdentityRole("Staff"));
-            }
-            if (!roleManager.RoleExists("Member"))
-            {
-                roleManager.Create(new IdentityRole("Member"));
-            }
+            roleManager.Create(new IdentityRole("Admin"));
+            roleManager.Create(new IdentityRole("Staff"));
+            roleManager.Create(new IdentityRole("Member"));
+            roleManager.Create(new IdentityRole("Suspended"));
 
             // Add some default categories.
             var news = context.Categories.Add(new Category { Name = "News" });
@@ -129,6 +121,15 @@ namespace TheatreProject.Models
                 };
                 userManager.Create(bill, "member");
                 userManager.AddToRoles(bill.Id, "Member");
+                var greg = new Member
+                {
+                    UserName = "greg",
+                    Email = "greg@gmail.com",
+                    Joined = DateTime.Now,
+                    EmailConfirmed = true,
+                };
+                userManager.Create(greg, "member");
+                userManager.AddToRoles(greg.Id, "Suspended");
 
                 // some comments to use in posts.
                 var comments = new List<Comment>

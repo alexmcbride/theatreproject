@@ -10,9 +10,6 @@ namespace TheatreProject.ViewModels
         [Required, DataType(DataType.EmailAddress), Display(Name = "Email Address")]
         public string Email { get; set; }
 
-        [Display(Name = "Is Suspended")]
-        public bool IsSuspended { get; set; }
-
         [Display(Name = "Confirm Email")]
         public bool EmailConfirmed { get; set; }
     }
