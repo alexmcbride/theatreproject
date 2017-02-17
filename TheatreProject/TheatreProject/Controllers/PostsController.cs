@@ -9,7 +9,6 @@ using TheatreProject.ViewModels;
 using MvcFlash.Core;
 using MvcFlash.Core.Extensions;
 
-
 namespace TheatreProject.Controllers
 {
     [Authorize]
@@ -85,11 +84,11 @@ namespace TheatreProject.Controllers
                     UserId = User.Identity.GetUserId(),
                     Content = model.Comment,
                     Posted = DateTime.Now,
-                    IsApproved = true
+                    IsApproved = false
                 });
                 db.SaveChanges();
 
-                Flash.Instance.Success("Comment Posted", "Your comment has been posted");
+                Flash.Instance.Success("Approval", "Your comment needs to be approved by an admin before it can be viewed");
 
                 return RedirectToAction("details", new { id = post.PostId });
             }
@@ -343,12 +342,30 @@ namespace TheatreProject.Controllers
             return null;
         }
 
-        private IOrderedQueryable<Comment> GetCommentsForPost(Post post)
+        private IQueryable<Comment> GetCommentsForPost(Post post)
         {
-            return db.Comments
+            IQueryable<Comment> comments =  db.Comments
                 .Include(c => c.User)
                 .Where(c => c.PostId == post.PostId)
                 .OrderByDescending(c => c.Posted);
+
+            if (User.Identity.IsAuthenticated)
+            {
+                // Admin see all comments.
+                if (!User.IsInRole("Admin"))
+                {
+                    // other users see only approved comments and their own.
+                    string userId = User.Identity.GetUserId();
+                    comments = comments.Where(p => p.IsApproved || p.UserId == userId);
+                }
+            }
+            else
+            {
+                // Non-members see only approved posts.
+                comments = comments.Where(p => p.IsApproved);
+            }
+
+            return comments;
         }
 
         protected override void Dispose(bool disposing)

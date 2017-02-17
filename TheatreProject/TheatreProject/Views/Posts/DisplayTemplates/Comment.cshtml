@@ -2,7 +2,15 @@
 @using TheatreProject.Helpers
 
 <div @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-comment\"")>
-    <hr>
+
+    @if (Model.IsApproved)
+    {
+        <hr>
+    }
+    else
+    {
+        <div class="text-muted"><strong>[Awaiting Approval]</strong></div>
+    }
 
     <div>@Html.KeepLineBreaks(Model.Content)</div>
     <div class="text-muted text-right small">
@@ -22,6 +30,7 @@
             @Html.ActionLink("Delete", "delete", "comments", new { id = Model.CommentId }, null)
             @:|
         }
+
 
         Posted by @Model.User.UserName @Html.RelativeDate(Model.Posted)
     </div>

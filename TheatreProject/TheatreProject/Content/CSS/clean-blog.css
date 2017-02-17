@@ -427,9 +427,7 @@ body {
 
 .unapproved-post, .unapproved-comment {
 	background-color: #efefef;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 15px;
     border: 1px dotted #333;
     margin-bottom: 10px;
 }
