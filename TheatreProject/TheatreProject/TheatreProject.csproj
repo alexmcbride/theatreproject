@@ -320,16 +320,14 @@
     <Content Include="Views\Users\ChangeRole.cshtml" />
     <Content Include="Views\Posts\Index.cshtml" />
     <Content Include="Views\Account\ResendConfirmEmail.cshtml" />
-    <Content Include="Views\Comments\Create.cshtml" />
     <Content Include="Views\Comments\Delete.cshtml" />
-    <Content Include="Views\Comments\Details.cshtml" />
     <Content Include="Views\Comments\Edit.cshtml" />
     <Content Include="Views\Comments\Index.cshtml" />
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Secret.config" />
     <Content Include="Views\Shared\DisplayTemplates\Paginator.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SimpleMessage.cshtml" />
-    <Content Include="Views\Posts\DisplayTemplates\Comment.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

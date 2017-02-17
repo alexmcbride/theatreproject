@@ -6,6 +6,7 @@ using TheatreProject.Models;
 using TheatreProject.ViewModels;
 using MvcFlash.Core;
 using MvcFlash.Core.Extensions;
+using TheatreProject.Helpers;
 
 namespace TheatreProject.Controllers
 {
@@ -15,10 +16,17 @@ namespace TheatreProject.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var comments = db.Comments.Include(c => c.Post).Include(c => c.User);
-            return View(comments.ToList());
+            const int MaxCommentsPerPage = 50;
+
+            var comments = db.Comments
+                .Include(c => c.Post)
+                .Include(c => c.User)
+                .Where(c => !c.IsApproved)
+                .OrderBy(c => c.Posted);
+            var pagination = new Paginator<Comment>(comments, page ?? 0, MaxCommentsPerPage);
+            return View(pagination);
         }
 
         // GET: Comments/Details/5

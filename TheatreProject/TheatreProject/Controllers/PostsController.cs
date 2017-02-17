@@ -91,7 +91,7 @@ namespace TheatreProject.Controllers
                 });
                 db.SaveChanges();
 
-                Flash.Instance.Error("Approval", "Your comment needs to be approved by an admin before it can be viewed");
+                Flash.Instance.Error("Approval", "Your comment needs to be approved by an admin before it will be displayed");
 
                 return RedirectToAction("details", new { id = post.PostId });
             }

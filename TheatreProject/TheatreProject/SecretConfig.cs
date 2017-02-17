@@ -3,6 +3,9 @@ using System.Web.Configuration;
 
 namespace TheatreProject
 {
+    /// <summary>
+    /// Config class for reading the Secret.config file.
+    /// </summary>
     public sealed class SecretConfig : ConfigurationSection
     {
         private static SecretConfig config = null;

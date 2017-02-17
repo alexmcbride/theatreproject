@@ -1,57 +1,19 @@
-﻿@model IEnumerable<TheatreProject.Models.Comment>
+﻿@model TheatreProject.Helpers.Paginator<TheatreProject.Models.Comment>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manage Comments";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Post.StaffId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Posted)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsApproved)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Content)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Post.StaffId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Posted)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsApproved)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CommentId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CommentId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CommentId })
-        </td>
-    </tr>
+@section breadcrumb {
+    @Html.ActionLink("Home", "index", "home") &raquo;
+    @Html.ActionLink("Blog", "index") &raquo;
+    @ViewBag.Title
 }
 
-</table>
+<h2>@ViewBag.Title</h2>
+
+<p>Please moderate this list of unapproved comments.</p>
+
+@Html.DisplayFor(model => model.Items)
+
+@Html.DisplayFor(model => model, "paginator")
