@@ -10,7 +10,7 @@ This file should contain the following:
 
 ```XML
 <?xml version="1.0"?>
-<secret emailPassword="<YOUR EMAIL PASSWORD>"/>
+<secret sendGridApiKey="<SEND GRID API KEY>"/>
 ```
 
 When first run the app seeds the database with a default user:

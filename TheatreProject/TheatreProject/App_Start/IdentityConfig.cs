@@ -3,6 +3,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Configuration;
 using System.Net;
@@ -15,22 +17,19 @@ namespace TheatreProject
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Get password from 'Secret.config' file.
-            string password = SecretConfig.Config.EmailPassword;
+            // Send mail using SendGrid.
+            var apiKey = SecretConfig.Config.SendGridApiKey;
 
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("apptechcogc@gmail.com", password);
+            var client = new SendGridClient(apiKey);
 
-            MailMessage messaage = new MailMessage();
-            messaage.From = new MailAddress("apptechcogc@gmail.com");
-            messaage.To.Add(message.Destination);
-            messaage.Subject = message.Subject;
-            messaage.Body = message.Body;
+            var from = new EmailAddress("futureprospectsapp@gmail.com", "Local Theatre Company");
+            var to = new EmailAddress(message.Destination, message.Destination);
 
-            return client.SendMailAsync(messaage);
+            var msg = MailHelper.CreateSingleEmail(from, to, message.Subject, message.Body, message.Body);
+
+            await client.SendEmailAsync(msg);
         }
     }
 

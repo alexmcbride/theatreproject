@@ -67,8 +67,8 @@ namespace TheatreProject.Models
                 userManager.AddToRoles(jeff.Id, "Staff");
                 var alex = new Staff
                 {
-                    UserName = "Alex",
-                    Email = "alex@localtheatrecompany.com",
+                    UserName = "Xander",
+                    Email = "xander@localtheatrecompany.com",
                     Joined = DateTime.Now,
                     EmailConfirmed = true,
                 };
@@ -76,7 +76,7 @@ namespace TheatreProject.Models
                 userManager.AddToRoles(alex.Id, "Staff");
                 var paul = new Staff
                 {
-                    UserName = "paul",
+                    UserName = "Paul",
                     Email = "paul@localtheatrecompany.com",
                     Joined = DateTime.Now,
                     EmailConfirmed = true,
@@ -123,7 +123,7 @@ namespace TheatreProject.Models
                 userManager.AddToRoles(bill.Id, "Member");
                 var greg = new Member
                 {
-                    UserName = "greg",
+                    UserName = "Greg",
                     Email = "greg@gmail.com",
                     Joined = DateTime.Now,
                     EmailConfirmed = true,

@@ -23,11 +23,11 @@ namespace TheatreProject
             }
         }
 
-        [ConfigurationProperty("emailPassword", IsRequired = true)]
-        public string EmailPassword
+        [ConfigurationProperty("sendGridApiKey", IsRequired = true)]
+        public string SendGridApiKey
         {
-            get { return (string)base["emailPassword"]; }
-            set { base["emailPassword"] = value; }
+            get { return (string)base["sendGridApiKey"]; }
+            set { base["sendGridApiKey"] = value; }
         }
     }
 }
