@@ -68,7 +68,7 @@ namespace TheatreProject.Helpers
             return new MvcHtmlString(value);
         }
 
-        public static MvcHtmlString ReplaceSpaces(this HtmlHelper helper, string value)
+        public static MvcHtmlString KeepLineBreaks(this HtmlHelper helper, string value)
         {
             return new MvcHtmlString(value.Replace("\n", "<br>"));
         }

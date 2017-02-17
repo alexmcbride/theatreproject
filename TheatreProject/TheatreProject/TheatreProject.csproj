@@ -194,6 +194,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DatabaseInitializer.cs" />
     <Compile Include="ViewModels\ChangeEmailViewModel.cs" />
+    <Compile Include="ViewModels\CommentEditViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Post.cs" />
@@ -326,6 +327,7 @@
     <Content Include="Secret.config" />
     <Content Include="Views\Shared\DisplayTemplates\Paginator.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SimpleMessage.cshtml" />
+    <Content Include="Views\Posts\DisplayTemplates\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

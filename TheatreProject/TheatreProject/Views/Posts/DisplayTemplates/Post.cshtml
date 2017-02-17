@@ -6,7 +6,7 @@
     <h2>
         @Html.ActionLink(Model.Title, "details", new { id = Model.PostId })
     </h2>
-    <p>@Html.ReplaceSpaces(Model.Content)</p>
+    <p>@Html.KeepLineBreaks(Model.Content)</p>
 
     <div class="row">
         <div class="col-sm-8 text-muted small">

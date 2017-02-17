@@ -3,6 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using TheatreProject.Models;
+using TheatreProject.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
 
 namespace TheatreProject.Controllers
 {
@@ -40,14 +43,26 @@ namespace TheatreProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comment comment = db.Comments.Find(id);
+
+            // Get comment, post, and user.
+            Comment comment = db.Comments
+                .Include(c => c.Post)
+                .Include(c => c.User)
+                .SingleOrDefault(c => c.CommentId == id);
             if (comment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId", comment.PostId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", comment.UserId);
-            return View(comment);
+
+            return View(new CommentEditViewModel
+            {
+                Content = comment.Content,
+                UserName = comment.User.UserName,
+                PostId = comment.PostId,
+                PostTitle = comment.Post.Title,
+                CategoryId = comment.Post.CategoryId,
+                CategoryName = comment.Post.Category.Name
+            });
         }
 
         // POST: Comments/Edit/5
@@ -55,17 +70,38 @@ namespace TheatreProject.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CommentId,PostId,UserId,Posted,IsApproved,Content")] Comment comment)
+        public ActionResult Edit(int? id, [Bind(Include = "Content")] CommentEditViewModel model)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Get comment, post, and user.
+            Comment comment = db.Comments
+                .Include(c => c.Post)
+                .Include(c => c.User)
+                .SingleOrDefault(c => c.CommentId == id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
+                comment.Content = model.Content;
                 db.Entry(comment).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                Flash.Instance.Success("Comment Edited", "The comment has been edited");
+                return RedirectToAction("details", "posts", new { id = comment.PostId });
             }
-            ViewBag.PostId = new SelectList(db.Posts, "PostId", "StaffId", comment.PostId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", comment.UserId);
-            return View(comment);
+
+            model.CategoryId = comment.Post.CategoryId;
+            model.CategoryName = comment.Post.Category.Name;
+            model.PostTitle = comment.Post.Title;
+            model.PostId = comment.PostId;
+            return View(model);
         }
 
         // GET: Comments/Delete/5
