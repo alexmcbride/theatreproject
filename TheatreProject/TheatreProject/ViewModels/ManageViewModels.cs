@@ -13,6 +13,7 @@ namespace TheatreProject.ViewModels
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
         public string CurrentUserId { get; set; }
+        public string CurrentRole { get; set; }
     }
 
     public class ManageLoginsViewModel

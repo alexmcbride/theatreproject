@@ -74,7 +74,8 @@ namespace TheatreProject.Controllers
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
-                CurrentUserId = User.Identity.GetUserId()
+                CurrentUserId = User.Identity.GetUserId(),
+                CurrentRole = (await UserManager.GetRolesAsync(userId)).Single()
             };
             return View(model);
         }
