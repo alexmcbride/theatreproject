@@ -18,6 +18,7 @@
         <div class="col-sm-4 text-muted text-right small">
             @{
                 var admin = User.IsInRole("Admin");
+                var approved = Model.HasApproveComments;
             }
 
             @if (admin)
@@ -37,10 +38,19 @@
                 @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
                 @:|
                 @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
-                @:|
+
+                if (approved)
+                {
+                    @:|
+                }
             }
 
-            <a href="@Url.Action("details", "posts", new { id = Model.PostId })#comments">@Model.Comments.Count() Comments</a>
+            @if (approved)
+            {
+                var count = @Model.ApproveCommentCount;
+
+                <a href="@Url.Action("details", "posts", new { id = Model.PostId })#comments">@count Comment@(count > 1 ? "s" : "")</a>
+            }
         </div>
     </div>
 

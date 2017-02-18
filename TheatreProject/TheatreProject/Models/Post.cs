@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace TheatreProject.Models
 {
@@ -31,6 +32,16 @@ namespace TheatreProject.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Staff Staff { get; set; }
         public virtual Category Category { get; set; }
+
+        public bool HasApproveComments
+        {
+            get { return Comments.Any(c => c.IsApproved); }
+        }
+
+        public int ApproveCommentCount
+        {
+            get { return Comments.Where(c => c.IsApproved).Count(); }
+        }
 
         public bool BelongsTo(string userId)
         {
