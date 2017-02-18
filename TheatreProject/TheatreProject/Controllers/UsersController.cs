@@ -297,7 +297,6 @@ namespace TheatreProject.Controllers
 
                 if (oldRole == model.Role)
                 {
-                    // User already has role, so don't change it.
                     Flash.Instance.Info("Role Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
@@ -307,7 +306,7 @@ namespace TheatreProject.Controllers
                     await UserManager.RemoveFromRoleAsync(id, oldRole);
                     await UserManager.AddToRoleAsync(id, model.Role);
 
-                    // If role is anything other than suspended we need to change type.
+                    // If role is anything other than suspended we need to change user type.
                     if (model.Role != "Suspended")
                     {
                         // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
@@ -317,7 +316,6 @@ namespace TheatreProject.Controllers
                             id);
                     }
 
-                    // Redirect after change to make sure new user type is loaded.
                     Flash.Instance.Success(
                         "Role Changed",
                         string.Format("The user {0}'s role changed to {1}", user.UserName, model.Role));

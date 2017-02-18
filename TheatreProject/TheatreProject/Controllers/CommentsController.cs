@@ -42,6 +42,7 @@ namespace TheatreProject.Controllers
                 .Include(c => c.Post)
                 .Include(c => c.User)
                 .SingleOrDefault(c => c.CommentId == id);
+
             if (comment == null)
             {
                 return HttpNotFound();
@@ -61,22 +62,13 @@ namespace TheatreProject.Controllers
         // POST: Comments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, [Bind(Include = "Content")] CommentEditViewModel model)
+        public ActionResult Edit(int id, [Bind(Include = "Content")] CommentEditViewModel model)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
             // Get comment, post, and user.
             Comment comment = db.Comments
                 .Include(c => c.Post)
                 .Include(c => c.User)
                 .SingleOrDefault(c => c.CommentId == id);
-            if (comment == null)
-            {
-                return HttpNotFound();
-            }
 
             if (ModelState.IsValid)
             {

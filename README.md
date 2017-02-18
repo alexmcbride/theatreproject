@@ -2,7 +2,7 @@
 
 College project to develop web site for local theatre, written in C# and ASP.NET MVC. 
 
-To run the site the following file needs to be placed in the main directory (alongside Web.config):
+In order to send emails you need to setup the SendGrid API key (sendgrid.com) and then create a file with the following name in the apps root folder (alongside Web.config):
 
 `Secret.config`
 

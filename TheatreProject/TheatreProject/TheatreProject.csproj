@@ -185,7 +185,6 @@
     <Compile Include="Helpers\Paginator.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="SecretConfig.cs" />
-    <Compile Include="ViewModels\ChangeRoleConfirmViewModel.cs" />
     <Compile Include="ViewModels\ChangeRoleViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

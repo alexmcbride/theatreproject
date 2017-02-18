@@ -9,12 +9,14 @@ namespace TheatreProject.ViewModels
         [Required]
         public string Title { get; set; }
 
-        [Required, DataType(DataType.MultilineText)]
+        [Required]
+        [DataType(DataType.MultilineText)]
         public string Content { get; set; }
 
         public SelectList Categories { get; set; }
 
-        [Required, Display(Name = "Category")]
+        [Required]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         public Category Category { get; set; } 

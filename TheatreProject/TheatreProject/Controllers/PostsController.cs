@@ -67,14 +67,9 @@ namespace TheatreProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Details")]
-        public ActionResult CreateComment(int id, PostDetailsViewModel model)
+        public ActionResult CreateComment(int id, [Bind(Include = "Comment")] PostDetailsViewModel model)
         {
             Post post = GetAllowedPost(id, allowApproved: true);
-
-            if (post == null)
-            {
-                return HttpNotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -168,10 +163,6 @@ namespace TheatreProject.Controllers
         public ActionResult Edit(int id, [Bind(Include = "CategoryId,Title,Content")] PostEditViewModel model)
         {
             Post post = db.Posts.Find(id);
-            if (post == null)
-            {
-                return HttpNotFound();
-            }
 
             if (ModelState.IsValid)
             {
