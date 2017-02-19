@@ -33,14 +33,16 @@ namespace TheatreProject.Models
         public virtual Staff Staff { get; set; }
         public virtual Category Category { get; set; }
 
-        public bool HasApproveComments
+        [NotMapped]
+        public bool HasApprovedComments
         {
-            get { return Comments.Any(c => c.IsApproved); }
+            get { return Comments != null && Comments.Any(c => c.IsApproved); }
         }
 
-        public int ApproveCommentCount
+        [NotMapped]
+        public int ApprovedCommentCount
         {
-            get { return Comments.Where(c => c.IsApproved).Count(); }
+            get { return Comments != null ? Comments.Where(c => c.IsApproved).Count() : 0; }
         }
 
         public bool BelongsTo(string userId)

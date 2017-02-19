@@ -107,9 +107,12 @@
             @RenderBody()
         </div>
 
-        <div class="row">
-            <hr>
-        </div>
+        @if (ViewBag.ShowBottomLink ?? true)
+        {
+            <div class="row">
+                <hr>
+            </div>
+        }
     </div>
 
     <footer>

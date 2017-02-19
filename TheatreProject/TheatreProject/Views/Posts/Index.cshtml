@@ -1,6 +1,7 @@
 ﻿@model TheatreProject.Helpers.Paginator<TheatreProject.Models.Post>
 @{
     ViewBag.Title = "Blog";
+    ViewBag.ShowBottomLink = Model.IsPaginated;
 }
 
 @section breadcrumb {

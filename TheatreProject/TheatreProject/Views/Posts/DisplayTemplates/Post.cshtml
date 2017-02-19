@@ -10,22 +10,23 @@
 
     <div class="row">
         <div class="col-sm-8 text-muted small">
-            Posted by @Model.Staff.UserName
+            Posted 
             @Html.RelativeDate(Model.Published)
+            by @Model.Staff.UserName
             in @Html.ActionLink(Model.Category.Name, "category", new { id = Model.CategoryId })
         </div>
 
         <div class="col-sm-4 text-muted text-right small">
             @{
                 var admin = User.IsInRole("Admin");
-                var approved = Model.HasApproveComments;
+                var comments = Model.HasApprovedComments;
             }
 
             @if (admin)
             {
                 if (Model.IsApproved)
                 {
-                    @Html.ActionLink("Disallow", "Disallow", new { id = Model.PostId }) @:|
+                    @Html.ActionLink("Disallow", "disallow", new { id = Model.PostId }) @:|
                 }
                 else
                 {
@@ -39,15 +40,15 @@
                 @:|
                 @Html.ActionLink("Delete", "delete", new { id = Model.PostId })
 
-                if (approved)
+                if (comments)
                 {
                     @:|
                 }
             }
 
-            @if (approved)
+            @if (comments)
             {
-                var count = @Model.ApproveCommentCount;
+                var count = @Model.ApprovedCommentCount;
 
                 <a href="@Url.Action("details", "posts", new { id = Model.PostId })#comments">@count Comment@(count > 1 ? "s" : "")</a>
             }
