@@ -16,16 +16,18 @@ namespace TheatreProject
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            // Send mail using SendGrid.
-            var apiKey = SecretConfig.Config.SendGridApiKey;
+            // Send mail using SendGrid. 
+            string apiKey = SecretConfig.Config.SendGridApiKey; // Get secret API key
+            SendGridClient client = new SendGridClient(apiKey);
+            
+            // Create message.
+            SendGridMessage msg = new SendGridMessage();
+            msg.AddTo(new EmailAddress(message.Destination));
+            msg.From = new EmailAddress("futureprospectsapp@gmail.com", "Local Theatre Company");
+            msg.Subject = message.Subject;
+            msg.PlainTextContent = message.Body;
 
-            var client = new SendGridClient(apiKey);
-
-            var from = new EmailAddress("futureprospectsapp@gmail.com", "Local Theatre Company");
-            var to = new EmailAddress(message.Destination, message.Destination);
-
-            var msg = MailHelper.CreateSingleEmail(from, to, message.Subject, message.Body, message.Body);
-
+            // Send email.
             await client.SendEmailAsync(msg);
         }
     }

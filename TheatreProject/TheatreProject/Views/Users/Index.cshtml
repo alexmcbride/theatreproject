@@ -35,7 +35,7 @@
                 @Html.DisplayFor(modelItem => user.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => user.Email)
+                <a href="mailto:@user.Email">@Html.DisplayFor(modelItem => user.Email)</a>
             </td>
             <td>
                 @user.Joined.ToShortDateString()

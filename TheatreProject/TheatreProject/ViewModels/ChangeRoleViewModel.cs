@@ -8,6 +8,8 @@ namespace TheatreProject.ViewModels
     {
         public string UserName { get; set; }
 
+        public string OldRole { get; set; }
+
         public ICollection<SelectListItem> Roles { get; set; }
 
         [Required, Display(Name = "Role")]

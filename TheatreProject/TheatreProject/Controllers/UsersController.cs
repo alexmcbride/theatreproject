@@ -268,19 +268,20 @@ namespace TheatreProject.Controllers
             }
 
             User user = await UserManager.FindByIdAsync(id);
-            string role = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
+            string oldRole = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
 
             var items = db.Roles.Select(r => new SelectListItem
             {
                 Text = r.Name,
                 Value = r.Name,
-                Selected = r.Name == role
+                Selected = r.Name == oldRole
             }).ToList();
 
             return View(new ChangeRoleViewModel
             {
                 UserName = user.UserName,
-                Roles = items
+                Roles = items,
+                OldRole = oldRole,
             });
         }
 
@@ -302,7 +303,7 @@ namespace TheatreProject.Controllers
 
                 if (oldRole == model.Role)
                 {
-                    Flash.Instance.Error("Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
+                    Flash.Instance.Error("Error", string.Format("The user '{0}' already has the role '{1}'", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
                 else
@@ -323,7 +324,7 @@ namespace TheatreProject.Controllers
 
                     Flash.Instance.Success(
                         "Role Changed",
-                        string.Format("The user {0}'s role changed to {1}", user.UserName, model.Role));
+                        string.Format("The user '{0}' has has their role changed to '{1}'", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
             }

@@ -27,7 +27,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Email)
+            <a href="mailto:@Model.Email">@Html.DisplayFor(modelItem => modelItem.Email)</a>
         </dd>
 
         <dt>
