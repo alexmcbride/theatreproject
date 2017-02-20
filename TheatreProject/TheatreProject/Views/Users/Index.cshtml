@@ -44,14 +44,7 @@
                 @user.CurrentRole (@Html.ActionLink("Edit", "changerole", new { id = user.Id }))
             </td>
             <td class="text-right">
-                @if (user is Staff)
-                {
-                    @Html.ActionLink("Edit", "editstaff", new { id = user.Id })
-                }
-                else if (user is Member)
-                {
-                    @Html.ActionLink("Edit", "editmember", new { id = user.Id })
-                } 
+                @Html.ActionLink("Edit", "edit" + (user is Staff ? "staff" : "member"), new { id = user.Id })
                 |
                 @Html.ActionLink("Details", "details", new { id = user.Id }) 
                 |
@@ -92,12 +85,9 @@
 </div>
 
 <script type="text/javascript">
-    // Triggered when modal is about to be shown
+    // When modal is triggered, get userId from link and set in hidden input.
     $('#deleteUserModal').on('show.bs.modal', function (e) {
-        // Get data-id attribute of the clicked element
         var userId = $(e.relatedTarget).data('user-id');
-
-        // Populate the hidden textbox.
         $(e.currentTarget).find('input[name="userId"]').val(userId);
     });
 </script>

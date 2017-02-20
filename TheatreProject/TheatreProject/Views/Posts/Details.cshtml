@@ -21,11 +21,11 @@
 }
 else if (User.IsInRole("Suspended"))
 {
-    <div class="alert alert-danger">You have been suspeded from commenting</div>
+    <div class="alert alert-danger">You have been suspended from commenting</div>
 }
 else if (!Model.Post.IsApproved)
 {
-    <div class="alert alert-danger">You cannot comment on a post that is not approved</div>
+    <div class="alert alert-warning">You cannot comment on a post that is not approved</div>
 }
 else
 {

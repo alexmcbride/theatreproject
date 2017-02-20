@@ -1,23 +1,25 @@
 ﻿@model TheatreProject.Helpers.IPaginator
 
-<div class="row">
-    <div class="col-sm-6">
-        @if (Model.HasPreviousPage)
-        {
-            @:&laquo;  
-            if (Model.PreviousPageNumber == 0)
+@if (Model.IsPaginated)
+{
+    <div class="row">
+        <div class="col-sm-6">
+            @if (Model.HasPreviousPage)
             {
-                @Html.ActionLink("Previous", null)
+                @:&laquo;  
+                if (Model.PreviousPageNumber == 0)
+                {
+                    @Html.ActionLink("Previous", null)
+                }
             }
-        }
-    </div>
+        </div>
 
-    <div class="col-sm-6 text-right">
-        @if (Model.HasNextPage) { 
-            @Html.ActionLink("Next", null, new { page = Model.NextPageNumber }) 
-            @:&raquo;
-        }
+        <div class="col-sm-6 text-right">
+            @if (Model.HasNextPage)
+            {
+                @Html.ActionLink("Next", null, new { page = Model.NextPageNumber }) 
+                @:&raquo;
+            }
+        </div>
     </div>
-</div>
-
-<br>
+}
