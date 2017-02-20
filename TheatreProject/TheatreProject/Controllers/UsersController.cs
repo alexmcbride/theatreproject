@@ -98,6 +98,7 @@ namespace TheatreProject.Controllers
         }
 
         // GET: Users/EditStaff/5
+        [Authorize(Roles = "Admin,Staff")]
         public ActionResult EditStaff(string id)
         {
             if (id == null)
@@ -128,6 +129,7 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Users/EditStaff/5
+        [Authorize(Roles = "Admin,Staff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditStaff(string id, [Bind(Include = "UserName,Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate,EmailConfirmed")]EditStaffViewModel model)

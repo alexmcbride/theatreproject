@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace TheatreProject.Models
 
         public virtual ICollection<Comment> Comments { get; set; }
 
+        [NotMapped]
         public string CurrentRole
         {
             get {

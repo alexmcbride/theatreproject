@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 
 namespace TheatreProject.Models
@@ -11,32 +10,12 @@ namespace TheatreProject.Models
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
-        public IQueryable<Staff> Staff
-        {
-            get { return Users.OfType<Staff>(); }
-        }
-
-        public IQueryable<Member> Members
-        {
-            get { return Users.OfType<Member>(); }
-        }
-
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
             Database.SetInitializer(new DatabaseInitializer());
 
             // Log SQL queries to the debug output.
             //Database.Log = s => Debug.WriteLine(s);
-        }
-
-        public Staff FindStaff(string id)
-        {
-            return (Staff)Users.Find(id);
-        }
-
-        public Member FindMember(string id)
-        {
-            return (Member)Users.Find(id);
         }
 
         public bool EmailAddressExists(string emailAddress)

@@ -1,13 +1,8 @@
-﻿** Big **
-
-- Suspend user!!!
-
-** Small **
+﻿** TODO **
 
 - confirm email changed
 - RSS/Atom
 - Staff should be able to change their own address/postcode etc.
-- Increase password strength (lowered for development)
 
 ** Done **
 
@@ -15,6 +10,7 @@
 - Edit/Delete posts
 - What happens with non-confirmed email?
 - Resend activation email
-- Add email password to config file.
+- Add email password to secret config file.
 - Confirmation messages for small things, such as post new post, edit user, edit category etc.. (flash messages?)
 - Post/Edit/Delete comments
+- Suspend user!!!

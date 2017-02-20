@@ -36,5 +36,14 @@
             @Html.ActionLink("Change your email", "changeemail")
             ]
         </dd>
+        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+        {
+            <dt>Profile:</dt>
+            <dd>
+                [
+                @Html.ActionLink("Edit your profile", "editprofile", "manage")
+                ]
+            </dd>
+        }
     </dl>
 </div>

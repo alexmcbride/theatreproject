@@ -64,6 +64,7 @@ namespace TheatreProject.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : message == ManageMessageId.EmailChangedSuccess ? "Your email address has been changed."
+                : message == ManageMessageId.ProfileEditedSuccess ? "Your profile has been saved."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -369,6 +370,45 @@ namespace TheatreProject.Controllers
             return result.Succeeded ? RedirectToAction("managelogins") : RedirectToAction("managelogins", new { Message = ManageMessageId.Error });
         }
 
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult> EditProfile()
+        {
+            string userId = User.Identity.GetUserId();
+            Staff staff = await UserManager.FindByIdAsync(userId) as Staff;
+
+            return View(new EditProfileViewModel
+            {
+                Email = staff.Email,
+                Address = staff.Address,
+                BirthDate = staff.BirthDate ?? new DateTime(1900, 1, 1),
+                City = staff.City,
+                FirstName = staff.FirstName,
+                LastName = staff.LastName,
+                PhoneNumber = staff.PhoneNumber,
+                PostCode = staff.PostCode,
+            });
+        }
+
+        [Authorize(Roles = "Admin,Staff")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditProfile([Bind(Include = "Email,PhoneNumber,FirstName,LastName,Address,City,PostCode,BirthDate")] EditProfileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = User.Identity.GetUserId();
+                Staff staff = await UserManager.FindByIdAsync(userId) as Staff;
+
+                UpdateModel(staff);
+
+                await UserManager.UpdateAsync(staff);
+
+                return RedirectToAction("index", "manage", new { message = ManageMessageId.ProfileEditedSuccess });
+            }
+
+            return View(model);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -429,7 +469,8 @@ namespace TheatreProject.Controllers
             RemoveLoginSuccess,
             RemovePhoneSuccess,
             EmailChangedSuccess,
-            Error
+            Error,
+            ProfileEditedSuccess
         }
 
         #endregion
