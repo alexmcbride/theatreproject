@@ -206,7 +206,7 @@ namespace TheatreProject.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                Flash.Instance.Info("Delete Error", "You cannot delete your own account");
+                Flash.Instance.Error("Error", "You cannot delete your own account");
                 return RedirectToAction("index", "users");
             }
 
@@ -221,37 +221,33 @@ namespace TheatreProject.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed()
         {
-            User user = await UserManager.FindByIdAsync(id);
-            bool save = false;
+            // Get ID of user to delete and check we're not deleting our own account.
+            string id = Request.Params.Get("userId");
+            if (id == User.Identity.GetUserId())
+            {
+                Flash.Instance.Error("Error", "You cannot delete your own account");
+                return RedirectToAction("index", "users");
+            }
 
-            // Remove any posts owned by this user.
+            User user = await UserManager.FindByIdAsync(id);
+
+            // If this is a staff member delete their posts.
             Staff staff = user as Staff;
             if (staff != null)
             {
                 var posts = db.Posts.Where(p => p.StaffId == staff.Id).ToList();
                 db.Posts.RemoveRange(posts);
-                save = true;
             }
 
-            // Delete comments owned by this user.
+            // Delete their comments.
             var comments = db.Comments.Where(c => c.UserId == user.Id).ToList();
-            if (comments.Any())
-            {
-                db.Comments.RemoveRange(comments);
-                save = true;
-            }
-
-            // Save if needed
-            if (save)
-            {
-                await db.SaveChangesAsync();
-            }
+            db.Comments.RemoveRange(comments);
+            await db.SaveChangesAsync();
 
             // Delete user.
             await UserManager.DeleteAsync(user);
-
             Flash.Instance.Success("Deleted", "The user has been deleted");
             return RedirectToAction("index", "users");
         }
@@ -267,7 +263,7 @@ namespace TheatreProject.Controllers
             // Can't change your own role.
             if (id == User.Identity.GetUserId())
             {
-                Flash.Instance.Info("Change Role", "You cannot change your own role");
+                Flash.Instance.Error("Error", "You cannot change your own role");
                 return RedirectToAction("index", "users");
             }
 
@@ -291,7 +287,14 @@ namespace TheatreProject.Controllers
         // POST: Users/ChangeRole/5
         [HttpPost, ValidateAntiForgeryToken, ActionName("ChangeRole")]
         public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
-        {
+        {            
+            // Can't change your own role.
+            if (id == User.Identity.GetUserId())
+            {
+                Flash.Instance.Error("Error", "You cannot change your own role");
+                return RedirectToAction("index", "users");
+            }
+
             if (ModelState.IsValid)
             {
                 User user = await UserManager.FindByIdAsync(id);
@@ -299,7 +302,7 @@ namespace TheatreProject.Controllers
 
                 if (oldRole == model.Role)
                 {
-                    Flash.Instance.Info("Role Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
+                    Flash.Instance.Error("Error", string.Format("The user {0} already has the role {1}", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
                 else
