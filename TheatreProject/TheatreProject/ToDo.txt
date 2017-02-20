@@ -1,11 +1,12 @@
 ﻿** TODO **
 
-- Dialog?
+- Improve userscontroller flash messages.
 - confirm email changed
 - RSS/Atom
 
 ** Done **
 
+- Dialog?
 - View all user's posts (and your own)
 - Edit/Delete posts
 - What happens with non-confirmed email?
