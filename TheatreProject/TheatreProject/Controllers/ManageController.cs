@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TheatreProject.Models;
 using TheatreProject.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
 
 namespace TheatreProject.Controllers
 {
@@ -54,19 +56,8 @@ namespace TheatreProject.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public async Task<ActionResult> Index()
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : message == ManageMessageId.EmailChangedSuccess ? "Your email address has been changed."
-                : message == ManageMessageId.ProfileEditedSuccess ? "Your profile has been saved."
-                : "";
-
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
@@ -113,7 +104,8 @@ namespace TheatreProject.Controllers
                     IdentityResult result = await UserManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("index", new { Message = ManageMessageId.EmailChangedSuccess });
+                        Flash.Instance.Success("Email Changed", "Your email address has been changed.");
+                        return RedirectToAction("index");
                     }
 
                     AddErrors(result);
@@ -129,7 +121,6 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
-            ManageMessageId? message;
             var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
@@ -138,13 +129,13 @@ namespace TheatreProject.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                message = ManageMessageId.RemoveLoginSuccess;
+                Flash.Instance.Success("Login Removed", "The external login was removed.");
             }
             else
             {
-                message = ManageMessageId.Error;
+                Flash.Instance.Error("Error", "An error has occurred.");
             }
-            return RedirectToAction("managelogins", new { Message = message });
+            return RedirectToAction("managelogins");
         }
 
         //
@@ -235,7 +226,8 @@ namespace TheatreProject.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("index", new { Message = ManageMessageId.AddPhoneSuccess });
+                Flash.Instance.Success("Phone Added", "Your phone number was added.");
+                return RedirectToAction("index");
             }
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "Failed to verify phone");
@@ -251,14 +243,16 @@ namespace TheatreProject.Controllers
             var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
             if (!result.Succeeded)
             {
-                return RedirectToAction("index", new { Message = ManageMessageId.Error });
+                Flash.Instance.Error("Error", "An error has occured.");
+                return RedirectToAction("index");
             }
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
-            return RedirectToAction("index", new { Message = ManageMessageId.RemovePhoneSuccess });
+            Flash.Instance.Success("Phone Removed", "Your phone number was removed.");
+            return RedirectToAction("index");
         }
 
         //
@@ -286,7 +280,8 @@ namespace TheatreProject.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                Flash.Instance.Success("Password Changed", "Your password has been changed.");
+                return RedirectToAction("index");
             }
             AddErrors(result);
             return View(model);
@@ -315,7 +310,8 @@ namespace TheatreProject.Controllers
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     }
-                    return RedirectToAction("index", new { Message = ManageMessageId.SetPasswordSuccess });
+                    Flash.Instance.Success("Password Set", "Your password has been set.");
+                    return RedirectToAction("index");
                 }
                 AddErrors(result);
             }
@@ -326,12 +322,8 @@ namespace TheatreProject.Controllers
 
         //
         // GET: /Manage/ManageLogins
-        public async Task<ActionResult> ManageLogins(ManageMessageId? message)
+        public async Task<ActionResult> ManageLogins()
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
             {
@@ -364,10 +356,16 @@ namespace TheatreProject.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {
-                return RedirectToAction("managelogins", new { Message = ManageMessageId.Error });
+                Flash.Instance.Error("Error", "An error has occured.");
+                return RedirectToAction("managelogins");
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("managelogins") : RedirectToAction("managelogins", new { Message = ManageMessageId.Error });
+            if (!result.Succeeded)
+            {
+                Flash.Instance.Error("Error", "An error has occured.");
+                return RedirectToAction("managelogins");
+            }
+            return RedirectToAction("managelogins");
         }
 
         [Authorize(Roles = "Admin,Staff")]
@@ -403,7 +401,8 @@ namespace TheatreProject.Controllers
 
                 await UserManager.UpdateAsync(staff);
 
-                return RedirectToAction("index", "manage", new { message = ManageMessageId.ProfileEditedSuccess });
+                Flash.Instance.Success("Profile Saved", "Your profile has been saved.");
+                return RedirectToAction("index", "manage");
             }
 
             return View(model);
@@ -458,19 +457,6 @@ namespace TheatreProject.Controllers
                 return user.PhoneNumber != null;
             }
             return false;
-        }
-
-        public enum ManageMessageId
-        {
-            AddPhoneSuccess,
-            ChangePasswordSuccess,
-            SetTwoFactorSuccess,
-            SetPasswordSuccess,
-            RemoveLoginSuccess,
-            RemovePhoneSuccess,
-            EmailChangedSuccess,
-            Error,
-            ProfileEditedSuccess
         }
 
         #endregion
