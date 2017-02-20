@@ -1,8 +1,8 @@
 ﻿** TODO **
 
+- Dialog?
 - confirm email changed
 - RSS/Atom
-- Staff should be able to change their own address/postcode etc.
 
 ** Done **
 
@@ -13,4 +13,5 @@
 - Add email password to secret config file.
 - Confirmation messages for small things, such as post new post, edit user, edit category etc.. (flash messages?)
 - Post/Edit/Delete comments
-- Suspend user!!!
+- Suspend user
+- Staff should be able to change their own address/postcode etc.

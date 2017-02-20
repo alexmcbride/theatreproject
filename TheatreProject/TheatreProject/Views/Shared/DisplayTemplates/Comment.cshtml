@@ -2,7 +2,6 @@
 @using TheatreProject.Helpers
 
 <div @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-comment\"")>
-
     @if (Model.IsApproved)
     {
         <hr>
@@ -11,7 +10,7 @@
     <div>@Html.KeepLineBreaks(Model.Content)</div>
 
     <div class="text-muted text-right small" style="margin-top: 10px;">
-        Posted by @Model.User.UserName @Html.RelativeDate(Model.Posted)
+        Posted @Html.RelativeDate(Model.Posted) by @Model.User.UserName
 
         @if (User.IsInRole("Admin"))
         {
@@ -27,7 +26,30 @@
             @:|
             @Html.ActionLink("Edit", "edit", "comments", new { id = Model.CommentId }, null)
             @:|
-            @Html.ActionLink("Delete", "delete", "comments", new { id = Model.CommentId }, null)
+            <a data-toggle="modal" href="#deleteCommentModal">Delete</a>
         }
+    </div>
+</div>
+
+<div id="deleteCommentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Comment</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the comment by <strong>@Model.User.UserName</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("delete", "comments", new { id = Model.CommentId }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit" class="btn btn-default">Yes</button>
+                    <button type="button" class="btn" data-dismiss="modal">No</button>
+                }
+            </div>
+        </div>
     </div>
 </div>
