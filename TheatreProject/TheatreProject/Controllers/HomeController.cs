@@ -1,7 +1,5 @@
-﻿using MvcFlash.Core;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using MvcFlash.Core.Extensions;
 
 using TheatreProject.Models;
 
