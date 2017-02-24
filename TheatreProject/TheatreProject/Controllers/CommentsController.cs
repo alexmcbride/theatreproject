@@ -15,20 +15,6 @@ namespace TheatreProject.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Comments
-        public ActionResult Index(int? page)
-        {
-            const int MaxCommentsPerPage = 50;
-
-            var comments = db.Comments
-                .Include(c => c.Post)
-                .Include(c => c.User)
-                .Where(c => !c.IsApproved)
-                .OrderBy(c => c.Posted);
-            var pagination = new Paginator<Comment>(comments, page ?? 0, MaxCommentsPerPage);
-            return View(pagination);
-        }
-
         // GET: Comments/Edit/5
         public ActionResult Edit(int? id)
         {

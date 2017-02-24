@@ -16,7 +16,6 @@ namespace TheatreProject.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : AccountController
     {
-        private const int MaxUsersPerPage = 20;
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public UsersController() : base() { }
@@ -27,6 +26,7 @@ namespace TheatreProject.Controllers
         // GET: Users
         public ActionResult Index(int? page)
         {
+            const int MaxUsersPerPage = 20;
             var users = db.Users.OrderBy(u => u.Joined);
             var paginator = new Paginator<User>(users, page ?? 0, MaxUsersPerPage);
 
@@ -286,9 +286,11 @@ namespace TheatreProject.Controllers
         }
 
         // POST: Users/ChangeRole/5
-        [HttpPost, ValidateAntiForgeryToken, ActionName("ChangeRole")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("ChangeRole")]
         public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
-        {            
+        {
             // Can't change your own role.
             if (id == User.Identity.GetUserId())
             {
@@ -306,27 +308,25 @@ namespace TheatreProject.Controllers
                     Flash.Instance.Error("Error", string.Format("The user '{0}' already has the role '{1}'", user.UserName, model.Role));
                     return RedirectToAction("index", "users");
                 }
-                else
+
+                // Remove old role and add new one.
+                await UserManager.RemoveFromRoleAsync(id, oldRole);
+                await UserManager.AddToRoleAsync(id, model.Role);
+
+                // If role is anything other than suspended we need to change user type.
+                if (model.Role != "Suspended")
                 {
-                    // Remove old role and add new one.
-                    await UserManager.RemoveFromRoleAsync(id, oldRole);
-                    await UserManager.AddToRoleAsync(id, model.Role);
-
-                    // If role is anything other than suspended we need to change user type.
-                    if (model.Role != "Suspended")
-                    {
-                        // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
-                        db.Database.ExecuteSqlCommand(
-                            "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
-                            model.Role == "Admin" ? "Staff" : model.Role,
-                            id);
-                    }
-
-                    Flash.Instance.Success(
-                        "Role Changed",
-                        string.Format("The user '{0}' has had their role changed to '{1}'", user.UserName, model.Role));
-                    return RedirectToAction("index", "users");
+                    // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
+                    db.Database.ExecuteSqlCommand(
+                        "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
+                        model.Role == "Admin" ? "Staff" : model.Role,
+                        id);
                 }
+
+                Flash.Instance.Success(
+                    "Role Changed",
+                    string.Format("The user '{0}' has had their role changed to '{1}'", user.UserName, model.Role));
+                return RedirectToAction("index", "users");
             }
 
             return View(model);

@@ -51,6 +51,7 @@ namespace TheatreProject.Controllers
         public ActionResult Details(int id)
         {
             Post post = GetAllowedPost(id, allowApproved: true);
+
             if (post == null)
             {
                 return HttpNotFound();

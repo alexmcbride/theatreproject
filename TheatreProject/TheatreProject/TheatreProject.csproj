@@ -325,7 +325,6 @@
     <Content Include="Views\Account\ResendConfirmEmail.cshtml" />
     <Content Include="Views\Comments\Delete.cshtml" />
     <Content Include="Views\Comments\Edit.cshtml" />
-    <Content Include="Views\Comments\Index.cshtml" />
     <Content Include="Views\Posts\EditorTemplates\PostEditViewModel.cshtml" />
     <Content Include="Secret.config" />
     <Content Include="Views\Shared\DisplayTemplates\Paginator.cshtml" />
