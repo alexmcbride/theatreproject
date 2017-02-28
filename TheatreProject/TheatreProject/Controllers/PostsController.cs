@@ -60,7 +60,7 @@ namespace TheatreProject.Controllers
             return View(new PostDetailsViewModel
             {
                 Post = post,
-                Comments = GetCommentsForPost(post).ToList()
+                Comments = GetCommentsForPost(post.PostId).ToList()
             });
         }
 
@@ -90,7 +90,7 @@ namespace TheatreProject.Controllers
             }
 
             model.Post = post;
-            model.Comments = GetCommentsForPost(post).ToList();
+            model.Comments = GetCommentsForPost(post.PostId).ToList();
             return View(model);
         }
 
@@ -334,11 +334,11 @@ namespace TheatreProject.Controllers
             return null;
         }
 
-        private IQueryable<Comment> GetCommentsForPost(Post post)
+        private IQueryable<Comment> GetCommentsForPost(int postId)
         {
             IQueryable<Comment> comments = db.Comments
                 .Include(c => c.User)
-                .Where(c => c.PostId == post.PostId)
+                .Where(c => c.PostId == postId)
                 .OrderByDescending(c => c.Posted);
 
             if (User.Identity.IsAuthenticated)
@@ -348,13 +348,13 @@ namespace TheatreProject.Controllers
                 {
                     // other users see only approved comments and their own.
                     string userId = User.Identity.GetUserId();
-                    comments = comments.Where(p => p.IsApproved || p.UserId == userId);
+                    comments = comments.Where(c => c.IsApproved || c.UserId == userId);
                 }
             }
             else
             {
                 // Non-members see only approved posts.
-                comments = comments.Where(p => p.IsApproved);
+                comments = comments.Where(c => c.IsApproved);
             }
 
             return comments;
