@@ -44,10 +44,5 @@ namespace TheatreProject.Models
         {
             get { return Comments != null ? Comments.Where(c => c.IsApproved).Count() : 0; }
         }
-
-        public bool BelongsTo(string userId)
-        {
-            return StaffId == userId;
-        }
     }
 }

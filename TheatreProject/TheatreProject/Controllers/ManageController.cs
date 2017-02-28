@@ -92,24 +92,17 @@ namespace TheatreProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (db.EmailAddressExists(model.Email))
-                {
-                    ModelState.AddModelError("", "The email address already exists");
-                }
-                else
-                {
-                    User user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                    user.Email = model.Email;
+                User user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                user.Email = model.Email;
 
-                    IdentityResult result = await UserManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        Flash.Instance.Success("Email Changed", "Your email address has been changed.");
-                        return RedirectToAction("index");
-                    }
-
-                    AddErrors(result);
+                IdentityResult result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    Flash.Instance.Success("Email Changed", "Your email address has been changed.");
+                    return RedirectToAction("index");
                 }
+
+                AddErrors(result);
             }
 
             return View(model);

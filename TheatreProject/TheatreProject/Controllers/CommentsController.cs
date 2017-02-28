@@ -91,8 +91,6 @@ namespace TheatreProject.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.CategoryId = comment.Post.CategoryId;
-            ViewBag.CategoryName = comment.Post.Category.Name;
             return View(new CommentDeleteViewModel
             {
                 UserName = comment.User.UserName,
