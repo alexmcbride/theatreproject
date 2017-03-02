@@ -213,6 +213,7 @@
     <Compile Include="ViewModels\EditStaffViewModel.cs" />
     <Compile Include="ViewModels\PostDetailsViewModel.cs" />
     <Compile Include="ViewModels\PostEditViewModel.cs" />
+    <Compile Include="ViewModels\PostViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\CSS\bootstrap-theme.css" />

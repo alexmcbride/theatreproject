@@ -1,15 +1,17 @@
 ﻿@model TheatreProject.Models.Comment
 @using TheatreProject.Helpers
 
-<div @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-comment\"")>
-    @if (Model.IsApproved)
-    {
-        <hr>
-    }
+<div>
+    <hr>
 
     <div>@Html.KeepLineBreaks(Model.Content)</div>
 
     <div class="text-muted text-right small" style="margin-top: 10px;">
+        @if (!Model.IsApproved)
+        {
+            @:[Unapproved] |
+        }
+
         Posted @Html.RelativeDate(Model.Posted) by @Model.User.UserName
 
         @if (User.IsInRole("Admin"))

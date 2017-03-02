@@ -2,9 +2,13 @@
 @using TheatreProject.Helpers
 @using Microsoft.AspNet.Identity;
 
-<article @Html.Raw(Model.IsApproved ? "" : "class=\"unapproved-post\"")>
+<article>
     <h2>
         @Html.ActionLink(Model.Title, "details", new { id = Model.PostId })
+        @if (!Model.IsApproved)
+        {
+            @:[Unapproved]
+        }
     </h2>
     <p>@Html.KeepLineBreaks(Model.Content)</p>
 
@@ -34,7 +38,7 @@
                 }
             }
 
-            @if (admin || Model.BelongsTo(User.Identity.GetUserId()))
+            @if (admin || Model.StaffId == User.Identity.GetUserId())
             {
                 @Html.ActionLink("Edit", "edit", new { id = Model.PostId })
                 @:|
