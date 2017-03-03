@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-
 namespace TheatreProject.Models
 {
     public class DatabaseInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
@@ -161,7 +160,7 @@ namespace TheatreProject.Models
                 {
                     Category = movies,
                     Content = "Fusce dignissim malesuada convallis. Mauris vel ante id augue fermentum tincidunt ut ut neque. Pellentesque sit amet convallis dolor. Phasellus euismod est quis mi fringilla, sit amet faucibus mauris finibus. Proin ultrices, risus non efficitur tristique, libero leo elementum mauris, ut iaculis neque dolor eleifend dolor. Etiam mauris est, tristique at interdum quis, maximus eu risus. Praesent feugiat tortor quam, eu scelerisque lacus pharetra vitae.",
-                    IsApproved = false,
+                    IsApproved = true,
                     Published = new DateTime(2016, 12, 12, 14, 17, 11, 100),
                     Staff = paul,
                     Title = "Fusce dignissim malesuada convallis",
@@ -254,6 +253,7 @@ namespace TheatreProject.Models
 
         private IEnumerable<Comment> GetRandomSelectionOfComments(IList<Comment> comments)
         {
+            // Just grabs a random number of comments in a random order.
             int num = random.Next(0, comments.Count);
             return comments.OrderBy(c => Guid.NewGuid()).Take(num).Select(c => new Comment
             {
