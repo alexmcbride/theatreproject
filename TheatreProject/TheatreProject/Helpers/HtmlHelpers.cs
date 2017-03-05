@@ -54,6 +54,7 @@ namespace TheatreProject.Helpers
             return years <= 1 ? "a year ago" : years + " years ago";
         }
 
+        // Replaces line breaks with HTML break rule tags
         public static MvcHtmlString KeepLineBreaks(this HtmlHelper helper, string value)
         {
             return new MvcHtmlString(value.Replace("\n", "<br>"));

@@ -84,7 +84,7 @@ namespace TheatreProject.Controllers
                 });
                 db.SaveChanges();
 
-                Flash.Instance.Error("Approval", "Your comment needs to be approved by an admin before it will be displayed");
+                Flash.Instance.Warning("Approval", "Your comment needs to be approved by an admin before it will be displayed");
 
                 return RedirectToAction("details", new { id = post.PostId });
             }
@@ -334,6 +334,7 @@ namespace TheatreProject.Controllers
             return null;
         }
 
+        // Gets comments for a particular posts that this user can view.
         private IQueryable<Comment> GetCommentsForPost(int postId)
         {
             IQueryable<Comment> comments = db.Comments
@@ -346,14 +347,14 @@ namespace TheatreProject.Controllers
                 // Admin see all comments.
                 if (!User.IsInRole("Admin"))
                 {
-                    // other users see only approved comments and their own.
+                    // Other users see only approved comments and their own.
                     string userId = User.Identity.GetUserId();
                     comments = comments.Where(c => c.IsApproved || c.UserId == userId);
                 }
             }
             else
             {
-                // Non-members see only approved posts.
+                // Non-members see only approved comments.
                 comments = comments.Where(c => c.IsApproved);
             }
 

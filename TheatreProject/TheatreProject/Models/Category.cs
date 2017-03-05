@@ -18,7 +18,7 @@ namespace TheatreProject.Models
         [NotMapped]
         public bool HasApprovedPosts
         {
-            get { return Posts != null && Posts.Where(p => p.IsApproved).Any(); }
+            get { return Posts != null && Posts.Any(p => p.IsApproved); }
         }
 
         [NotMapped]

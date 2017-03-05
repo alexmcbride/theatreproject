@@ -223,8 +223,10 @@ namespace TheatreProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed()
         {
-            // Get ID of user to delete and check we're not deleting our own account.
+            // We get from the params as this action can be called from a Bootstrap modal dialog.
             string id = Request.Params.Get("userId");
+
+            // Check this isn't your account.
             if (id == User.Identity.GetUserId())
             {
                 Flash.Instance.Error("Error", "You cannot delete your own account");
@@ -244,6 +246,8 @@ namespace TheatreProject.Controllers
             // Delete their comments.
             var comments = db.Comments.Where(c => c.UserId == user.Id).ToList();
             db.Comments.RemoveRange(comments);
+
+            // Save DB
             await db.SaveChangesAsync();
 
             // Delete user.
@@ -270,7 +274,8 @@ namespace TheatreProject.Controllers
             User user = await UserManager.FindByIdAsync(id);
             string oldRole = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
 
-            var items = db.Roles.Select(r => new SelectListItem
+            // Get roles select list.
+            var roles = db.Roles.Select(r => new SelectListItem
             {
                 Text = r.Name,
                 Value = r.Name,
@@ -280,7 +285,7 @@ namespace TheatreProject.Controllers
             return View(new ChangeRoleViewModel
             {
                 UserName = user.UserName,
-                Roles = items,
+                Roles = roles,
                 OldRole = oldRole,
             });
         }
@@ -300,9 +305,11 @@ namespace TheatreProject.Controllers
 
             if (ModelState.IsValid)
             {
+                // Get user and their old role
                 User user = await UserManager.FindByIdAsync(id);
                 string oldRole = (await UserManager.GetRolesAsync(id)).Single(); // Only ever a single role.
 
+                // Check if user has this role.
                 if (oldRole == model.Role)
                 {
                     Flash.Instance.Error("Error", string.Format("The user '{0}' already has the role '{1}'", user.UserName, model.Role));
@@ -316,7 +323,7 @@ namespace TheatreProject.Controllers
                 // If role is anything other than suspended we need to change user type.
                 if (model.Role != "Suspended")
                 {
-                    // Update discriminator to change the type of this user. This is a bit of a hack, but it works!
+                    // Update discriminator to change the user's type.
                     db.Database.ExecuteSqlCommand(
                         "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
                         model.Role == "Admin" ? "Staff" : model.Role,

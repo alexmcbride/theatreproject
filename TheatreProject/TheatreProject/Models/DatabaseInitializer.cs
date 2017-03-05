@@ -15,7 +15,7 @@ namespace TheatreProject.Models
         {
             base.Seed(context);
 
-            // Add roles if they don't exist.
+            // Add roles
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             roleManager.Create(new IdentityRole("Admin"));
             roleManager.Create(new IdentityRole("Staff"));
